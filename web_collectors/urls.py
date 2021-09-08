@@ -5,5 +5,5 @@ from . import views
 app_name = 'web_collectors'
 
 urlpatterns = [
-    path('', views.index),
+    path('', views.index, name='index'),
 ]
