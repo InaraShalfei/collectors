@@ -6,8 +6,8 @@
     {% cache 20 index_page page.number %}
         <div class="container">
             {% include "includes/menu.html" with index=True %}
-            {% for post in page %}
-                {% include "includes/post_card.html" with post=post %}
+<!--            {% for post in page %}-->
+<!--                {% include "includes/post_card.html" with post=post %}-->
             {% endfor %}
         </div>
         {% if page.has_other_pages %}
