@@ -3,7 +3,7 @@
     <ul class="nav nav-tabs">
         {% if request.resolver_match.url_name == 'index' %}
         <li class="nav-item">
-            <a class="nav-link " href="{% url 'index' %}">
+            <a class="nav-link " href="{% url 'web_collectors:index' %}">
                 <strong>Все авторы коллекций</strong>
             </a>
         </li>
