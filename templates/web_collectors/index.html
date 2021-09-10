@@ -10,8 +10,8 @@
                 {# {% include "includes/post_card.html" with post=post %} #}
             {# {% endfor %} #}
         </div>
-        {# {% if page.has_other_pages %} #}
-            {# {% include "includes/paginator.html" with items=page paginator=paginator%} #}
-        {# {% endif %} #}
+        {% if page.has_other_pages %}
+            {% include "includes/paginator.html" with items=page paginator=paginator%}
+        {% endif %}
     {% endcache %}
 {% endblock %}
