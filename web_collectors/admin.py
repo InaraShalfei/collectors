@@ -1,6 +1,17 @@
 from django.contrib import admin
 
-from .models import Collection, CollectionItem, Photo
+from .models import Collection, CollectionItem, CollectionGroup, Photo
+
+
+class CollectionAdminInLine(admin.TabularInline):
+    model = Collection
+    extra = 1
+
+
+class CollectionGroupAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'description')
+    list_filter = ('name', )
+    inlines = (CollectionAdminInLine, )
 
 
 class CollectionAdmin(admin.ModelAdmin):
