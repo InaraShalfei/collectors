@@ -3,19 +3,13 @@ from django.contrib import admin
 from .models import Collection, CollectionItem, CollectionGroup, Photo
 
 
-class CollectionAdminInLine(admin.TabularInline):
-    model = Collection
-    extra = 1
-
-
 class CollectionGroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'description')
     list_filter = ('name', )
-    inlines = (CollectionAdminInLine, )
 
 
 class CollectionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'creation_date', 'collection_owner', 'photo')
+    list_display = ('name', 'description', 'creation_date', 'collection_owner', 'photo', 'group')
     list_filter = ('name', 'collection_owner', )
     search_fields = ('name', )
     empty_value_display = '-пусто-'
@@ -36,3 +30,4 @@ class CollectionItemAdmin(admin.ModelAdmin):
 
 admin.site.register(Collection, CollectionAdmin)
 admin.site.register(CollectionItem, CollectionItemAdmin)
+admin.site.register(CollectionGroup, CollectionGroupAdmin)
