@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Группы коллекций{% endblock %}
-{% block header %}{{ group.name }}{% endblock %}
+{% block header %}Группы коллекций{% endblock %}
 {% block content %}
 <div class="container">
-    {# {% for post in page %} #}
-    {# {% include "includes/post_card.html" with post=post %} #}
-    {# {% if not forloop.last %} #}
-    {# {% endif %} #}
-    {# {% endfor %} #}
+    {% for group in page %}
+    <p> <strong><a class="p-2 text-dark" href="{% url 'web_collectors:group' group.slug %}"><strong>{{ group }}</strong></a></strong> </p>
+    {% if not forloop.last %}
+    {% endif %}
+    {% endfor %}
+
 </div>
 {% if page.has_other_pages %}
 {% include "includes/paginator.html" with items=page paginator=paginator%}
 {% endif %}
-{% endblock %} 
+{% endblock %}
