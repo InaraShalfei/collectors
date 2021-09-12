@@ -23,4 +23,10 @@ def collection_group(request, slug):
     return render(request, 'web_collectors/group.html', {'page': page, 'paginator': paginator})
 
 
+def collection_groups(request):
+    groups = CollectionGroup.objects.all()
+    paginator = Paginator(groups, settings.ITEMS_PER_PAGE)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'web_collectors/groups.html', {'page': page, 'paginator': paginator})
 

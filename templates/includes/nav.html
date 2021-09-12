@@ -6,9 +6,9 @@
 
         <a class="p-2 text-dark" href="{% url 'password_change' %}"><strong>Изменить пароль</strong></a>
         <a class="p-2 text-dark" href="{% url 'logout' %}"><strong>Выйти</strong></a>
-        <a class="p-2 text-dark" href="{% url 'web_collectors:group' group.slug %}"> {{ group }}<strong>Группы коллекций</strong></a>
+        <a class="p-2 text-dark" href="{% url 'web_collectors:groups' %}"><strong>Группы коллекций</strong></a>
         {# <a class="p-2 text-dark" href="{% url 'new_post' %}"><strong>Новая запись</strong></a> #}
-       {#  <a class="p-2 text-dark" href="{% url 'profile' user.username %}">{{ user.username }}</a> #}
+        {# <a class="p-2 text-dark" href="{% url 'profile' user.username %}">{{ user.username }}</a> #}
         {% else %}
         <a class="p-2 text-dark" href="{% url 'login' %}"><strong>Войти</strong></a> |
         <a class="p-2 text-dark" href="{% url 'users:signup' %}"><strong>Регистрация</strong></a>
