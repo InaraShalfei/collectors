@@ -3,6 +3,11 @@
 {% block header %}Группы коллекций{% endblock %}
 {% block content %}
 <div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Группы коллекций</li>
+        </ol>
+    </nav>
     {% for group in page %}
     <p> <strong><a class="p-2 text-dark" href="{% url 'web_collectors:group' group.slug %}"><strong>{{ group }}</strong></a></strong> </p>
     {% if not forloop.last %}

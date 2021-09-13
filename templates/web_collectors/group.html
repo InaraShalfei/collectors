@@ -1,14 +1,21 @@
 {% extends "base.html" %}
-{% block title %}Коллекции группы {{ group.name }}{% endblock %}
-{% block header %}{{ group.name }}{% endblock %}
+{% block title %}Коллекции группы {{ collection.group.name }} {% endblock %}
+{% block header %} {{ group.name }}{% endblock %}
 {% block content %}
 <p>{{ group.description }}</p>
 <div class="container">
-    {# {% for post in page %} #}
-    {# {% include "includes/post_card.html" with post=post %} #}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:groups' %}">Группы коллекций</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ group.name }}</li>
+        </ol>
+    </nav>
+    <p>{% for collection in page %}</p>
+    <strong>{{ collection.name }}</strong>
+    {{ collection.photo }}    {# {% include "includes/post_card.html" with post=post %} #}
     {# {% if not forloop.last %} #}
     {# {% endif %} #}
-    {# {% endfor %} #}
+    {% endfor %}
 </div>
 {% if page.has_other_pages %}
 {% include "includes/paginator.html" with items=page paginator=paginator%}
