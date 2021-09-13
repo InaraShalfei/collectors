@@ -4,7 +4,7 @@
         {% if request.resolver_match.url_name == 'index' %}
         <li class="nav-item">
             <a class="nav-link " href="{% url 'web_collectors:index' %}">
-                <strong>Все авторы коллекций</strong>
+                <strong><span style="color:red">Все авторы коллекций</span></strong>
             </a>
         </li>
         {% endif %}
