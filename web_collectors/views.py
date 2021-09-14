@@ -43,11 +43,8 @@ def collection(request, slug, collection_name):
     })
 
 
-# def collection_items(request, slug, collection_name):
-#     group = get_object_or_404(CollectionGroup, slug=slug)
-#     collection = get_object_or_404(Collection, group=group, name=collection_name)
-#     items = collection.collection_items.all()
-#     paginator = Paginator(items, settings.ITEMS_PER_PAGE)
-#     page_number = request.GET.get('page')
-#     page = paginator.get_page(page_number)
-#     return render(request, 'web_collectors/items.html', {'page': page, 'paginator': paginator})
+def collection_item(request, slug, collection_name, item_name):
+    group = get_object_or_404(CollectionGroup, slug=slug)
+    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    item = get_object_or_404(CollectionItem, collection=collection, name=item_name)
+    return render(request, 'web_collectors/item.html', {'item': item, 'collection': collection})

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Коллекция {{ collection.name }} {% endblock %}
+{% block header %}Коллекция {{ collection.name }}{% endblock %}
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:groups' %}">Группы коллекций</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:group' group.slug %}">{{ group.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:group' group.slug collection.name %}">{{
+                collection.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
+        </ol>
+    </nav>
+    {{ item.name }}
+    {{ item.description }}
+
+</div>
+{% endblock %}
