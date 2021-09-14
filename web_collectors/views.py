@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 
-from web_collectors.models import Collection, CollectionGroup
+from web_collectors.models import Collection, CollectionGroup, CollectionItem
 
 
 def index(request):
@@ -34,4 +34,20 @@ def collection_groups(request):
 def collection(request, slug, collection_name):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, name=collection_name)
-    return render(request, 'web_collectors/collection.html', {'collection': collection, 'group': group})
+    items = CollectionItem.objects.filter(collection=collection)
+    paginator = Paginator(items, settings.ITEMS_PER_PAGE)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'web_collectors/collection.html', {
+        'page': page, 'paginator': paginator, 'group': group, 'collection': collection
+    })
+
+
+# def collection_items(request, slug, collection_name):
+#     group = get_object_or_404(CollectionGroup, slug=slug)
+#     collection = get_object_or_404(Collection, group=group, name=collection_name)
+#     items = collection.collection_items.all()
+#     paginator = Paginator(items, settings.ITEMS_PER_PAGE)
+#     page_number = request.GET.get('page')
+#     page = paginator.get_page(page_number)
+#     return render(request, 'web_collectors/items.html', {'page': page, 'paginator': paginator})

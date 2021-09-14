@@ -3,15 +3,25 @@
 {% block header %} {{ collection.name }}{% endblock %}
 {% block content %}
 
-<div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'web_collectors:groups' %}">Группы коллекций</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'web_collectors:group' group.slug %}">{{ group.name }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ collection.name }}</li>
-        </ol>
-    </nav>
-    <p><img src="{{ collection.photo }}"></p>
-    <p>{{ collection.description }}</p>
-</div>
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'web_collectors:groups' %}">Группы коллекций</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'web_collectors:group' group.slug %}">{{ group.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ collection.name }}</li>
+            </ol>
+        </nav>
+        <p><img src="/{{ collection.photo }}"></p>
+        <p>{{ collection.description }}</p>
+        <div class="container">
+            {% for item in page %}
+           <div class="d-block p-2 bg-danger text-white">{{ item }}</div>
+            {% endfor %}
+                  </div>
+        </div>
+
+        {% if page.has_other_pages %}
+        {% include "includes/paginator.html" with items=page paginator=paginator%}
+    {% endif %}
 {% endblock %}
+</div>

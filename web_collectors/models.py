@@ -35,7 +35,7 @@ class Collection(models.Model):
 class CollectionItem(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=200, blank=True)
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='collections')
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='collection_items')
     creation_date = models.DateTimeField(auto_created=False, default=timezone.now)
     position = models.AutoField(primary_key=True)
 
@@ -47,7 +47,7 @@ class CollectionItem(models.Model):
 
 
 class Photo(models.Model):
-    photo = models.ImageField(upload_to='api/%Y/%m/%d', blank=True, null=True, )
+    photo = models.ImageField(upload_to='media/photo', blank=True, null=True, )
     item = models.ForeignKey(CollectionItem, on_delete=models.CASCADE, related_name='photos')
     position = models.AutoField(primary_key=True)
 
