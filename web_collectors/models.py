@@ -21,7 +21,7 @@ class Collection(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=300, blank=True)
     creation_date = models.DateTimeField(auto_created=False, default=timezone.now)
-    photo = models.ImageField(upload_to='media/%Y/%m/%d', blank=True, null=True)
+    photo = models.ImageField(upload_to='media/', blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections')
     group = models.ForeignKey(CollectionGroup, on_delete=models.CASCADE, related_name='collections')
 
