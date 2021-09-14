@@ -47,4 +47,4 @@ def collection_item(request, slug, collection_name, item_name):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, name=collection_name)
     item = get_object_or_404(CollectionItem, collection=collection, name=item_name)
-    return render(request, 'web_collectors/item.html', {'item': item, 'collection': collection})
+    return render(request, 'web_collectors/item.html', {'group': group, 'item': item, 'collection': collection})

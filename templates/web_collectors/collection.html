@@ -11,15 +11,14 @@
             <li class="breadcrumb-item active" aria-current="page">{{ collection.name }}</li>
         </ol>
     </nav>
-    {% thumbnail collection.photo "400x400" crop="center" upscale=True as im %}
+    {% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
     <img class="card-img" src="/{{ collection.photo }}" width="{{ im.width }}" height="{{ im.height }}">
     {% endthumbnail %}
 
     <p>{{ collection.description }}</p>
     <div class="container">
         {% for item in page %}
-        <a class="p-2 text-light" href="{% url 'web_collectors:collection' group.slug
-            collection.name item.name %}"><div class="d-block p-2 bg-danger text-white"><strong>{{ item }}</strong>
+        <a class="p-2 text-light" href="{% url 'web_collectors:item' group.slug collection.name item.name %}"><div class="d-block p-2 bg-danger text-white"><strong>{{ item }}</strong>
         </div></a>
     </div>
     {% endfor %}

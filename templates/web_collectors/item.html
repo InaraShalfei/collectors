@@ -1,18 +1,27 @@
 {% extends "base.html" %}
 {% block title %}Коллекция {{ collection.name }} {% endblock %}
-{% block header %}Коллекция {{ collection.name }}{% endblock %}
+{% block header %} {{ collection.name }} {% endblock %}
 {% block content %}
+{% load thumbnail %}
+<style>
+mark {
+  background-color: black;
+  color: white;
+}
+</style>
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'web_collectors:groups' %}">Группы коллекций</a></li>
             <li class="breadcrumb-item"><a href="{% url 'web_collectors:group' group.slug %}">{{ group.name }}</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'web_collectors:group' group.slug collection.name %}">{{
-                collection.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:collection' group.slug collection.name %}">{{ collection.name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
         </ol>
     </nav>
-    {{ item.name }}
+    <p><strong><mark>{{ item.name }}</mark></strong></p>
+    {% thumbnail item.photo "400x400" crop="center" upscale=True as im %}
+    <img class="card-img" src="/photo/{{ item.photo }}" width="{{ im.width }}" height="{{ im.height }}">
+    {% endthumbnail %}
     {{ item.description }}
 
 </div>
