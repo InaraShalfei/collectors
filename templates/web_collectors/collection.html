@@ -11,8 +11,8 @@
                 <li class="breadcrumb-item active" aria-current="page">{{ collection.name }}</li>
             </ol>
         </nav>
-            {% thumbnail collection.photo "100x100" crop="center" upscale=True as im %}
-            <img class="card-img" src="/{{ collection.photo }}">
+            {% thumbnail collection.photo "400x400" crop="center" upscale=True as im %}
+            <img class="card-img" src="/{{ collection.photo }}"  width="{{ im.width }}" height="{{ im.height }}">
             {% endthumbnail %}
 
         <p>{{ collection.description }}</p>
