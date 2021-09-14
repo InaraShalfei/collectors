@@ -30,3 +30,8 @@ def collection_groups(request):
     page = paginator.get_page(page_number)
     return render(request, 'web_collectors/groups.html', {'page': page, 'paginator': paginator})
 
+
+def collection(request, slug, collection_name):
+    group = get_object_or_404(CollectionGroup, slug=slug)
+    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    return render(request, 'web_collectors/collection.html', {'collection': collection, 'group': group})
