@@ -2,7 +2,7 @@
 {% block title %} Коллекция {{ collection.name }} {% endblock %}
 {% block header %} {{ collection.name }}{% endblock %}
 {% block content %}
-
+{% load thumbnail %}
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -11,7 +11,10 @@
                 <li class="breadcrumb-item active" aria-current="page">{{ collection.name }}</li>
             </ol>
         </nav>
-        <p><img src="/{{ collection.photo }}"></p>
+            {% thumbnail collection.photo "100x100" crop="center" upscale=True as im %}
+            <img class="card-img" src="/{{ collection.photo }}">
+            {% endthumbnail %}
+
         <p>{{ collection.description }}</p>
         <div class="container">
             {% for item in page %}

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'collectors.apps.CollectorsConfig',
     'bootstrap4',
+    'sorl.thumbnail',
     'web_collectors',
     'users',
 
