@@ -34,8 +34,8 @@ def create_collection(request):
         collection = form.save(commit=False)
         collection.owner = request.user
         form.save()
-        return redirect('web_collectors:new')
-    return render(request, 'web_collectors/groups.html', {"form": form})
+        return redirect('web_collectors:groups')
+    return render(request, 'web_collectors/new.html', {"form": form})
 
 
 def collection_groups(request):
