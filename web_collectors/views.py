@@ -38,6 +38,22 @@ def create_collection(request):
     return render(request, 'web_collectors/new.html', {"form": form})
 
 
+def update_collection(request, slug,  collection_name):
+    group = get_object_or_404(CollectionGroup, slug=slug)
+    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    author = collection.owner
+    if request.user != author:
+        return redirect('web_collectors:groups')
+    form = CollectionForm(request.POST or None,
+                          files=request.FILES or None, instance=collection)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect('web_collectors:group', slug=slug)
+    return render(request, 'web_collectors/new.html', {
+        'form': form, 'group': group, 'collection': collection, 'author': author
+    })
+
+
 def collection_groups(request):
     groups = CollectionGroup.objects.all()
     paginator = Paginator(groups, settings.ITEMS_PER_PAGE)

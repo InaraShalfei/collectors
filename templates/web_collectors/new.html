@@ -10,7 +10,7 @@
     <div class="col-md-8 p-5">
         <div class="card">
             <div class="card-header">
-                {% if request.user.username == username %}
+                {% if request.user == author %}
                 Редактировать запись
                 {% else %}
                 Добавить запись
@@ -20,8 +20,8 @@
             <div class="card-body">
                 <form
                         method="POST" enctype="multipart/form-data"
-                        {% if request.user.username == username %}
-                        {# action="{% url 'post_edit' username=username post_id=post.id %}" #}
+                        {% if request.user == author %}
+                        action="{% url 'web_collectors:update_collection' group.slug collection.name %}"
                         {% else %}
                         action="{% url 'web_collectors:new_collection' %}"
                         {% endif %}
@@ -44,7 +44,7 @@
                         {% endfor %}
 
                         <button type="submit" class="btn btn-primary">
-                            {% if request.user.username == username %}
+                            {% if request.user == author %}
                             Сохранить
                             {% else %}
                             Добавить
