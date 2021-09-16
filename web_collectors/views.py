@@ -98,10 +98,11 @@ def create_item(request, slug, collection_name):
 
 def update_item(request, slug, collection_name, item_name):
     group = get_object_or_404(CollectionGroup, slug=slug)
-    item = get_object_or_404(CollectionItem, collection=collection_name, name=item_name)
-    author = group.collections.owner
+    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    author = collection.owner
     if request.user != author:
         return redirect('web_collectors:group')
+    item = get_object_or_404(CollectionItem, collection=collection, name=item_name)
     form = ItemForm(request.POST or None,
                     files=request.FILES or None, instance=item)
     if request.method == "POST" and form.is_valid():
