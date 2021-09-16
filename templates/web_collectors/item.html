@@ -19,8 +19,10 @@ mark {
         </ol>
     </nav>
     <p><strong><mark>{{ item.name }}</mark></strong></p>
+        <p><a class="p-1 text-dark" href="{% url 'web_collectors:update_item' group.slug collection.name item.name %}"><strong>Редактировать</strong></a></p>
     {% thumbnail item.photo "400x400" crop="center" upscale=True as im %}
     <img class="card-img" src="/photo/{{ item.photo }}" width="{{ im.width }}" height="{{ im.height }}">
+
     {% endthumbnail %}
     {{ item.description }}
 
