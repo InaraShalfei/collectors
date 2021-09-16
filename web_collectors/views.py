@@ -67,7 +67,7 @@ def collection(request, slug, collection_name):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, name=collection_name)
     items = CollectionItem.objects.filter(collection=collection)
-    paginator = Paginator(items, 5)
+    paginator = Paginator(items, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'web_collectors/collection.html', {
