@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
+from sorl.thumbnail import get_thumbnail
 
 User = get_user_model()
 
@@ -39,6 +40,11 @@ class Photo(models.Model):
 
     class Meta:
         ordering = ['position']
+
+    def save(self, *args, **kwargs):
+        if self.photo:
+            self.photo = get_thumbnail(self.image, '500x600', quality=99, format='JPEG')
+        super(Photo, self).save(*args, **kwargs)
 
 
 class CollectionItem(models.Model):

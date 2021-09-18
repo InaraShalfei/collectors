@@ -20,10 +20,13 @@ mark {
     </nav>
     <p><strong><mark>{{ item.name }}</mark></strong></p>
         <p><a class="p-1 text-dark" href="{% url 'web_collectors:update_item' group.slug collection.name item.name %}"><strong>Редактировать</strong></a></p>
-    {% thumbnail item.photo "400x400" crop="center" upscale=True as im %}
-    <img class="card-img" src="/photo/{{ item.photo }}" width="{{ im.width }}" height="{{ im.height }}">
 
+    <br/>{% for photo in item.photo.all %}
+    {% thumbnail photo.photo "500x600" crop="center" upscale=True as im %}
+    <img class="card-img" src="/{{ photo.photo }}" width="{{ im.width }}" height="{{ im.height }}">
     {% endthumbnail %}
+    <br/>{% endfor %}
+
     {{ item.description }}
 
 </div>
