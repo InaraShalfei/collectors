@@ -15,19 +15,14 @@ class CollectionAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-class PhotoAdminInLine(admin.TabularInline):
-    model = Photo
-    extra = 1
-
-
 class CollectionItemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'collection', 'creation_date')
+    list_display = ('name', 'description', 'collection', 'creation_date', )
     list_filter = ('name', 'collection', )
     search_fields = ('name', 'collection', )
-    inlines = (PhotoAdminInLine, )
     empty_value_display = '-пусто-'
 
 
 admin.site.register(Collection, CollectionAdmin)
 admin.site.register(CollectionItem, CollectionItemAdmin)
 admin.site.register(CollectionGroup, CollectionGroupAdmin)
+admin.site.register(Photo)
