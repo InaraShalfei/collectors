@@ -1,6 +1,10 @@
-*.doc
+.git/*
+env/
 venv/
-.pytest_cache
+.venv
+.venv/
+
+__pycache__/
 *.py[cod]
 
 .idea
@@ -12,7 +16,10 @@ venv/
 *.sublime-workspace
 
 static/
+
 media/
+
+sent_emails/
 
 db.sqlite3
 
@@ -22,3 +29,4 @@ htmlcov/
 coverage.xml
 *.cover
 /htmlcov/
+/cache/
