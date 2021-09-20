@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Профиль пользователя {{ author.username }}{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+{% load thumbnail %}
+
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-md-3 mb-3 mt-1">
+            {% include "includes/author_card.html" %}
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        {% for collection in page %}
+        <p><strong>{{ collection.name }}</strong></p>
+        {% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
+        <img class="card-img" src="/{{ collection.photo }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
+
+        <p>{{ collection.description }}</p>
+
+        {% if not forloop.last %}
+        <hr>
+        {% endif %}
+        {% endfor %}
+
+        {% include "includes/paginator.html" %}
+    </div>
+
+</main>
+{% endblock %}

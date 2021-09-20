@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
 from web_collectors.forms import CollectionForm, ItemForm
-from web_collectors.models import Collection, CollectionGroup, CollectionItem
+from web_collectors.models import Collection, CollectionGroup, CollectionItem, User
 
 
 def index(request):
@@ -111,3 +111,15 @@ def update_item(request, slug, collection_name, item_name):
     return render(request, 'web_collectors/new_item.html', {
         'form': form, 'group': group, 'collection': collection, 'author': author, 'item': item
     })
+
+
+def profile(request, username):
+    author = get_object_or_404(User, username=username)
+    collections = Collection.objects.filter(owner=author)
+    paginator = Paginator(collections, 5)
+    page_number = request.GET.get("page")
+    page = paginator.get_page(page_number)
+    return render(request, 'web_collectors/profile.html', {
+        'page': page, 'paginator': paginator, 'collection': collection, 'author': author
+    })
+
