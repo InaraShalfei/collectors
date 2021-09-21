@@ -29,7 +29,6 @@ urlpatterns = [
 
 handler404 = 'web_collectors.views.page_not_found'
 handler500 = 'web_collectors.views.server_error'
-CSRF_FAILURE_VIEW = 'web_collectors.views.csrf_failure'
 
 if settings.DEBUG:
     urlpatterns += static(
