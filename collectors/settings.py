@@ -122,9 +122,9 @@ USE_TZ = True
 
 LOGIN_URL = '/auth/login/'
 
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = '/'
 
-LOGOUT_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
