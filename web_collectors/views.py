@@ -72,8 +72,6 @@ def delete_collection(request, slug,  collection_name):
     return redirect('web_collectors:group', slug=slug)
 
 
-
-
 def collection(request, slug, collection_name):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, name=collection_name)
@@ -122,6 +120,17 @@ def update_item(request, slug, collection_name, item_name):
     return render(request, 'web_collectors/new_item.html', {
         'form': form, 'group': group, 'collection': collection, 'author': author, 'item': item
     })
+
+
+def delete_item(request, slug, collection_name, item_name):
+    group = get_object_or_404(CollectionGroup, slug=slug)
+    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    author = collection.owner
+    if request.user != author:
+        return redirect('web_collectors:group')
+    item = get_object_or_404(CollectionItem, collection=collection, name=item_name)
+    item.delete()
+    return redirect('web_collectors:collection', slug=slug, collection_name=collection_name)
 
 
 def profile(request, username):

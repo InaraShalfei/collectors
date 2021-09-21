@@ -29,5 +29,7 @@ mark {
 
     {{ item.description }}
 
+    <p><a class="p-1 text-dark" href="{% url 'web_collectors:delete_item' group.slug collection.name item.name %}"><strong>Удалить</strong></a></p>
+
 </div>
 {% endblock %}
