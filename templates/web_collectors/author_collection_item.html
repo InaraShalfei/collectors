@@ -14,7 +14,7 @@ mark {
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'web_collectors:profile' user.username %}">Коллекции автора</a></li>
             <li class="breadcrumb-item"><a href="{% url 'web_collectors:author_collection' user.username collection.name %}">{{ collection.name }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ item.name }}</li>
         </ol>
     </nav>
     <p><strong><mark>{{ item.name }}</mark></strong></p>
