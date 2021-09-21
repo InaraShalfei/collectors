@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %} Коллекция {{ collection.name }} {% endblock %}
+{% block header %} {{ collection.name }}{% endblock %}
+{% block content %}
+{% load thumbnail %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:profile' user.username %}">Коллекции автора</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ collection.name }}</li>
+        </ol>
+    </nav>
+    {% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
+    <img class="card-img" src="/{{ collection.photo }}" width="{{ im.width }}" height="{{ im.height }}">
+    {% endthumbnail %}
+
+    <p>{{ collection.description }}</p>
+
+    {% if page.has_other_pages %}
+    {% include "includes/paginator.html" with items=page paginator=paginator%}
+    {% endif %}
+    {% endblock %}
+</div>

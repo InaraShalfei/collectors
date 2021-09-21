@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('new/', views.create_collection, name='new_collection'),
     path('profile/<str:username>/', views.profile, name='profile'),
+    path('profile/<str:username>/<str:collection_name>', views.author_collection, name='author_collection'),
     path('group/<slug:slug>/', views.collection_group, name='group'),
     path('group/<slug:slug>/<str:collection_name>', views.collection, name='collection'),
     path('group/<slug:slug>/<str:collection_name>/edit', views.update_collection, name='update_collection'),
@@ -15,5 +16,4 @@ urlpatterns = [
     path('group/<slug:slug>/<str:collection_name>/<str:item_name>', views.collection_item, name='item'),
     path('group/<slug:slug>/<str:collection_name>/<str:item_name>/update', views.update_item, name='update_item'),
     path('groups/', views.collection_groups, name='groups'),
-
 ]

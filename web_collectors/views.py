@@ -123,3 +123,14 @@ def profile(request, username):
         'page': page, 'paginator': paginator, 'collection': collection, 'author': author
     })
 
+
+def author_collection(request, username, collection_name):
+    author = get_object_or_404(User, username=username)
+    collection = get_object_or_404(Collection, owner=author, name=collection_name)
+    items = CollectionItem.objects.filter(collection=collection)
+    paginator = Paginator(items, 3)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'web_collectors/author_collection.html', {
+        'page': page, 'paginator': paginator, 'author': author, 'collection': collection
+    })

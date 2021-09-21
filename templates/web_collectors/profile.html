@@ -10,16 +10,16 @@
             {% include "includes/author_card.html" %}
         </div>
     </div>
-
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Коллекции автора</li>
+        </ol>
+    </nav>
     <div class="col-md-9">
         {% for collection in page %}
-        <p><strong>{{ collection.name }}</strong></p>
-        {% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
-        <img class="card-img" src="/{{ collection.photo }}" width="{{ im.width }}" height="{{ im.height }}">
-        {% endthumbnail %}
-
-        <p>{{ collection.description }}</p>
-
+        <p><strong><a class="p-2 text-dark"
+                      href="{% url 'web_collectors:author_collection' user.username collection.name %}"><strong>
+            {{ collection.name }}</strong></a></strong></p>
         {% if not forloop.last %}
         <hr>
         {% endif %}
