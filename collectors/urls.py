@@ -27,6 +27,10 @@ urlpatterns = [
     path('', include('static_pages.urls', namespace='static_pages')),
 ]
 
+handler404 = 'web_collectors.views.page_not_found'
+handler500 = 'web_collectors.views.server_error'
+CSRF_FAILURE_VIEW = 'web_collectors.views.csrf_failure'
+
 if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT

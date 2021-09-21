@@ -143,3 +143,15 @@ def author_collection_item(request, username, collection_name, item_name):
     return render(request, 'web_collectors/author_collection_item.html', {
         'author': author, 'item': item, 'collection': collection}
                   )
+
+
+def page_not_found(request, exception):
+    return render(request, 'misc/404.html', {'path': request.path}, status=404)
+
+
+def server_error(request):
+    return render(request, 'misc/500.html', status=500)
+
+
+def csrf_failure(request, reason=''):
+    return render(request, 'misc/403.html', status=403)

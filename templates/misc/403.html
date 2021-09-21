@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Ошибка 403</h1>
+  <p>Доступ на страницу {{ path }} запрещен!</p>
+  <a href="{% url 'web_collectors:index' %}"> Идите на главную</a>
+{% endblock %}
