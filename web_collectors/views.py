@@ -62,6 +62,18 @@ def update_collection(request, slug,  collection_name):
     })
 
 
+def delete_collection(request, slug,  collection_name):
+    group = get_object_or_404(CollectionGroup, slug=slug)
+    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    author = collection.owner
+    if request.user != author:
+        return redirect('web_collectors:groups')
+    collection.delete()
+    return redirect('web_collectors:group', slug=slug)
+
+
+
+
 def collection(request, slug, collection_name):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, name=collection_name)

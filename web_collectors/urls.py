@@ -14,6 +14,7 @@ urlpatterns = [
     path('group/<slug:slug>/', views.collection_group, name='group'),
     path('group/<slug:slug>/<str:collection_name>', views.collection, name='collection'),
     path('group/<slug:slug>/<str:collection_name>/edit', views.update_collection, name='update_collection'),
+    path('group/<slug:slug>/<str:collection_name>/delete', views.delete_collection, name='delete_collection'),
     path('group/<slug:slug>/<str:collection_name>/new', views.create_item, name='new_item'),
     path('group/<slug:slug>/<str:collection_name>/<str:item_name>', views.collection_item, name='item'),
     path('group/<slug:slug>/<str:collection_name>/<str:item_name>/update', views.update_item, name='update_item'),
