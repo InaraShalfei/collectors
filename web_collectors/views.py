@@ -134,3 +134,12 @@ def author_collection(request, username, collection_name):
     return render(request, 'web_collectors/author_collection.html', {
         'page': page, 'paginator': paginator, 'author': author, 'collection': collection
     })
+
+
+def author_collection_item(request, username, collection_name, item_name):
+    author = get_object_or_404(User, username=username)
+    collection = get_object_or_404(Collection, owner=author, name=collection_name)
+    item = get_object_or_404(CollectionItem, collection=collection, name=item_name)
+    return render(request, 'web_collectors/author_collection_item.html', {
+        'author': author, 'item': item, 'collection': collection}
+                  )
