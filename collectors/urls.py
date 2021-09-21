@@ -20,12 +20,11 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('auth/', include('users.urls', namespace='users')),
     path('auth/', include('django.contrib.auth.urls')),
+    path('admin/', admin.site.urls),
     path('', include('web_collectors.urls', namespace='web_collectors')),
     path('', include('static_pages.urls', namespace='static_pages')),
-
 ]
 
 if settings.DEBUG:
