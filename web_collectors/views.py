@@ -79,8 +79,9 @@ def collection(request, slug, collection_name):
     paginator = Paginator(items, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
+    form = CommentForm()
     return render(request, 'web_collectors/collection.html', {
-        'page': page, 'paginator': paginator, 'group': group, 'collection': collection
+        'page': page, 'paginator': paginator, 'group': group, 'collection': collection, 'form': form, 'comments': collection.comments.all()
     })
 
 
@@ -94,8 +95,7 @@ def add_comment(request, slug, collection_name):
         comment.author = request.user
         comment.collection = collection
         comment.save()
-        return redirect('web_collectors:collection', slug=slug, collection_name=collection)
-    return render(request, 'web_collectors/collection.html', {'form': form, 'group': group, 'collection': collection})
+    return redirect('web_collectors:collection', slug=slug, collection_name=collection)
 
 
 def collection_item(request, slug, collection_name, item_name):

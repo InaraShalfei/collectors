@@ -16,14 +16,15 @@
 {% endif %}
 
 <!-- Комментарии -->
-{% for item in comments %}
+{% for comment in comments %}
 <div class="media card mb-4">
     <div class="media-body card-body">
         <h5 class="mt-0">
-               name="comment_{{ item.id }}">
-                {{ item.author.username }}
+            <a href="{% url 'web_collectors:profile' comment.author.username %}">
+                {{ comment.author.username }}
+            </a>
         </h5>
-        <p>{{ item.text | linebreaksbr }}</p>
+        <p>{{ comment.text }}</p>
     </div>
 </div>
 {% endfor %}
