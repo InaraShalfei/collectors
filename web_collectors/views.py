@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import HttpResponseRedirect
 
 from django.shortcuts import render, get_object_or_404, redirect
 from web_collectors.forms import CollectionForm, ItemForm, CommentForm
@@ -42,7 +43,8 @@ def create_collection(request):
         collection = form.save(commit=False)
         collection.owner = request.user
         form.save()
-        return redirect('web_collectors:groups')
+        group = collection.group
+        return redirect('web_collectors:collection', slug=group.slug, collection_name=collection)
     return render(request, 'web_collectors/new.html', {'form': form})
 
 
