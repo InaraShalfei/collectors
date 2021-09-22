@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 from django.shortcuts import render, get_object_or_404, redirect
-from web_collectors.forms import CollectionForm, ItemForm
+from web_collectors.forms import CollectionForm, ItemForm, CommentForm
 from web_collectors.models import Collection, CollectionGroup, CollectionItem, User
 
 
@@ -38,15 +38,15 @@ def collection_group(request, slug):
 @login_required
 def create_collection(request):
     form = CollectionForm(request.POST or None, files=request.FILES or None)
-    if request.method == "POST" and form.is_valid():
+    if request.method == 'POST' and form.is_valid():
         collection = form.save(commit=False)
         collection.owner = request.user
         form.save()
         return redirect('web_collectors:groups')
-    return render(request, 'web_collectors/new.html', {"form": form})
+    return render(request, 'web_collectors/new.html', {'form': form})
 
 
-def update_collection(request, slug,  collection_name):
+def update_collection(request, slug, collection_name):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, name=collection_name)
     author = collection.owner
@@ -84,6 +84,20 @@ def collection(request, slug, collection_name):
     })
 
 
+@login_required
+def add_comment(request, slug, collection_name):
+    form = CommentForm(request.POST or None)
+    group = get_object_or_404(CollectionGroup, slug=slug)
+    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    if request.method == 'POST' and form.is_valid():
+        comment = form.save(commit=False)
+        comment.author = request.user
+        comment.collection = collection
+        comment.save()
+        return redirect('web_collectors:collection', slug=slug, collection_name=collection)
+    return render(request, 'web_collectors/collection.html', {'form': form, 'group': group, 'collection': collection})
+
+
 def collection_item(request, slug, collection_name, item_name):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, name=collection_name)
@@ -96,13 +110,13 @@ def create_item(request, slug, collection_name):
     form = ItemForm(request.POST or None, files=request.FILES or None)
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, name=collection_name)
-    if request.method == "POST" and form.is_valid():
+    if request.method == 'POST' and form.is_valid():
         item = form.save(commit=False)
         item.collection = collection
         collection.owner = request.user
         form.save()
         return redirect('web_collectors:collection', slug=slug, collection_name=collection)
-    return render(request, 'web_collectors/new_item.html', {"form": form, 'group': group, 'collection': collection})
+    return render(request, 'web_collectors/new_item.html', {'form': form, 'group': group, 'collection': collection})
 
 
 def update_item(request, slug, collection_name, item_name):

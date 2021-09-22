@@ -17,6 +17,7 @@
     {% endthumbnail %}
 
     <p>{{ collection.description }}</p>
+    {% include "includes/comments.html" %}
         {% for item in page %}
         <a class="p-2 text-light" href="{% url 'web_collectors:item' group.slug collection.name item.name %}"><div class="d-block p-2 bg-danger text-white"><strong>{{ item }}</strong>
         </div></a>

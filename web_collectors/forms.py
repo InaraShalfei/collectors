@@ -1,5 +1,5 @@
 from django import forms
-from .models import Collection, CollectionItem, Photo
+from .models import Collection, CollectionItem, Photo, Comment
 
 
 class CollectionForm(forms.ModelForm):
@@ -29,3 +29,10 @@ class ItemForm(forms.ModelForm):
         if '' in name and '' in description:
             raise forms.ValidationError('Необходимо заполнить данное поле формы!')
         return name, description
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text', )
+        text = forms.CharField(max_length=100, widget=forms.Textarea)

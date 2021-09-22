@@ -13,6 +13,7 @@ urlpatterns = [
          name='author_collection_item'),
     path('group/<slug:slug>/', views.collection_group, name='group'),
     path('group/<slug:slug>/<str:collection_name>', views.collection, name='collection'),
+    path('group/<slug:slug>/<str:collection_name>/comment', views.add_comment, name='add_comment'),
     path('group/<slug:slug>/<str:collection_name>/edit', views.update_collection, name='update_collection'),
     path('group/<slug:slug>/<str:collection_name>/delete', views.delete_collection, name='delete_collection'),
     path('group/<slug:slug>/<str:collection_name>/new', views.create_item, name='new_item'),

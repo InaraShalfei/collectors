@@ -21,7 +21,7 @@ class CollectionGroup(models.Model):
 class Collection(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=300, blank=True)
-    creation_date = models.DateTimeField(auto_created=False, default=timezone.now)
+    creation_date = models.DateTimeField(auto_now_add=True)
     photo = models.ImageField(upload_to='media/', blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections')
     group = models.ForeignKey(CollectionGroup, on_delete=models.CASCADE, related_name='collections')
@@ -51,7 +51,7 @@ class CollectionItem(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=200, blank=True)
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='collection_items')
-    creation_date = models.DateTimeField(auto_created=False, default=timezone.now)
+    creation_date = models.DateTimeField(auto_now_add=True)
     position = models.AutoField(primary_key=True)
     photo = models.ManyToManyField(Photo)
 
@@ -60,3 +60,16 @@ class CollectionItem(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Comment(models.Model):
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField(max_length=200, blank=False)
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-creation_date']
+
+    def __str__(self):
+        return self.text
