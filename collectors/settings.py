@@ -149,3 +149,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, '')
 ITEMS_PER_PAGE = 10
 
 CSRF_FAILURE_VIEW = 'web_collectors.views.csrf_failure'
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}

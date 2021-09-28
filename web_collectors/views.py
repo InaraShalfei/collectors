@@ -4,10 +4,13 @@ from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.cache import cache_page
+
 from web_collectors.forms import CollectionForm, ItemForm, CommentForm
 from web_collectors.models import Collection, CollectionGroup, CollectionItem, User
 
 
+@cache_page(60 * 5)
 def index(request):
     #TODO: decide what to represent on the main page
     collections = Collection.objects.order_by('-creation_date')
