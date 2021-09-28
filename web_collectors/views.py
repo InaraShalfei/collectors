@@ -70,8 +70,10 @@ def delete_collection(request, slug,  collection_name):
     author = collection.owner
     if request.user != author:
         return redirect('web_collectors:groups')
-    collection.delete()
-    return redirect('web_collectors:group', slug=slug)
+    if request.method == 'POST':
+        collection.delete()
+        return redirect('web_collectors:group', slug=slug)
+    return render(request, 'includes/delete_collection.html', {'group': group})
 
 
 def collection(request, slug, collection_name):
