@@ -73,7 +73,7 @@ def delete_collection(request, slug,  collection_name):
     if request.method == 'POST':
         collection.delete()
         return redirect('web_collectors:group', slug=slug)
-    return render(request, 'includes/delete_confirmation.html', {'group': group})
+    return render(request, 'includes/delete_collection.html', {'group': group})
 
 
 def collection(request, slug, collection_name):
@@ -147,10 +147,10 @@ def delete_item(request, slug, collection_name, item_name):
     author = collection.owner
     if request.user != author:
         return redirect('web_collectors:group')
-    if request == 'POST':
+    if request.method == 'POST':
         item.delete()
         return redirect('web_collectors:collection', slug=slug, collection_name=collection_name)
-    return render(request, 'includes/delete_confirmation.html', {'group': group})
+    return render(request, 'includes/delete_item.html', {'group': group, 'collection': collection})
 
 
 def profile(request, username):
