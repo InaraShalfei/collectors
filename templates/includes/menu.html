@@ -4,14 +4,14 @@
         {% if request.resolver_match.url_name == 'index' %}
         <li class="nav-item">
             <a class="nav-link " href="{% url 'web_collectors:index' %}">
-                <strong><span style="color:red">Все авторы коллекций</span></strong>
+                <strong><span style="color:black">Все авторы коллекций</span></strong>
             </a>
         </li>
         {% endif %}
         <li class="nav-item">
-            {# <a class="nav-link {% if follow %}active{% endif %}" href="{% url 'follow_index' %}"> #}
-                {# Избранные авторы коллекций #}
-           {# </a> #}
+            <a class="nav-link {% if follow %}active{% endif %}" href="{% url 'web_collectors:follow_index' %}">
+                <strong><span style="color:red">Избранные авторы коллекций</span></strong>
+           </a>
         </li>
     </ul>
 </div>

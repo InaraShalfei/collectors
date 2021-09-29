@@ -188,6 +188,16 @@ def author_collection_item(request, username, collection_name, item_name):
                   )
 
 
+@login_required
+def follow_index(request):
+    collections = Collection.objects.filter(owner__following__user=request.user)
+    paginator = Paginator(collections, 3)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'web_collectors/follow.html', {
+        'page': page, 'paginator': paginator, 'collection': collection})
+
+
 def page_not_found(request, exception):
     return render(request, 'misc/404.html', {'path': request.path}, status=404)
 

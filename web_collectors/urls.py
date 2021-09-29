@@ -7,6 +7,7 @@ app_name = 'web_collectors'
 urlpatterns = [
     path('', views.index, name='index'),
     path('new/', views.create_collection, name='new_collection'),
+    path('follow/', views.follow_index, name='follow_index'),
     path('profile/<str:username>/', views.profile, name='profile'),
     path('profile/<str:username>/<str:collection_name>', views.author_collection, name='author_collection'),
     path('profile/<str:username>/<str:collection_name>/<str:item_name>', views.author_collection_item,
