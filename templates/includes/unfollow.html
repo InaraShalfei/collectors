@@ -1,0 +1,7 @@
+{% load user_filters %}
+<form method="post" action="">
+   {% csrf_token %}
+     <h1>Вы уверены, что хотите отписаться от автора?</h1><br>
+     <input class="btn btn-danger" type="submit" value="Да" />
+     <a href="{% url 'web_collectors:profile' author.username %}"><div class="btn btn-primary">Отменить</div></a>
+</form>

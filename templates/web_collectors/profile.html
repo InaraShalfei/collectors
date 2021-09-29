@@ -4,6 +4,7 @@
 {% block content %}
 {% load thumbnail %}
 
+<a class="p-2 text-dark" href="{% url 'web_collectors:new_collection' %}"><strong>Новая коллекция</strong></a>
 <main role="main" class="container">
     <div class="row">
         <div class="col-md-3 mb-3 mt-1">
@@ -16,7 +17,7 @@
         </ol>
     </nav>
     <div class="col-md-9">
-        <a class="p-2 text-dark" href="{% url 'web_collectors:new_collection' %}"><strong>Новая коллекция</strong></a>
+
         {% for collection in page %}
         <p><strong><a class="p-2 text-dark"
                       href="{% url 'web_collectors:author_collection' user.username collection.name %}"><strong>

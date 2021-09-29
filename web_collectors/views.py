@@ -1,13 +1,12 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.cache import cache_page
 
 from web_collectors.forms import CollectionForm, ItemForm, CommentForm
-from web_collectors.models import Collection, CollectionGroup, CollectionItem, User
+from web_collectors.models import Collection, CollectionGroup, CollectionItem, User, Follow
 
 
 @cache_page(60 * 5)
@@ -162,8 +161,10 @@ def profile(request, username):
     paginator = Paginator(collections, 5)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
+    following = request.user.is_authenticated and Follow.objects.filter(author=author, user=request.user).exists()
     return render(request, 'web_collectors/profile.html', {
-        'page': page, 'paginator': paginator, 'collection': collection, 'author': author
+        'page': page, 'paginator': paginator, 'collection': collection, 'author': author,
+        'following': following
     })
 
 
@@ -196,6 +197,23 @@ def follow_index(request):
     page = paginator.get_page(page_number)
     return render(request, 'web_collectors/follow.html', {
         'page': page, 'paginator': paginator, 'collection': collection})
+
+
+@login_required
+def profile_follow(request, username):
+    author = get_object_or_404(User, username=username)
+    if request.user != author:
+        Follow.objects.get_or_create(author=author, user=request.user)
+    return redirect('web_collectors:profile', username=username)
+
+
+@login_required
+def profile_unfollow(request, username):
+    author = get_object_or_404(User, username=username)
+    if request.method == 'POST':
+        get_object_or_404(Follow, user=request.user, author=author).delete()
+        return redirect('web_collectors:profile', username=username)
+    return render('includes/unfollow.html', {'author': author, 'user': request.user})
 
 
 def page_not_found(request, exception):
