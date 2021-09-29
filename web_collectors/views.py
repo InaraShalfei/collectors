@@ -3,21 +3,19 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.decorators.cache import cache_page
 
 from web_collectors.forms import CollectionForm, ItemForm, CommentForm
 from web_collectors.models import Collection, CollectionGroup, CollectionItem, User, Follow
 
 
-@cache_page(60 * 5)
 def index(request):
     #TODO: decide what to represent on the main page
-    collections = Collection.objects.order_by('-creation_date')
-    paginator = Paginator(collections, settings.ITEMS_PER_PAGE)
+    users = User.objects.all()
+    paginator = Paginator(users, settings.ITEMS_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'web_collectors/index.html', {
-        'page': page, 'paginator': paginator, 'collections': collections
+        'page': page, 'paginator': paginator, 'users': users
     })
 
 
@@ -213,7 +211,7 @@ def profile_unfollow(request, username):
     if request.method == 'POST':
         get_object_or_404(Follow, user=request.user, author=author).delete()
         return redirect('web_collectors:profile', username=username)
-    return render('includes/unfollow.html', {'author': author, 'user': request.user})
+    return render(request, 'includes/unfollow.html', {'author': author, 'user': request.user})
 
 
 def page_not_found(request, exception):

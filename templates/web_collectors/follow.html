@@ -3,7 +3,7 @@
 {% block header %}Коллекции авторов{% endblock %}
 {% block content %}
 {% load cache %}
-{% cache 20 follow_page page.number %}
+{% cache 10 follow_page page.number %}
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'web_collectors:index' %}">Все авторы</a></li>
@@ -12,9 +12,8 @@
 </nav>
 
 {% for collection in page %}
-{{ collection.name }}
-<a class="p-2 text-dark" href="{% url 'web_collectors:profile' collection.owner %}"><strong>{{ collection.owner
-    }}</strong></a>
+<p>{{ collection.name }}</p>
+<a class="p-2 text-dark" href="{% url 'web_collectors:profile' collection.owner %}"><strong>{{ collection.owner }}</strong></a>
 {% endfor %}
 
 {% if page.has_other_pages %}
