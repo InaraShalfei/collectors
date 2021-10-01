@@ -10,14 +10,23 @@ from web_collectors.models import Collection, CollectionGroup, CollectionItem, U
 
 def index(request):
     #TODO: decide what to represent on the main page
+    collections = Collection.objects.all()
+    paginator = Paginator(collections, settings.ITEMS_PER_PAGE)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'web_collectors/index.html', {
+        'page': page, 'paginator': paginator, 'collections': collections
+    })
+
+
+def all_authors(request):
     users = User.objects.all()
     paginator = Paginator(users, settings.ITEMS_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, 'web_collectors/index.html', {
+    return render(request, 'web_collectors/all_authors.html', {
         'page': page, 'paginator': paginator, 'users': users
     })
-
 
 def collection_groups(request):
     groups = CollectionGroup.objects.all()

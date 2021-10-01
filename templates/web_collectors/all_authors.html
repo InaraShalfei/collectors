@@ -7,13 +7,12 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'web_collectors:index' %}">Главная</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Избранные авторы</li>
+        <li class="breadcrumb-item active" aria-current="page">Все авторы</li>
     </ol>
 </nav>
 
-{% for collection in page %}
-<p>{{ collection.name }}</p>
-<a class="p-2 text-dark" href="{% url 'web_collectors:profile' collection.owner %}"><strong>{{ collection.owner }}</strong></a>
+{% for user in page %}
+<p><a class="p-2 text-dark" href="{% url 'web_collectors:profile' user.username %}"><strong>{{ user }}</strong></a></p>
 {% endfor %}
 
 {% if page.has_other_pages %}
