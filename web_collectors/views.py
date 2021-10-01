@@ -28,6 +28,7 @@ def all_authors(request):
         'page': page, 'paginator': paginator, 'users': users
     })
 
+
 def collection_groups(request):
     groups = CollectionGroup.objects.all()
     paginator = Paginator(groups, settings.ITEMS_PER_PAGE)
