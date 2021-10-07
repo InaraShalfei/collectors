@@ -11,9 +11,10 @@
     </ol>
 </nav>
 
-{% for collection in page %}
-<p>{{ collection.name }}</p>
-<a class="p-2 text-dark" href="{% url 'web_collectors:profile' collection.owner %}"><strong>{{ collection.owner }}</strong></a>
+{% for follow in page %}
+<a class="p-2 text-dark" href="{% url 'web_collectors:profile' follow.author.username %}">
+    <strong>{{ follow.author.username }}</strong>
+</a>
 {% endfor %}
 
 {% if page.has_other_pages %}
