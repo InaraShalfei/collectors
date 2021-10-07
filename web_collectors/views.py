@@ -199,12 +199,11 @@ def author_collection_item(request, username, collection_name, item_name):
 
 @login_required
 def follow_index(request):
-    collections = Collection.objects.filter(owner__following__user=request.user)
-    paginator = Paginator(collections, 3)
+    followed = request.user.followed.all()
+    paginator = Paginator(followed, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, 'web_collectors/follow.html', {
-        'page': page, 'paginator': paginator, 'collection': collection})
+    return render(request, 'web_collectors/follow.html', {'page': page, 'paginator': paginator})
 
 
 @login_required
