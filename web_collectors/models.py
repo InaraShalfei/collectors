@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.utils import timezone
 from sorl.thumbnail import get_thumbnail
 
 User = get_user_model()
@@ -76,8 +75,8 @@ class Comment(models.Model):
 
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followed')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
 
     class Meta:
         constraints = [
