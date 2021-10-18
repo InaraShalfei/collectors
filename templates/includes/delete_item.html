@@ -3,5 +3,5 @@
    {% csrf_token %}
      <h1>Вы уверены, что хотите удалить объект коллекции?</h1><br>
      <input class="btn btn-danger" type="submit" value="Да" />
-     <a href="{% url 'web_collectors:collection' group.slug collection.name %}"><div class="btn btn-primary">Отменить</div></a>
+     <a href="{% url 'web_collectors:collection' group.slug collection.id %}"><div class="btn btn-primary">Отменить</div></a>
 </form>

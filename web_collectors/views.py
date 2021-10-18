@@ -58,9 +58,9 @@ def create_collection(request):
     return render(request, 'web_collectors/new.html', {'form': form})
 
 
-def update_collection(request, slug, collection_name):
+def update_collection(request, slug, collection_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    collection = get_object_or_404(Collection, group=group, id=collection_id)
     author = collection.owner
     if request.user != author:
         return redirect('web_collectors:groups')
@@ -74,9 +74,9 @@ def update_collection(request, slug, collection_name):
     })
 
 
-def delete_collection(request, slug,  collection_name):
+def delete_collection(request, slug,  collection_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    collection = get_object_or_404(Collection, group=group, id=collection_id)
     author = collection.owner
     if request.user != author:
         return redirect('web_collectors:groups')
@@ -86,9 +86,9 @@ def delete_collection(request, slug,  collection_name):
     return render(request, 'includes/delete_collection.html', {'group': group})
 
 
-def collection(request, slug, collection_name):
+def collection(request, slug, collection_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    collection = get_object_or_404(Collection, group=group, id=collection_id)
     items = CollectionItem.objects.filter(collection=collection)
     paginator = Paginator(items, 3)
     page_number = request.GET.get('page')
@@ -100,66 +100,67 @@ def collection(request, slug, collection_name):
 
 
 @login_required
-def add_comment(request, slug, collection_name):
+def add_comment(request, slug, collection_id):
     form = CommentForm(request.POST or None)
     group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    collection = get_object_or_404(Collection, group=group, id=collection_id)
     if request.method == 'POST' and form.is_valid():
         comment = form.save(commit=False)
         comment.author = request.user
         comment.collection = collection
         comment.save()
-    return redirect('web_collectors:collection', slug=slug, collection_name=collection)
+    return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
 
 
-def collection_item(request, slug, collection_name, item_name):
+def collection_item(request, slug, collection_id, item_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, name=collection_name)
-    item = get_object_or_404(CollectionItem, collection=collection, name=item_name)
+    collection = get_object_or_404(Collection, group=group, id=collection_id)
+    item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
     return render(request, 'web_collectors/item.html', {'group': group, 'item': item, 'collection': collection})
 
 
 @login_required
-def create_item(request, slug, collection_name):
+def create_item(request, slug, collection_id):
     form = ItemForm(request.POST or None, files=request.FILES or None)
     group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    collection = get_object_or_404(Collection, group=group, id=collection_id)
     if request.method == 'POST' and form.is_valid():
         item = form.save(commit=False)
+        item.position = 1
         item.collection = collection
         collection.owner = request.user
         form.save()
-        return redirect('web_collectors:collection', slug=slug, collection_name=collection)
+        return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
     return render(request, 'web_collectors/new_item.html', {'form': form, 'group': group, 'collection': collection})
 
 
-def update_item(request, slug, collection_name, item_name):
+def update_item(request, slug, collection_id, item_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, name=collection_name)
+    collection = get_object_or_404(Collection, group=group, id=collection_id)
     author = collection.owner
     if request.user != author:
         return redirect('web_collectors:group')
-    item = get_object_or_404(CollectionItem, collection=collection, name=item_name)
+    item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
     form = ItemForm(request.POST or None,
                     files=request.FILES or None, instance=item)
     if request.method == "POST" and form.is_valid():
         form.save()
-        return redirect('web_collectors:item', slug=slug, collection_name=collection_name, item_name=item)
+        return redirect('web_collectors:item', slug=slug, collection_id=collection_id, item_id=item_id)
     return render(request, 'web_collectors/new_item.html', {
         'form': form, 'group': group, 'collection': collection, 'author': author, 'item': item
     })
 
 
-def delete_item(request, slug, collection_name, item_name):
+def delete_item(request, slug, collection_id, item_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, name=collection_name)
-    item = get_object_or_404(CollectionItem, collection=collection, name=item_name)
+    collection = get_object_or_404(Collection, group=group, id=collection_id)
+    item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
     author = collection.owner
     if request.user != author:
         return redirect('web_collectors:group')
     if request.method == 'POST':
         item.delete()
-        return redirect('web_collectors:collection', slug=slug, collection_name=collection_name)
+        return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
     return render(request, 'includes/delete_item.html', {'group': group, 'collection': collection})
 
 
@@ -176,9 +177,9 @@ def profile(request, username):
     })
 
 
-def author_collection(request, username, collection_name):
+def author_collection(request, username, collection_id):
     author = get_object_or_404(User, username=username)
-    collection = get_object_or_404(Collection, owner=author, name=collection_name)
+    collection = get_object_or_404(Collection, owner=author, id=collection_id)
     items = CollectionItem.objects.filter(collection=collection)
     paginator = Paginator(items, 3)
     page_number = request.GET.get('page')
@@ -188,10 +189,10 @@ def author_collection(request, username, collection_name):
     })
 
 
-def author_collection_item(request, username, collection_name, item_name):
+def author_collection_item(request, username, collection_id, item_id):
     author = get_object_or_404(User, username=username)
-    collection = get_object_or_404(Collection, owner=author, name=collection_name)
-    item = get_object_or_404(CollectionItem, collection=collection, name=item_name)
+    collection = get_object_or_404(Collection, owner=author, id=collection_id)
+    item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
     return render(request, 'web_collectors/author_collection_item.html', {
         'author': author, 'item': item, 'collection': collection}
                   )

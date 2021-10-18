@@ -13,7 +13,7 @@ mark {
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'web_collectors:profile' user.username %}">Коллекции автора</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'web_collectors:author_collection' user.username collection.name %}">{{ collection.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:author_collection' user.username collection.id %}">{{ collection.name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ item.name }}</li>
         </ol>
     </nav>
@@ -21,7 +21,7 @@ mark {
 
     <br/>{% for photo in item.photo.all %}
     {% thumbnail photo.photo "500x600" crop="center" upscale=True as im %}
-    <img class="card-img" src="/{{ photo.photo }}" width="{{ im.width }}" height="{{ im.height }}">
+    <img src="/{{ photo.photo }}" width="{{ im.width }}" height="{{ im.height }}">
     {% endthumbnail %}
     <br/>{% endfor %}
 

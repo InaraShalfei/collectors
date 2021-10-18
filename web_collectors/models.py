@@ -34,8 +34,7 @@ class Collection(models.Model):
 
 class Photo(models.Model):
     photo = models.ImageField(upload_to='media/photo/', blank=True, null=True)
-    #item = models.ForeignKey(CollectionItem, on_delete=models.CASCADE, related_name='photos')
-    position = models.AutoField(primary_key=True)
+    position = models.IntegerField()
 
     class Meta:
         ordering = ['position']
@@ -51,7 +50,7 @@ class CollectionItem(models.Model):
     description = models.TextField(max_length=200, blank=True)
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='collection_items')
     creation_date = models.DateTimeField(auto_now_add=True)
-    position = models.AutoField(primary_key=True)
+    position = models.IntegerField()
     photo = models.ManyToManyField(Photo)
 
     class Meta:

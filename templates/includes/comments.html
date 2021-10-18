@@ -2,7 +2,7 @@
 
 {% if user.is_authenticated %}
 <div class="card my-4">
-    <form method="post" action="{% url 'web_collectors:add_comment' group.slug collection.name %}">
+    <form method="post" action="{% url 'web_collectors:add_comment' group.slug collection.id %}">
         {% csrf_token %}
         <h5 class="card-header">Добавить комментарий:</h5>
         <div class="card-body">

@@ -12,10 +12,10 @@
         </ol>
     </nav>
     <p>{% for collection in page %}</p>
-    <p> <strong><a class="p-2 text-dark" href="{% url 'web_collectors:collection' group.slug collection.name %}"><strong>{{ collection.name }}</strong></a></strong>
-    <p><a class="p-1 text-dark" href="{% url 'web_collectors:delete_collection' group.slug collection.name %}"><strong>Удалить коллекцию</strong></a></p>
+    <p> <strong><a class="p-2 text-dark" href="{% url 'web_collectors:collection' group.slug collection.id %}"><strong>{{ collection.name }}</strong></a></strong>
+    <p><a class="p-1 text-dark" href="{% url 'web_collectors:delete_collection' group.slug collection.id %}"><strong>Удалить коллекцию</strong></a></p>
     <p><img src="/{{ collection.photo }}" width="250" height="150"></p>
-        <p><a class="p-1 text-dark" href="{% url 'web_collectors:update_collection' group.slug collection.name %}"><strong>Редактировать коллекцию</strong></a></p>
+        <p><a class="p-1 text-dark" href="{% url 'web_collectors:update_collection' group.slug collection.id %}"><strong>Редактировать коллекцию</strong></a></p>
     {# {% include "includes/post_card.html" with post=post %} #}
     {# {% if not forloop.last %} #}
     {# {% endif %} #}

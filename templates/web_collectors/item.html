@@ -14,22 +14,22 @@ mark {
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'web_collectors:groups' %}">Группы коллекций</a></li>
             <li class="breadcrumb-item"><a href="{% url 'web_collectors:group' group.slug %}">{{ group.name }}</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'web_collectors:collection' group.slug collection.name %}">{{ collection.name }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:collection' group.slug collection.id %}">{{ collection.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ item.name }}</li>
         </ol>
     </nav>
     <p><strong><mark>{{ item.name }}</mark></strong></p>
-        <p><a class="p-1 text-dark" href="{% url 'web_collectors:update_item' group.slug collection.name item.name %}"><strong>Редактировать</strong></a></p>
+        <p><a class="p-1 text-dark" href="{% url 'web_collectors:update_item' group.slug collection.id item.id %}"><strong>Редактировать</strong></a></p>
 
     <br/>{% for photo in item.photo.all %}
     {% thumbnail photo.photo "500x600" crop="center" upscale=True as im %}
-    <img class="card-img" src="/{{ photo.photo }}" width="{{ im.width }}" height="{{ im.height }}">
+    <img src="/{{ photo.photo }}" width="{{ im.width }}" height="{{ im.height }}">
     {% endthumbnail %}
     <br/>{% endfor %}
 
     {{ item.description }}
 
-    <p><a class="p-1 text-dark" href="{% url 'web_collectors:delete_item' group.slug collection.name item.name %}"><strong>Удалить</strong></a></p>
+    <p><a class="p-1 text-dark" href="{% url 'web_collectors:delete_item' group.slug collection.id item.id %}"><strong>Удалить</strong></a></p>
 
 </div>
 {% endblock %}

@@ -21,7 +21,7 @@
                 <form
                         method="POST" enctype="multipart/form-data"
                         {% if request.user == author %}
-                        action="{% url 'web_collectors:update_collection' group.slug collection.name %}"
+                        action="{% url 'web_collectors:update_collection' group.slug collection.id %}"
                         {% else %}
                         action="{% url 'web_collectors:new_collection' %}"
                         {% endif %}
