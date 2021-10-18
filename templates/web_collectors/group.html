@@ -2,7 +2,9 @@
 {% block title %}Коллекции группы {{ collection.group.name }} {% endblock %}
 {% block header %} {{ group.name }}{% endblock %}
 {% block content %}
+    {% if request.user == author %}
 <a class="p-2 text-dark" href="{% url 'web_collectors:new_collection' %}"><strong>Новая коллекция</strong></a>
+    {%  endif %}
 <p>{{ group.description }}</p>
 <div class="container">
     <nav aria-label="breadcrumb">
@@ -12,13 +14,12 @@
         </ol>
     </nav>
     <p>{% for collection in page %}</p>
-    <p> <strong><a class="p-2 text-dark" href="{% url 'web_collectors:collection' group.slug collection.id %}"><strong>{{ collection.name }}</strong></a></strong>
-    <p><a class="p-1 text-dark" href="{% url 'web_collectors:delete_collection' group.slug collection.id %}"><strong>Удалить коллекцию</strong></a></p>
-    <p><img src="/{{ collection.photo }}" width="250" height="150"></p>
-        <p><a class="p-1 text-dark" href="{% url 'web_collectors:update_collection' group.slug collection.id %}"><strong>Редактировать коллекцию</strong></a></p>
-    {# {% include "includes/post_card.html" with post=post %} #}
-    {# {% if not forloop.last %} #}
-    {# {% endif %} #}
+        <p><strong><a class="p-2 text-dark"
+                      href="{% url 'web_collectors:collection' group.slug collection.id %}"><strong>{{ collection.name }}</strong></a></strong>
+
+        <p><img src="/{{ collection.photo }}" width="250" height="150"></p>
+
+
     {% endfor %}
 </div>
 {% if page.has_other_pages %}

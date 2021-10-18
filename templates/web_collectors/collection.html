@@ -3,7 +3,10 @@
 {% block header %} {{ collection.name }}{% endblock %}
 {% block content %}
 {% load thumbnail %}
-<a class="p-2 text-dark" href="{% url 'web_collectors:new_item' group.slug collection.id %}"><strong>Новый предмет коллекции</strong></a>
+    {% if request.user == author %}
+        <a class="p-2 text-dark" href="{% url 'web_collectors:new_item' group.slug collection.id %}"><strong>Новый
+            предмет коллекции</strong></a>
+    {% endif %}
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -17,6 +20,14 @@
     {% endthumbnail %}
 
     <p>{{ collection.description }}</p>
+    {% if request.user == author %}
+        <p><a class="p-1 text-dark"
+              href="{% url 'web_collectors:update_collection' group.slug collection.id %}"><strong>Редактировать
+            коллекцию</strong></a></p>
+        <p><a class="p-1 text-dark"
+              href="{% url 'web_collectors:delete_collection' group.slug collection.id %}"><strong>Удалить
+            коллекцию</strong></a></p>
+    {% endif %}
     {% include "includes/comments.html" %}
     {% for item in page %}
         <a class="p-2 text-light" href="{% url 'web_collectors:item' group.slug collection.id item.id %}"><div class="d-block p-2 bg-danger text-white"><strong>{{ item }}</strong>

@@ -19,8 +19,9 @@ mark {
         </ol>
     </nav>
     <p><strong><mark>{{ item.name }}</mark></strong></p>
+{% if request.user == author %}
         <p><a class="p-1 text-dark" href="{% url 'web_collectors:update_item' group.slug collection.id item.id %}"><strong>Редактировать</strong></a></p>
-
+{%  endif %}
     <br/>{% for photo in item.photo.all %}
     {% thumbnail photo.photo "500x600" crop="center" upscale=True as im %}
     <img src="/{{ photo.photo }}" width="{{ im.width }}" height="{{ im.height }}">
@@ -28,8 +29,8 @@ mark {
     <br/>{% endfor %}
 
     {{ item.description }}
-
+{% if request.user == author %}
     <p><a class="p-1 text-dark" href="{% url 'web_collectors:delete_item' group.slug collection.id item.id %}"><strong>Удалить</strong></a></p>
-
+{%  endif %}
 </div>
 {% endblock %}

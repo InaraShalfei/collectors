@@ -70,8 +70,7 @@ def update_collection(request, slug, collection_id):
         form.save()
         return redirect('web_collectors:group', slug=slug)
     return render(request, 'web_collectors/new.html', {
-        'form': form, 'group': group, 'collection': collection, 'author': author
-    })
+        'form': form, 'group': group, 'collection': collection, 'author': author})
 
 
 def delete_collection(request, slug,  collection_id):
@@ -83,19 +82,20 @@ def delete_collection(request, slug,  collection_id):
     if request.method == 'POST':
         collection.delete()
         return redirect('web_collectors:group', slug=slug)
-    return render(request, 'includes/delete_collection.html', {'group': group})
+    return render(request, 'includes/delete_collection.html', {'group': group, 'author': author})
 
 
 def collection(request, slug, collection_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
+    author = collection.owner
     items = CollectionItem.objects.filter(collection=collection)
     paginator = Paginator(items, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     form = CommentForm()
     return render(request, 'web_collectors/collection.html', {
-        'page': page, 'paginator': paginator, 'group': group, 'collection': collection, 'form': form, 'comments': collection.comments.all()
+        'page': page, 'paginator': paginator, 'group': group, 'collection': collection, 'author': author, 'form': form, 'comments': collection.comments.all()
     })
 
 
@@ -115,8 +115,10 @@ def add_comment(request, slug, collection_id):
 def collection_item(request, slug, collection_id, item_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
+    author = collection.owner
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
-    return render(request, 'web_collectors/item.html', {'group': group, 'item': item, 'collection': collection})
+    return render(request, 'web_collectors/item.html', {'group': group, 'item': item, 'collection': collection,
+                                                        'author': author})
 
 
 @login_required
@@ -124,6 +126,7 @@ def create_item(request, slug, collection_id):
     form = ItemForm(request.POST or None, files=request.FILES or None)
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
+    author = collection.owner
     if request.method == 'POST' and form.is_valid():
         item = form.save(commit=False)
         item.position = 1
@@ -131,7 +134,8 @@ def create_item(request, slug, collection_id):
         collection.owner = request.user
         form.save()
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
-    return render(request, 'web_collectors/new_item.html', {'form': form, 'group': group, 'collection': collection})
+    return render(request, 'web_collectors/new_item.html', {'form': form, 'group': group, 'collection': collection,
+                                                            'author': author})
 
 
 def update_item(request, slug, collection_id, item_id):
@@ -161,7 +165,7 @@ def delete_item(request, slug, collection_id, item_id):
     if request.method == 'POST':
         item.delete()
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
-    return render(request, 'includes/delete_item.html', {'group': group, 'collection': collection})
+    return render(request, 'includes/delete_item.html', {'group': group, 'collection': collection, 'author': author})
 
 
 def profile(request, username):
@@ -184,9 +188,10 @@ def author_collection(request, username, collection_id):
     paginator = Paginator(items, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
+    form = CommentForm()
     return render(request, 'web_collectors/author_collection.html', {
-        'page': page, 'paginator': paginator, 'author': author, 'collection': collection
-    })
+        'page': page, 'paginator': paginator, 'author': author, 'collection': collection, 'form': form,
+        'comments': collection.comments.all()})
 
 
 def author_collection_item(request, username, collection_id, item_id):
