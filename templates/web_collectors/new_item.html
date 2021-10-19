@@ -9,15 +9,22 @@
         <div class="col-md-8 p-5">
             <div class="card">
                 <div class="card-header">
-                    Создать новую запись
+                    {% if form.instance.id %}
+                        Редактировать запись
+                    {% else %}
+                        Создать новую запись
+                    {% endif %}
                 </div>
 
                 <hr>
                 <div class="card-body">
                     <form
                             method="POST" enctype="multipart/form-data"
-
+                            {% if form.instance.id %}
+                            action="{% url 'web_collectors:update_item' group.slug collection.id item.id %}"
+                            {% else %}
                             action="{% url 'web_collectors:new_item' group.slug collection.id %}"
+                            {% endif %}
 
                     >
 
@@ -39,8 +46,7 @@
                         {% endfor %}
 
                         <button type="submit" class="btn btn-outline-dark">
-                            Добавить
-
+                            Сохранить
                         </button>
                         </div>
                     </form>
