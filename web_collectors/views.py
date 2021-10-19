@@ -69,7 +69,7 @@ def update_collection(request, slug, collection_id):
     if request.method == "POST" and form.is_valid():
         form.save()
         return redirect('web_collectors:group', slug=slug)
-    return render(request, 'web_collectors/new.html', {
+    return render(request, 'web_collectors/edit_collection.html', {
         'form': form, 'group': group, 'collection': collection, 'author': author})
 
 
