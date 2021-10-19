@@ -3,12 +3,7 @@
 {% block header %} {{ collection.name }}{% endblock %}
 {% block content %}
     {% load thumbnail %}
-    {% if request.user == author %}
-        <a href="{% url 'web_collectors:new_item' group.slug collection.id %}" class="btn btn-dark btn-sm active"
-           role="button" aria-pressed="true">Новый
-            предмет коллекции</a>
 
-    {% endif %}
     <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -23,6 +18,9 @@
 
     <p>{{ collection.description }}</p>
     {% if request.user == author %}
+        <a href="{% url 'web_collectors:new_item' group.slug collection.id %}" class="btn btn-dark btn-sm active"
+           role="button" aria-pressed="true">Новый
+            предмет коллекции</a>
         <a href="{% url 'web_collectors:update_collection' group.slug collection.id %}"
            class="btn btn-secondary btn-sm active" role="button" aria-pressed="true">Редактировать</a>
         <a href="{% url 'web_collectors:delete_collection' group.slug collection.id %}"
