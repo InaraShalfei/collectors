@@ -18,22 +18,22 @@
 
     <p>{{ collection.description }}</p>
     {% if request.user == author %}
-        <a href="{% url 'web_collectors:new_item' group.slug collection.id %}" class="btn btn-dark btn-sm active"
+        <a href="{% url 'web_collectors:new_item' group.slug collection.id %}" class="btn btn-outline-dark btn-sm"
            role="button" aria-pressed="true">Новый
             предмет коллекции</a>
         <a href="{% url 'web_collectors:update_collection' group.slug collection.id %}"
-           class="btn btn-secondary btn-sm active" role="button" aria-pressed="true">Редактировать</a>
+           class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Редактировать</a>
         <a href="{% url 'web_collectors:delete_collection' group.slug collection.id %}"
-           class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Удалить</a>
+           class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Удалить</a>
     {% endif %}
-    {% include "includes/comments.html" %}
-    {% for item in page %}
+    <hr>
+        {% for item in page %}
         <a class="p-2 text-light" href="{% url 'web_collectors:item' group.slug collection.id item.id %}">
             <div class="d-block p-2 bg-danger text-white"><strong>{{ item }}</strong>
             </div>
         </a>
     {% endfor %}
-
+    {% include "includes/comments.html" %}
     {% if page.has_other_pages %}
         {% include "includes/paginator.html" with items=page paginator=paginator %}
     {% endif %}

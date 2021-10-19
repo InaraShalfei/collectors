@@ -5,41 +5,47 @@
 
 {% block content %}
     {% load user_filters %}
-
-
-    <hr>
-    <div class="card-body">
-        <form
-                method="POST" enctype="multipart/form-data"
-
-                action="{% url 'web_collectors:new_item' group.slug collection.id %}"
-
-        >
-
-            {% csrf_token %}
-
-            {% for field in form %}
-                <div
-                        class="form-group row"
-                        aria-required="{% if field.field.required %}true{% else %}false{% endif %}"
-                >
-                    <label for="{{ field.id_for_label }}" class="col-md-4 col-form-label text-md-right">
-                        {{ field.label }}{% if field.field.required %}<span class="required">*</span>{% endif %}</label>
-                    <div class="col-md-6">
-                        {{ field|addclass:"form-control" }}
-                    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8 p-5">
+            <div class="card">
+                <div class="card-header">
+                    Создать новую запись
                 </div>
-                <div class="card">
-            {% endfor %}
 
-            <button type="submit" class="btn btn-primary">
-                Добавить
+                <hr>
+                <div class="card-body">
+                    <form
+                            method="POST" enctype="multipart/form-data"
 
-            </button>
+                            action="{% url 'web_collectors:new_item' group.slug collection.id %}"
+
+                    >
+
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                            <div
+                                    class="form-group row"
+                                    aria-required="{% if field.field.required %}true{% else %}false{% endif %}"
+                            >
+                                <label for="{{ field.id_for_label }}" class="col-md-4 col-form-label text-md-right">
+                                    {{ field.label }}{% if field.field.required %}
+                                        <span class="required">*</span>{% endif %}</label>
+                                <div class="col-md-6">
+                                    {{ field|addclass:"form-control" }}
+                                </div>
+                            </div>
+                            <div class="card">
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-outline-dark">
+                            Добавить
+
+                        </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
-    </div>
-    </div>
-    </div>
+        </div>
     </div>
 {% endblock %}
