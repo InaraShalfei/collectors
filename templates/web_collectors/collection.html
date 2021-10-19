@@ -33,7 +33,9 @@
             </div>
         </a>
     {% endfor %}
+    {% if request.user != author %}
     {% include "includes/comments.html" %}
+    {%  endif %}
     {% if page.has_other_pages %}
         {% include "includes/paginator.html" with items=page paginator=paginator %}
     {% endif %}
