@@ -1,22 +1,29 @@
 {% extends "base.html" %}
-{% block title %}Редактировать запись{% endblock %}
+{% block title %}Коллекции{% endblock %}
 <h1>{% block header %}{% endblock %}</h1>
 
 
 {% block content %}
     {% load user_filters %}
-
     <div class="row justify-content-center">
         <div class="col-md-8 p-5">
             <div class="card">
                 <div class="card-header">
-                    Редактировать запись
+                    {% if form.instance.id %}
+                        Редактировать запись
+                    {% else %}
+                        Создать новую запись
+                    {% endif %}
                 </div>
                 <hr>
                 <div class="card-body">
                     <form
                             method="POST" enctype="multipart/form-data"
+                             {% if form.instance.id %}
                             action="{% url 'web_collectors:update_collection' group.slug collection.id %}"
+                            {% else %}
+                             action="{% url 'web_collectors:new_collection' %}"
+                            {% endif %}
                     >
 
                         {% csrf_token %}
@@ -38,7 +45,7 @@
                         {% endfor %}
 
                         <button type="submit" class="btn btn-outline-dark">
-                            Добавить
+                            Сохранить
                         </button>
                         </div>
                     </form>

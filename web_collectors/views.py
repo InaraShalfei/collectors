@@ -54,7 +54,7 @@ def create_collection(request):
         collection.owner = request.user
         form.save()
         group = collection.group
-        return redirect('web_collectors:collection', slug=group.slug, collection_name=collection)
+        return redirect('web_collectors:collection', slug=group.slug, collection_id=collection.id)
     return render(request, 'web_collectors/new.html', {'form': form})
 
 
@@ -68,8 +68,8 @@ def update_collection(request, slug, collection_id):
                           files=request.FILES or None, instance=collection)
     if request.method == "POST" and form.is_valid():
         form.save()
-        return redirect('web_collectors:group', slug=slug)
-    return render(request, 'web_collectors/edit_collection.html', {
+        return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
+    return render(request, 'web_collectors/new.html', {
         'form': form, 'group': group, 'collection': collection, 'author': author})
 
 
