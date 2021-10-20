@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 
 from web_collectors.forms import CollectionForm, ItemForm, CommentForm
-from web_collectors.models import Collection, CollectionGroup, CollectionItem, User, Follow
+from web_collectors.models import Collection, CollectionGroup, CollectionItem, User, Follow, Comment
 
 
 def index(request):
@@ -110,6 +110,19 @@ def add_comment(request, slug, collection_id):
         comment.collection = collection
         comment.save()
     return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
+
+
+@login_required
+def delete_comment(request, slug, collection_id, comment_id):
+    group = get_object_or_404(CollectionGroup, slug=slug)
+    collection = get_object_or_404(Collection, group=group, id=collection_id)
+    comment = get_object_or_404(Comment, collection=collection, id=comment_id)
+    author = comment.author
+    if request.method == 'POST':
+        comment.delete()
+        return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
+    return render(request, 'includes/delete_comment.html', {'group': group, 'collection': collection, 'author': author,
+                                                            'comment': comment})
 
 
 def collection_item(request, slug, collection_id, item_id):

@@ -15,7 +15,6 @@
     {% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
         <img src="/{{ collection.photo }}" width="{{ im.width }}" height="{{ im.height }}">
     {% endthumbnail %}
-
     <p>{{ collection.description }}</p>
     {% if request.user == author %}
         <a href="{% url 'web_collectors:new_item' group.slug collection.id %}" class="btn btn-outline-dark btn-sm"

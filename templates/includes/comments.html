@@ -25,6 +25,8 @@
             </a>
         </h5>
         <p>{{ comment.text }}</p>
+        <a href="{% url 'web_collectors:delete_comment' group.slug collection.id comment.id %}"
+           class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Удалить</a>
     </div>
 </div>
 {% endfor %}
