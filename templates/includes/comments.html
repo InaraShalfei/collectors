@@ -1,32 +1,36 @@
- {% load user_filters %}
+{% load user_filters %}
 
 {% if user.is_authenticated and request.user != author %}
-<div class="card my-4">
-    <form method="post" action="{% url 'web_collectors:add_comment' group.slug collection.id %}">
-        {% csrf_token %}
-        <h5 class="card-header">Добавить комментарий:</h5>
-        <div class="card-body">
-            <div class="form-group">
-                {{ form.as_p }}
+    <div class="card my-4">
+        <form method="post" action="{% url 'web_collectors:add_comment' group.slug collection.id %}">
+            {% csrf_token %}
+            <h5 class="card-header">Добавить комментарий:</h5>
+            <div class="card-body">
+                <div class="form-group">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-outline-dark">Отправить</button>
             </div>
-            <button type="submit" class="btn btn-outline-dark">Отправить</button>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 {% endif %}
 
 <!-- Комментарии -->
 {% for comment in comments %}
-<div class="media card mb-4">
-    <div class="media-body card-body">
-        <h5 class="mt-0">
-            <a href="{% url 'web_collectors:profile' comment.author.username %}">
-                {{ comment.author.username }}
-            </a>
-        </h5>
-        <p>{{ comment.text }}</p>
-        <a href="{% url 'web_collectors:delete_comment' group.slug collection.id comment.id %}"
-           class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Удалить</a>
+    <div class="media card mb-4">
+        <div class="media-body card-body">
+            <h5 class="mt-0">
+                <a href="{% url 'web_collectors:profile' comment.author.username %}">
+                    {{ comment.author.username }}
+                </a>
+            </h5>
+            <p>{{ comment.text }}</p>
+            {% if request.user == comment.author %}
+                <a href="{% url 'web_collectors:update_comment' group.slug collection.id comment.id %}"
+                   class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Редактировать</a>
+                <a href="{% url 'web_collectors:delete_comment' group.slug collection.id comment.id %}"
+                   class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Удалить</a>
+            {% endif %}
+        </div>
     </div>
-</div>
 {% endfor %}

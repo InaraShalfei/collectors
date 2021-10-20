@@ -58,6 +58,7 @@ def create_collection(request):
     return render(request, 'web_collectors/new.html', {'form': form})
 
 
+@login_required
 def update_collection(request, slug, collection_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
@@ -73,6 +74,7 @@ def update_collection(request, slug, collection_id):
         'form': form, 'group': group, 'collection': collection, 'author': author})
 
 
+@login_required
 def delete_collection(request, slug,  collection_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
@@ -125,6 +127,20 @@ def delete_comment(request, slug, collection_id, comment_id):
                                                             'comment': comment})
 
 
+@login_required
+def update_comment(request, slug, collection_id, comment_id):
+    group = get_object_or_404(CollectionGroup, slug=slug)
+    collection = get_object_or_404(Collection, group=group, id=collection_id)
+    comment = get_object_or_404(Comment, collection=collection, id=comment_id)
+    author = comment.author
+    form = CommentForm(request.POST or None, instance=comment)
+    if form.is_valid():
+        form.save()
+        return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
+    return render(request, 'includes/update_comment.html', {
+        'form': form, 'group': group, 'collection': collection, 'author': author, 'comment': comment})
+
+
 def collection_item(request, slug, collection_id, item_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
@@ -151,6 +167,7 @@ def create_item(request, slug, collection_id):
                                                             'author': author})
 
 
+@login_required
 def update_item(request, slug, collection_id, item_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
@@ -168,6 +185,7 @@ def update_item(request, slug, collection_id, item_id):
     })
 
 
+@login_required
 def delete_item(request, slug, collection_id, item_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)

@@ -1,0 +1,19 @@
+{% load user_filters %}
+
+{% if user.is_authenticated and request.user == author %}
+<div class="card my-4">
+    <form method="post" action="{% url 'web_collectors:update_comment' group.slug collection.id comment.id %}">
+        {% csrf_token %}
+        <h5 class="card-header">Редактировать комментарий:</h5>
+        <div class="card-body">
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-outline-dark">Отправить</button>
+            <a href="{% url 'web_collectors:collection' group.slug collection.id %}">
+                <div class="btn btn-primary">Отменить</div>
+            </a>
+        </div>
+    </form>
+</div>
+{% endif %}
