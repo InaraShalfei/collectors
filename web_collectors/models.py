@@ -64,6 +64,7 @@ class Comment(models.Model):
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField(max_length=200, blank=False)
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, related_name='comments', default=None)
     creation_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
