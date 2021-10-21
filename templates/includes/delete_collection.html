@@ -1,7 +1,8 @@
-{% load user_filters %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
 <form method="post" action="">
    {% csrf_token %}
      <h1>Вы уверены, что хотите удалить коллекцию?</h1><br>
      <input class="btn btn-danger" type="submit" value="Да" />
-     <a href="{% url 'web_collectors:group' group.slug %}"><div class="btn btn-primary">Отменить</div></a>
+     <a href="{% url 'web_collectors:collection' group.slug collection.id %}"><div class="btn btn-primary">Отменить</div></a>
 </form>
