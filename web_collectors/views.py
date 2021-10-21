@@ -83,8 +83,9 @@ def delete_collection(request, slug,  collection_id):
         return redirect('web_collectors:groups')
     if request.method == 'POST':
         collection.delete()
-        return redirect('web_collectors:group', slug=slug)
-    return render(request, 'includes/delete_collection.html', {'group': group, 'author': author})
+        return redirect('web_collectors:collection', slug=slug)
+    return render(request, 'includes/delete_collection.html', {'group': group, 'author': author,
+                                                               'collection': collection})
 
 
 def collection(request, slug, collection_id):
@@ -191,12 +192,11 @@ def delete_item(request, slug, collection_id, item_id):
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
     author = collection.owner
-    if request.user != author:
-        return redirect('web_collectors:group')
     if request.method == 'POST':
         item.delete()
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
-    return render(request, 'includes/delete_item.html', {'group': group, 'collection': collection, 'author': author})
+    return render(request, 'includes/delete_item.html', {'group': group, 'collection': collection, 'author': author,
+                                                         'item': item})
 
 
 def profile(request, username):

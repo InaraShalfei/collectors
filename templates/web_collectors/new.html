@@ -47,6 +47,9 @@
                         <button type="submit" class="btn btn-outline-dark">
                             Сохранить
                         </button>
+                    <button type="submit" class="btn btn-outline-dark">
+                    <a href="{% url 'web_collectors:collection' group.slug collection.id %}">Отменить</a>
+                        </button>
                         </div>
                     </form>
                 </div>

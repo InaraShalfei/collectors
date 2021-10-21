@@ -1,4 +1,5 @@
-{% load user_filters %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
 
 {% if user.is_authenticated and request.user == author %}
 <div class="card my-4">
