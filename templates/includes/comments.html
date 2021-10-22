@@ -17,34 +17,46 @@
 
 <!-- Комментарии -->
 {% for comment in comments %}
-    <div class="media card mb-4">
-        <div class="media-body card-body">
-            <h5 class="mt-0">
-                <a href="{% url 'web_collectors:profile' comment.author.username %}">
-                    {{ comment.author.username }}
-                </a>
-            </h5>
-            <p>{{ comment.text }}</p>
-            {% for child_comment in comment.comments.all %}
-                <div class="media card mb-4">
-                    <div class="media-body card-body">
-                        <h5 class="mt-0">
-                            <a href="{% url 'web_collectors:profile' child_comment.author.username %}">
-                                {{ child_comment.author.username }}
-                            </a>
-                        </h5>
-                        <p>{{ child_comment.text }}</p></div>
-                </div>
 
-            {% endfor %}
-            {% if request.user == comment.author %}
-                <a href="{% url 'web_collectors:update_comment' group.slug collection.id comment.id %}"
-                   class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Редактировать</a>
-                <a href="{% url 'web_collectors:delete_comment' group.slug collection.id comment.id %}"
-                   class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Удалить</a>
-            {% endif %}
-            <a href="{% url 'web_collectors:reply_comment' group.slug collection.id comment.id %}"
-               class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Ответить на комментарий</a>
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <p><a href="{% url 'web_collectors:profile' comment.author.username %}">
+                    <strong>{{ comment.author.username }}</strong></a></p>
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                            aria-expanded="true"
+                            aria-controls="collapseOne">
+                        {{ comment.text }}
+                    </button>
+                </h5>
+                {% if request.user == comment.author %}
+                    <a href="{% url 'web_collectors:update_comment' group.slug collection.id comment.id %}"
+                       class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Редактировать</a>
+                    <a href="{% url 'web_collectors:delete_comment' group.slug collection.id comment.id %}"
+                       class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Удалить</a>
+                {% endif %}
+                <a href="{% url 'web_collectors:reply_comment' group.slug collection.id comment.id %}"
+                   class="btn btn-outline-dark btn-sm" role="button" aria-pressed="true">Ответить на комментарий</a>
+            </div>
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                    {% for child_comment in comment.comments.all %}
+                        <div class="media card mb-4">
+                            <div class="media-body card-body">
+                                <h5 class="mt-0">
+                                    <a href="{% url 'web_collectors:profile' child_comment.author.username %}">
+                                        {{ child_comment.author.username }}
+                                    </a>
+                                </h5>
+                                <p>{{ child_comment.text }}</p></div>
+                        </div>
+
+                    {% endfor %}
+                </div>
+            </div>
         </div>
+
+
     </div>
 {% endfor %}
