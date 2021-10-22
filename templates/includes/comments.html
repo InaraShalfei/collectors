@@ -25,15 +25,26 @@
                 </a>
             </h5>
             <p>{{ comment.text }}</p>
+            {% for child_comment in comment.comments.all %}
+                <div class="media card mb-4">
+                    <div class="media-body card-body">
+                        <h5 class="mt-0">
+                            <a href="{% url 'web_collectors:profile' child_comment.author.username %}">
+                                {{ child_comment.author.username }}
+                            </a>
+                        </h5>
+                        <p>{{ child_comment.text }}</p></div>
+                </div>
+
+            {% endfor %}
             {% if request.user == comment.author %}
                 <a href="{% url 'web_collectors:update_comment' group.slug collection.id comment.id %}"
                    class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Редактировать</a>
                 <a href="{% url 'web_collectors:delete_comment' group.slug collection.id comment.id %}"
                    class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Удалить</a>
-                {%  else %}
-                 <a href="{% url 'web_collectors:reply_comment' group.slug collection.id comment.id %}"
-                   class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Ответить на комментарий</a>
             {% endif %}
+            <a href="{% url 'web_collectors:reply_comment' group.slug collection.id comment.id %}"
+               class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Ответить на комментарий</a>
         </div>
     </div>
 {% endfor %}

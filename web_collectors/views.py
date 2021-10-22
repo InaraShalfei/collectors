@@ -98,7 +98,8 @@ def collection(request, slug, collection_id):
     page = paginator.get_page(page_number)
     form = CommentForm()
     return render(request, 'web_collectors/collection.html', {
-        'page': page, 'paginator': paginator, 'group': group, 'collection': collection, 'author': author, 'form': form, 'comments': collection.comments.all()
+        'page': page, 'paginator': paginator, 'group': group, 'collection': collection, 'author': author, 'form': form,
+        'comments': collection.comments.filter(parent_comment=None)
     })
 
 
@@ -123,7 +124,7 @@ def reply_comment(request, slug, collection_id, comment_id):
     form = CommentForm(request.POST or None)
     if form.is_valid():
         reply = form.save(commit=False)
-        reply.author = collection.owner
+        reply.author = request.user
         reply.collection = collection
         reply.parent_comment = comment
         reply.save()
