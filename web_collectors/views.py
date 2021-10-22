@@ -116,6 +116,23 @@ def add_comment(request, slug, collection_id):
 
 
 @login_required
+def reply_comment(request, slug, collection_id, comment_id):
+    group = get_object_or_404(CollectionGroup, slug=slug)
+    collection = get_object_or_404(Collection, group=group, id=collection_id)
+    comment = get_object_or_404(Comment, collection=collection, id=comment_id)
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+        reply = form.save(commit=False)
+        reply.author = collection.owner
+        reply.collection = collection
+        reply.parent_comment = comment
+        reply.save()
+        return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
+    return render(request, 'includes/reply_comment.html', {
+        'form': form, 'group': group, 'collection': collection, 'comment': comment})
+
+
+@login_required
 def delete_comment(request, slug, collection_id, comment_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)

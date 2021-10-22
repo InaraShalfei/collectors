@@ -19,6 +19,7 @@ urlpatterns = [
     path('group/<slug:slug>/', views.collection_group, name='group'),
     path('group/<slug:slug>/<int:collection_id>', views.collection, name='collection'),
     path('group/<slug:slug>/<int:collection_id>/comment', views.add_comment, name='add_comment'),
+    path('group/<slug:slug>/<int:collection_id>/<int:comment_id>/reply', views.reply_comment, name='reply_comment'),
     path('group/<slug:slug>/<int:collection_id>/<int:comment_id>/delete_comment', views.delete_comment, name='delete_comment'),
     path('group/<slug:slug>/<int:collection_id>/<int:comment_id>/update_comment', views.update_comment, name='update_comment'),
     path('group/<slug:slug>/<int:collection_id>/edit', views.update_collection, name='update_collection'),

@@ -1,0 +1,20 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
+
+{% if user.is_authenticated %}
+<div class="card my-4">
+    <form method="post" action="{% url 'web_collectors:reply_comment' group.slug collection.id comment.id %}">
+        {% csrf_token %}
+        <h5 class="card-header">Ответить на комментарий:</h5>
+        <div class="card-body">
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-outline-dark">Отправить</button>
+            <a href="{% url 'web_collectors:collection' group.slug collection.id %}">
+                <div class="btn btn-primary">Отменить</div>
+            </a>
+        </div>
+    </form>
+</div>
+{% endif %}

@@ -30,6 +30,9 @@
                    class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Редактировать</a>
                 <a href="{% url 'web_collectors:delete_comment' group.slug collection.id comment.id %}"
                    class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Удалить</a>
+                {%  else %}
+                 <a href="{% url 'web_collectors:reply_comment' group.slug collection.id comment.id %}"
+                   class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Ответить на комментарий</a>
             {% endif %}
         </div>
     </div>
