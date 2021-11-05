@@ -1,14 +1,15 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from pytils.translit import slugify
 from sorl.thumbnail import get_thumbnail
 
 User = get_user_model()
 
 
 class CollectionGroup(models.Model):
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True)
-    description = models.TextField(max_length=300, blank=True)
+    name = models.CharField(max_length=100, verbose_name='Название группы')
+    slug = models.SlugField(unique=True, verbose_name='Адрес страницы с группой коллекций')
+    description = models.TextField(max_length=300, blank=True, verbose_name='Описание группы')
 
     class Meta:
         ordering = ['name']
@@ -16,14 +17,22 @@ class CollectionGroup(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)[:50]
+        super().save(*args, **kwargs)
+
 
 class Collection(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(max_length=300, blank=True)
-    creation_date = models.DateTimeField(auto_now_add=True)
-    photo = models.ImageField(upload_to='media/', blank=True, null=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections')
-    group = models.ForeignKey(CollectionGroup, on_delete=models.CASCADE, related_name='collections')
+    name = models.CharField(max_length=100, verbose_name='Название коллекции')
+    description = models.TextField(max_length=300, blank=True, verbose_name='Описание коллекции')
+    creation_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания коллекции')
+    photo = models.ImageField(upload_to='media/', blank=True, null=True,
+                              verbose_name='Фото коллекции')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections',
+                              verbose_name='Создатель коллекции')
+    group = models.ForeignKey(CollectionGroup, on_delete=models.CASCADE, related_name='collections',
+                              verbose_name='Группа коллекций')
 
     class Meta:
         order_with_respect_to = 'group'
@@ -33,7 +42,7 @@ class Collection(models.Model):
 
 
 class Photo(models.Model):
-    photo = models.ImageField(upload_to='media/photo/', blank=True, null=True)
+    photo = models.ImageField(upload_to='media/photo/', blank=True, null=True, verbose_name='Фото')
     position = models.IntegerField()
 
     class Meta:
@@ -46,12 +55,13 @@ class Photo(models.Model):
 
 
 class CollectionItem(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(max_length=200, blank=True)
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='collection_items')
-    creation_date = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=100, verbose_name='Название объекта коллекции')
+    description = models.TextField(max_length=200, blank=True, verbose_name='Описание объекта коллекции')
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='collection_items',
+                                   verbose_name='Коллекция объектов')
+    creation_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания объекта коллекции')
     position = models.IntegerField()
-    photo = models.ManyToManyField(Photo)
+    photo = models.ManyToManyField(Photo, verbose_name='Фото объекта коллекции')
 
     class Meta:
         ordering = ['position']
@@ -61,11 +71,13 @@ class CollectionItem(models.Model):
 
 
 class Comment(models.Model):
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='comments')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
-    text = models.TextField(max_length=200, blank=False)
-    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, related_name='comments', default=None, null=True)
-    creation_date = models.DateTimeField(auto_now_add=True)
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='comments',
+                                   verbose_name='Название коллекции')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', verbose_name='Автор коллекции')
+    text = models.TextField(max_length=200, blank=False, verbose_name='Текст комментария')
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, related_name='comments', default=None,
+                                       null=True, verbose_name='Ответный комментарий')
+    creation_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания комментария')
 
     class Meta:
         ordering = ['-creation_date']
@@ -75,8 +87,8 @@ class Comment(models.Model):
 
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followed')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followed', verbose_name='Подписчик')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers', verbose_name='Автор коллекции')
 
     class Meta:
         constraints = [
