@@ -8,7 +8,7 @@ User = get_user_model()
 
 class CollectionGroup(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название группы')
-    slug = models.SlugField(unique=True, verbose_name='Адрес страницы с группой коллекций')
+    slug = models.SlugField(unique=True, blank=True, max_length=50, verbose_name='Адрес страницы с группой коллекций')
     description = models.TextField(max_length=300, blank=True, verbose_name='Описание группы')
 
     class Meta:
