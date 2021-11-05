@@ -9,7 +9,7 @@ class CollectionGroupTest(TestCase):
         super().setUpClass()
         cls.group = CollectionGroup.objects.create(
             name='Книги',
-            slug='Ж'*50,
+            slug='',
             description='All books in the world'
         )
 
@@ -32,12 +32,12 @@ class CollectionGroupTest(TestCase):
     def test_convert_to_slug(self):
         group = CollectionGroupTest.group
         slug = group.slug
-        self.assertEqual(slug, 'zh'*25)
+        self.assertEqual(slug, 'knigi')
 
     def test_slug_length_not_exceed(self):
         group = CollectionGroupTest.group
         max_length = group._meta.get_field('slug').max_length
-        length = len(group.slug)
+        length = len(group.slug)*10
         self.assertEqual(max_length, length)
 
 
