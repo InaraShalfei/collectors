@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from web_collectors.models import CollectionGroup, Collection, User
+from web_collectors.models import CollectionGroup, Collection, User, CollectionItem
 
 
 class CollectionGroupTest(TestCase):
@@ -74,4 +74,43 @@ class CollectionTest(TestCase):
         collection = CollectionTest.collection
         expected_name = collection.name
         self.assertEqual(expected_name, str(collection))
+
+
+class CollectionItemTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.group = CollectionGroup.objects.create(
+            name='Книги',
+            slug='',
+            description='All books in the world'
+        )
+        cls.user = User.objects.create_user(username='auth')
+        cls.collection = Collection.objects.create(
+            name='Russian authors',
+            description='All books of russian authors',
+            owner=cls.user,
+            group=cls.group
+        )
+        cls.collection_item = CollectionItem.objects.create(
+            name='Pushkin poems',
+            description='Poems of A.S.Pushkin',
+            collection=cls.collection
+        )
+
+    def test_verbose_names(self):
+        collection_item = CollectionItemTest.collection_item
+        field_verboses = {
+            'name': 'Название объекта коллекции',
+            'description': 'Описание объекта коллекции',
+            'collection': 'Коллекция объектов'
+        }
+        for field, expected_value in field_verboses.items():
+            with self.subTest(field=field):
+                self.assertEqual(collection_item._meta.get_field(field).verbose_name, expected_value)
+
+    def test_name_field_is_str(self):
+        collection_item = CollectionItemTest.collection_item
+        expected_name = collection_item.name
+        self.assertEqual(expected_name, str(collection_item))
 
