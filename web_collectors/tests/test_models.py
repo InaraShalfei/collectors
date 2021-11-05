@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from web_collectors.models import CollectionGroup
+from web_collectors.models import CollectionGroup, Collection, User
 
 
 class CollectionGroupTest(TestCase):
@@ -40,4 +40,38 @@ class CollectionGroupTest(TestCase):
         length = len(group.slug)*10
         self.assertEqual(max_length, length)
 
+
+class CollectionTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.group = CollectionGroup.objects.create(
+            name='Книги',
+            slug='',
+            description='All books in the world'
+        )
+        cls.user = User.objects.create_user(username='auth')
+        cls.collection = Collection.objects.create(
+            name='Russian authors',
+            description='All books of russian authors',
+            owner=cls.user,
+            group=cls.group
+        )
+
+    def test_verbose_names(self):
+        collection = CollectionTest.collection
+        field_verboses = {
+            'name': 'Название коллекции',
+            'description': 'Описание коллекции',
+            'owner': 'Создатель коллекции',
+            'group': 'Группа коллекций'
+        }
+        for field, expected_value in field_verboses.items():
+            with self.subTest(field=field):
+                self.assertEqual(collection._meta.get_field(field).verbose_name, expected_value)
+
+    def test_name_field_is_str(self):
+        collection = CollectionTest.collection
+        expected_name = collection.name
+        self.assertEqual(expected_name, str(collection))
 
