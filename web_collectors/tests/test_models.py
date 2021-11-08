@@ -95,7 +95,8 @@ class CollectionItemTest(TestCase):
         cls.collection_item = CollectionItem.objects.create(
             name='Pushkin poems',
             description='Poems of A.S.Pushkin',
-            collection=cls.collection
+            collection=cls.collection,
+            position=0
         )
 
     def test_verbose_names(self):
