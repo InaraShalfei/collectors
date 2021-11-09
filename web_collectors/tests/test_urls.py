@@ -18,6 +18,7 @@ class CollectionUrlsTest(TestCase):
             description='Все игрушки мира'
         )
         cls.user = User.objects.create_user(username='Boba')
+        cls.user2 = User.objects.create_user(username='Vera')
         cls.collection = Collection.objects.create(
             name='Russian authors',
             description='All books of russian authors',
@@ -26,7 +27,7 @@ class CollectionUrlsTest(TestCase):
         )
         cls.comment = Comment.objects.create(
             collection=cls.collection,
-            author=cls.user,
+            author=cls.user2,
             text='Cool!',
         )
         cls.collection_item = CollectionItem.objects.create(
@@ -58,7 +59,7 @@ class CollectionUrlsTest(TestCase):
 
         for address in url_names:
             with self.subTest(adress=address):
-                response = self.guest_client.get(address)
+                response = self.authorized_client.get(address)
                 self.assertEqual(response.status_code, 200)
 
 
