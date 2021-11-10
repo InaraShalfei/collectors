@@ -39,13 +39,12 @@ class CollectionUrlsTest(TestCase):
 
     def setUp(self):
         self.guest_client = Client()
-        self.user = User.objects.create(username='User')
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
 
     def test_urls_exist_at_desired_location_for_guest_client(self):
         url_names = ['', '/groups/',  '/all/', '/group/knigi/', '/group/knigi/1', '/group/knigi/1/1',
-                     '/profile/Boba/', '/profile/Boba/1', '/profile/Boba/1/1',]
+                     '/profile/Boba/', '/profile/Boba/1', '/profile/Boba/1/1']
 
         for address in url_names:
             with self.subTest(adress=address):
@@ -53,7 +52,7 @@ class CollectionUrlsTest(TestCase):
                 self.assertEqual(response.status_code, 200)
 
     def test_urls_exist_at_desired_location_for_authorized_client(self):
-        url_names = ['/new/', '/group/knigi/1/delete', '/group/knigi/1/1/reply',
+        url_names = ['/new_collection/', '/group/knigi/1/delete', '/group/knigi/1/1/reply',
                      '/group/knigi/1/1/delete_comment', '/group/knigi/1/1/update_comment',
                      '/group/knigi/1/new', '/group/knigi/1/1/delete',  '/follow/']
 
@@ -62,25 +61,41 @@ class CollectionUrlsTest(TestCase):
                 response = self.authorized_client.get(address)
                 self.assertEqual(response.status_code, 200)
 
+    def test_pages_for_guest_client_have_correct_templates(self):
+        templates_url_names = {
+        'web_collectors/index.html': '',
+        'web_collectors/groups.html': '/groups/',
+        'web_collectors/all_authors.html': '/all/',
+        'web_collectors/group.html': '/group/knigi/',
+        'web_collectors/collection.html': '/group/knigi/1',
+        'web_collectors/item.html': '/group/knigi/1/1',
+        'web_collectors/profile.html': '/profile/Boba/',
+        'web_collectors/author_collection.html': '/profile/Boba/1',
+        'web_collectors/author_collection_item.html': '/profile/Boba/1/1',
+        }
+        for template, address in templates_url_names.items():
+            with self.subTest(address=address):
+                response = self.guest_client.get(address)
+                self.assertTemplateUsed(response, template)
 
-
-
-        # templates_url_names = {
-        #     'web_collectors/index.html': '',
-        #     'web_collectors/groups.html': '/groups/',
-        #     'web_collectors/all_authors.html': '/all/',
-        #     'web_collectors/group.html': '/group/knigi/',
-        #     # 'web_collectors/new.html': '/new/',
-        #     # 'includes/delete_collection.html': '/group/knigi/1/delete',
-        #     'web_collectors/collection.html': '/group/knigi/1',
-        #     # 'includes/reply_comment.html': '/group/knigi/1/1/reply',
-        #     # 'includes/delete_comment.html': '/group/knigi/1/1/delete_comment',
-        #     # 'includes/update_comment.html': '/group/knigi/1/1/update_comment',
-        #     'web_collectors/item.html': '/group/knigi/1/1',
-        #     # 'web_collectors/new_item.html': '/group/knigi/1/new',
-        #     # 'includes/delete_item.html': '/group/knigi/1/1/delete',
-        #     'web_collectors/profile.html': '/profile/Boba/',
-        #     'web_collectors/author_collection.html': '/profile/Boba/1',
-        #     'web_collectors/author_collection_item.html': '/profile/Boba/1/1',
-        #     # 'web_collectors/follow.html': '/follow/',
-        # }
+    def test_pages_for_authorized_client_have_correct_templates(self):
+        templates_url_names = {
+        'web_collectors/new.html': '/new_collection/',
+        'includes/delete_collection.html': '/group/knigi/1/delete',
+        'includes/reply_comment.html': '/group/knigi/1/1/reply',
+        'includes/delete_comment.html': '/group/knigi/1/1/delete_comment',
+        'includes/update_comment.html': '/group/knigi/1/1/update_comment',
+        'web_collectors/new_item.html': '/group/knigi/1/new',
+        'includes/delete_item.html': '/group/knigi/1/1/delete',
+        'web_collectors/follow.html': '/follow/',
+        }
+        self.new_collection = Collection.objects.create(
+            name='English authors',
+            description='All books of english authors',
+            owner=self.user,
+            group=self.group
+        )
+        for template, address in templates_url_names.items():
+            with self.subTest(address=address):
+                response = self.authorized_client.get(address)
+                self.assertTemplateUsed(response, template)
