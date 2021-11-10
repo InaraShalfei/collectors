@@ -93,3 +93,13 @@ class CollectionUrlsTest(TestCase):
             with self.subTest(address=address):
                 response = self.authorized_client.get(address)
                 self.assertTemplateUsed(response, template)
+
+    def test_redirects_for_anonymous(self):
+        url_names = ['/group/knigi/1/comment', '/new_collection/', '/group/knigi/1/edit',
+                     '/group/knigi/1/delete', '/group/knigi/1/1/reply', '/group/knigi/1/1/delete_comment',
+                     '/group/knigi/1/1/update_comment', '/group/knigi/1/new', '/group/knigi/1/1/update',
+                     '/group/knigi/1/1/delete', '/follow/', '/profile/Boba/follow', '/profile/Boba/unfollow']
+        for address in url_names:
+            with self.subTest(address=address):
+                response = self.guest_client.get(address, follow=True)
+                self.assertRedirects(response, f'/auth/login/?next={address}')
