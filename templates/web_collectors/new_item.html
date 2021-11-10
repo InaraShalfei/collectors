@@ -21,10 +21,9 @@
                     <form
                             method="POST" enctype="multipart/form-data"
                             {% if form.instance.id %}
-                            action="{% url 'web_collectors:update_item' group.slug collection.id item.id %}"
-
+                                action="{% url 'web_collectors:update_item' group.slug collection.id item.id %}"
                             {% else %}
-                            action="{% url 'web_collectors:new_item' group.slug collection.id %}"
+                                action="{% url 'web_collectors:new_item' group.slug collection.id %}"
                             {% endif %}
 
                     >
@@ -49,8 +48,14 @@
                         <button type="submit" class="btn btn-outline-dark">
                             Сохранить
                         </button>
-                    <button type="submit" class="btn btn-outline-dark">
-                    <a href="{% url 'web_collectors:item' group.slug collection.id item.id %}">Отменить</a>
+                        <button type="submit" class="btn btn-outline-dark">
+                            <a
+                                {% if form.instance.id %}
+                                    href="{% url 'web_collectors:item' group.slug collection.id item.id %}"
+                                {% else %}
+                                    href="{% url 'web_collectors:collection' group.slug collection.id %}"
+                                {% endif %}
+                            >Отменить</a>
                         </button>
                         </div>
                     </form>

@@ -20,7 +20,7 @@ def index(request):
 
 
 def all_authors(request):
-    users = User.objects.all()
+    users = User.objects.get_queryset().order_by('id')
     paginator = Paginator(users, settings.ITEMS_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -248,13 +248,13 @@ def author_collection_item(request, username, collection_id, item_id):
     collection = get_object_or_404(Collection, owner=author, id=collection_id)
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
     return render(request, 'web_collectors/author_collection_item.html', {
-        'author': author, 'item': item, 'collection': collection}
+        'user': author, 'item': item, 'collection': collection}
                   )
 
 
 @login_required
 def follow_index(request):
-    followed = request.user.followed.all()
+    followed = request.user.followed.get_queryset().order_by('id')
     paginator = Paginator(followed, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
