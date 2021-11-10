@@ -89,12 +89,6 @@ class CollectionUrlsTest(TestCase):
         'includes/delete_item.html': '/group/knigi/1/1/delete',
         'web_collectors/follow.html': '/follow/',
         }
-        self.new_collection = Collection.objects.create(
-            name='English authors',
-            description='All books of english authors',
-            owner=self.user,
-            group=self.group
-        )
         for template, address in templates_url_names.items():
             with self.subTest(address=address):
                 response = self.authorized_client.get(address)
