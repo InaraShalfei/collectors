@@ -45,24 +45,35 @@ class CollectionViewsTest(TestCase):
 
     def test_pages_use_correct_template(self):
         template_page_names = {
-        'web_collectors / index.html': reverse('web_collectors:index'),
+        'web_collectors/index.html': reverse('web_collectors:index'),
         'web_collectors/groups.html': reverse('web_collectors:groups'),
         'web_collectors/all_authors.html': reverse('web_collectors:all_authors'),
-        'web_collectors/group.html': reverse('web_collectors:group'),
-        'web_collectors/collection.html': reverse('web_collectors:collection'),
-        'web_collectors/item.html': reverse('web_collectors:item'),
-        'web_collectors/profile.html': reverse('web_collectors:profile'),
-        'web_collectors/author_collection.html': reverse('web_collectors:author_collection'),
-        'web_collectors/author_collection_item.html': reverse('web_collectors:author_collection_item'),
+        'web_collectors/group.html': reverse('web_collectors:group', kwargs={'slug': 'knigi'}),
+        'web_collectors/collection.html': reverse('web_collectors:collection', kwargs={
+            'slug': 'knigi', 'collection_id': 1}),
+        'web_collectors/item.html': reverse('web_collectors:item', kwargs={
+            'slug': 'knigi', 'collection_id': 1, 'item_id': 1}),
+        'web_collectors/profile.html': reverse('web_collectors:profile', kwargs={'username': 'Boba'}),
+        'web_collectors/author_collection.html': reverse('web_collectors:author_collection', kwargs={
+            'username': 'Boba', 'collection_id': 1}),
+        'web_collectors/author_collection_item.html': reverse('web_collectors:author_collection_item', kwargs={
+                                                                  'username': 'Boba', 'collection_id': 1,
+                                                              'item_id': 1}),
         'web_collectors/new.html': reverse('web_collectors:new_collection'),
-        'includes/delete_collection.html': reverse('web_collectors:delete_collection'),
-        'includes/reply_comment.html': reverse('web_collectors:reply_comment'),
-        'includes/delete_comment.html': reverse('web_collectors:delete_comment'),
-        'includes/update_comment.html': reverse('web_collectors:update_comment'),
-        'web_collectors/new_item.html': reverse('web_collectors:new_item'),
-        'includes/delete_item.html': reverse('web_collectors:delete_item'),
+        'includes/delete_collection.html': reverse('web_collectors:delete_collection', kwargs={
+            'slug': 'knigi', 'collection_id': 1}),
+        'includes/reply_comment.html': reverse('web_collectors:reply_comment', kwargs={
+            'slug': 'knigi', 'collection_id': 1, 'comment_id': 1}),
+        'includes/delete_comment.html': reverse('web_collectors:delete_comment', kwargs={
+            'slug': 'knigi', 'collection_id': 1, 'comment_id': 1}),
+        'includes/update_comment.html': reverse('web_collectors:update_comment', kwargs={
+            'slug': 'knigi', 'collection_id': 1, 'comment_id': 1}),
+        'web_collectors/new_item.html': reverse('web_collectors:new_item', kwargs={'slug': 'knigi',
+                                                                                   'collection_id': 1}),
+        'includes/delete_item.html': reverse('web_collectors:delete_item', kwargs={
+            'slug': 'knigi', 'collection_id': 1, 'item_id': 1}),
         'web_collectors/follow.html': reverse('web_collectors:follow_index'),
-        'includes:unfollow.html': reverse('web_collectors:profile_unfollow'),
+        'includes/unfollow.html': reverse('web_collectors:profile_unfollow', kwargs={'username': 'Boba'}),
         }
         for template, reverse_name in template_page_names.items():
             with self.subTest(reverse_name=reverse_name):
