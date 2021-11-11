@@ -88,6 +88,7 @@ class CollectionUrlsTest(TestCase):
         'web_collectors/new_item.html': '/group/knigi/1/new',
         'includes/delete_item.html': '/group/knigi/1/1/delete',
         'web_collectors/follow.html': '/follow/',
+        'includes/unfollow.html': '/profile/Boba/unfollow',
         }
         for template, address in templates_url_names.items():
             with self.subTest(address=address):
