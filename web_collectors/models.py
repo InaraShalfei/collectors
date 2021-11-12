@@ -35,7 +35,7 @@ class Collection(models.Model):
                               verbose_name='Группа коллекций')
 
     class Meta:
-        order_with_respect_to = 'group'
+        ordering = ['-creation_date']
 
     def __str__(self):
         return self.name
