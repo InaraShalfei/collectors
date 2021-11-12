@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+from django.urls import reverse
 
 
 class StaticPageTest(TestCase):
@@ -12,3 +13,8 @@ class StaticPageTest(TestCase):
     def test_about_url_uses_correct_template(self):
         response = self.guest_client.get('/about/')
         self.assertTemplateUsed(response, 'static_pages/about.html')
+
+    def test_about_url_accessible_by_its_name(self):
+        response = self.guest_client.get(reverse('static_pages:about'))
+        self.assertEqual(response.status_code, 200)
+
