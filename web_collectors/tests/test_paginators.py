@@ -1,4 +1,5 @@
 import datetime
+from collections import namedtuple
 
 from django.test import TestCase, Client
 from django.urls import reverse
@@ -107,12 +108,41 @@ class PaginatorViewsTest(TestCase):
         self.assertEqual(len(response.context['page']), 1)
 
 
+   # def test_homepage_has_correct_context(self):
+   #      response = self.guest_client.get(reverse('web_collectors:index'))
+   #      page_collections = response.context['page']
+   #      first_record = page_collections[0]
+   #      first_record_name = first_record.name
+   #      last_record = page_collections[9]
+   #      last_record_name = last_record.name
+   #      self.assertEqual(first_record_name, 'Russian poems')
+   #      self.assertEqual(last_record_name, 'Russian authors3')
+
+
     def test_homepage_has_correct_context(self):
-        response = self.guest_client.get(reverse('web_collectors:index'))
-        page_collections = response.context['page']
-        first_record = page_collections[0]
-        first_record_name = first_record.name
-        last_record = page_collections[9]
-        last_record_name = last_record.name
-        self.assertEqual(first_record_name, 'Russian poems')
-        self.assertEqual(last_record_name, 'Russian authors3')
+        Address = namedtuple('Address', 'address text1 text2')
+        addresses = [((reverse('web_collectors:index')), 'Russian poems', 'Russian authors3'),
+                     ((reverse('web_collectors:groups')), 'Книги0', 'Книги7'),
+                    # (reverse('web_collectors:groups'))
+                    ]
+        for address, text1, text2 in addresses:
+            with self.subTest(address=address):
+                new_address = Address(address, text1, text2)
+                response = self.guest_client.get(new_address.address)
+                page_collections = response.context['page']
+                first_record = page_collections[0]
+                first_record_name = first_record.name
+                last_record = page_collections[9]
+                last_record_name = last_record.name
+                self.assertEqual(first_record_name, new_address.text1)
+                self.assertEqual(last_record_name, new_address.text2)
+
+
+# addresses = [(reverse('web_collectors:group', kwargs={'slug': 'poems'})),
+#              (reverse('web_collectors:collection', kwargs={'slug': 'poems', 'collection_id': 13})),
+#              (reverse('web_collectors:author_collection', kwargs={'username': 'Ira', 'collection_id': 13})),
+#              (reverse('web_collectors:follow_index')),
+#              (reverse('web_collectors:profile', kwargs={'username': 'Ira'})),
+#              (reverse('web_collectors:index')),
+#              (reverse('web_collectors:all_authors')),
+#              (reverse('web_collectors:groups'))]
