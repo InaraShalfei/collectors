@@ -85,6 +85,28 @@ class PaginatorViewsTest(TestCase):
         response = self.guest_client.get(reverse('web_collectors:profile', kwargs={'username': 'Ira'}))
         self.assertEqual(len(response.context['page']), 5)
 
+    def test_follow_last_page_has_2_records(self):
+        response = self.authorized_client.get(reverse('web_collectors:follow_index') + '?page=2')
+        self.assertEqual(len(response.context['page']), 2)
+
+    def test_last_page_has_1_record(self):
+        addresses = [(reverse('web_collectors:collection', kwargs={'slug': 'poems', 'collection_id': 13})),
+                     (reverse('web_collectors:author_collection', kwargs={'username': 'Ira', 'collection_id': 13}))]
+        for address in addresses:
+            with self.subTest(address=address):
+                response = self.authorized_client.get(address + '?page=2')
+                self.assertEqual(len(response.context['page']), 1)
+
+    def test_group_last_page_has_1_record(self):
+        response = self.authorized_client.get(reverse('web_collectors:group', kwargs={'slug': 'poems'}) + '?page=5')
+        self.assertEqual(len(response.context['page']), 1)
+
+    def test_profile_last_page_has_1_record(self):
+        response = self.authorized_client.get(reverse('web_collectors:author_collection',
+                                                      kwargs={'username': 'Ira', 'collection_id': 13}) + '?page=3')
+        self.assertEqual(len(response.context['page']), 1)
+
+
     def test_homepage_has_correct_context(self):
         response = self.guest_client.get(reverse('web_collectors:index'))
         page_collections = response.context['page']
