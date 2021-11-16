@@ -180,5 +180,5 @@ class PaginatorViewsTest(TestCase):
         first_record_author = first_record.author
         last_record = page_users[2]
         last_record_author = last_record.author
-        self.assertEqual(first_record_author, text1)
-        self.assertEqual(last_record_author, text2)
+        self.assertEqual(first_record_author.username, text1)
+        self.assertEqual(last_record_author.username, text2)
