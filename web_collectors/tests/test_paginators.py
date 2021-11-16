@@ -107,23 +107,10 @@ class PaginatorViewsTest(TestCase):
                                                       kwargs={'username': 'Ira', 'collection_id': 13}) + '?page=3')
         self.assertEqual(len(response.context['page']), 1)
 
-
-   # def test_homepage_has_correct_context(self):
-   #      response = self.guest_client.get(reverse('web_collectors:index'))
-   #      page_collections = response.context['page']
-   #      first_record = page_collections[0]
-   #      first_record_name = first_record.name
-   #      last_record = page_collections[9]
-   #      last_record_name = last_record.name
-   #      self.assertEqual(first_record_name, 'Russian poems')
-   #      self.assertEqual(last_record_name, 'Russian authors3')
-
-
-    def test_homepage_has_correct_context(self):
+    def test_pages_with_ten_records_have_correct_context(self):
         Address = namedtuple('Address', 'address text1 text2')
         addresses = [((reverse('web_collectors:index')), 'Russian poems', 'Russian authors3'),
                      ((reverse('web_collectors:groups')), 'Книги0', 'Книги7'),
-                    # (reverse('web_collectors:groups'))
                     ]
         for address, text1, text2 in addresses:
             with self.subTest(address=address):
@@ -137,12 +124,61 @@ class PaginatorViewsTest(TestCase):
                 self.assertEqual(first_record_name, new_address.text1)
                 self.assertEqual(last_record_name, new_address.text2)
 
+    def test_pages_with_three_records_have_correct_context(self):
+        Url = namedtuple('Url', 'address text1 text2')
+        urls = [((reverse('web_collectors:group', kwargs={'slug': 'poems'})), 'Russian poems', 'Russian authors10'),
+                ((reverse('web_collectors:collection', kwargs={'slug': 'poems', 'collection_id': 13})),
+                 'Pushkin poems0', 'Pushkin poems2'),
+                ((reverse('web_collectors:author_collection', kwargs={'username': 'Ira', 'collection_id': 13})),
+                 'Pushkin poems0', 'Pushkin poems2')]
+        for address, text1, text2 in urls:
+            with self.subTest(address=address):
+                new_url = Url(address, text1, text2)
+                response = self.authorized_client.get(new_url.address)
+                page_collections = response.context['page']
+                first_record = page_collections[0]
+                first_record_name = first_record.name
+                last_record = page_collections[2]
+                last_record_name = last_record.name
+                self.assertEqual(first_record_name, new_url.text1)
+                self.assertEqual(last_record_name, new_url.text2)
 
-# addresses = [(reverse('web_collectors:group', kwargs={'slug': 'poems'})),
-#              (reverse('web_collectors:collection', kwargs={'slug': 'poems', 'collection_id': 13})),
-#              (reverse('web_collectors:author_collection', kwargs={'username': 'Ira', 'collection_id': 13})),
-#              (reverse('web_collectors:follow_index')),
-#              (reverse('web_collectors:profile', kwargs={'username': 'Ira'})),
-#              (reverse('web_collectors:index')),
-#              (reverse('web_collectors:all_authors')),
-#              (reverse('web_collectors:groups'))]
+    def test_all_groups_page_has_correct_context(self):
+        UrlAddress = namedtuple('Url', 'address text1 text2')
+        new_url_address = UrlAddress((reverse('web_collectors:all_authors')), 'Visitor', 'Boba - 3')
+        address, text1, text2 = new_url_address
+        response = self.guest_client.get(address)
+        page_collections = response.context['page']
+        first_record = page_collections[0]
+        first_record_username = first_record.username
+        last_record = page_collections[9]
+        last_record_username = last_record.username
+        self.assertEqual(first_record_username, text1)
+        self.assertEqual(last_record_username, text2)
+
+    def test_profile_page_has_correct_context(self):
+        PageAddress = namedtuple('PageAddress', 'address text1 text2')
+        page_address = PageAddress((reverse('web_collectors:profile', kwargs={'username': 'Ira'})), 'Russian poems',
+                                   'Russian authors8')
+        address, text1, text2 = page_address
+        response = self.guest_client.get(address)
+        page_collections = response.context['page']
+        first_record = page_collections[0]
+        first_record_name = first_record.name
+        last_record = page_collections[4]
+        last_record_name = last_record.name
+        self.assertEqual(first_record_name, text1)
+        self.assertEqual(last_record_name, text2)
+
+    def test_follow_page_has_correct_context(self):
+        FullAddress = namedtuple('FullAddress', 'address text1 text2')
+        full_address = FullAddress((reverse('web_collectors:follow_index')), 'Borya0', 'Borya2')
+        address, text1, text2 = full_address
+        response = self.authorized_client.get(address)
+        page_users = response.context['page']
+        first_record = page_users[0]
+        first_record_author = first_record.author
+        last_record = page_users[2]
+        last_record_author = last_record.author
+        self.assertEqual(first_record_author, text1)
+        self.assertEqual(last_record_author, text2)
