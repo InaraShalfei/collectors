@@ -11,6 +11,7 @@ from web_collectors.models import CollectionGroup, User, Collection, CollectionI
 class PaginatorViewsTest(TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.serialized_rollback = True
         super().setUpClass()
         cls.user = User.objects.create_user(username='Visitor')
         for i in range(5):
