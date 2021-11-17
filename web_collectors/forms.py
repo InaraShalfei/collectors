@@ -10,10 +10,9 @@ class CollectionForm(forms.ModelForm):
 
     def clean_data(self):
         name = self.cleaned_data['name']
-        description = self.cleaned_data['description']
         if '' in name:
             raise forms.ValidationError('Необходимо заполнить данное поле формы!')
-        return name, description
+        return name
 
 
 class ItemForm(forms.ModelForm):
@@ -25,10 +24,9 @@ class ItemForm(forms.ModelForm):
 
     def clean_data(self):
         name = self.cleaned_data['name']
-        description = self.cleaned_data['description']
         if '' in name:
             raise forms.ValidationError('Необходимо заполнить данное поле формы!')
-        return name, description
+        return name
 
 
 class CommentForm(forms.ModelForm):
