@@ -6,8 +6,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings, TestCase, Client
 from django.urls import reverse
 
-from web_collectors.forms import CollectionForm
-from web_collectors.models import Collection, CollectionGroup, User
+from web_collectors.forms import CollectionForm, CommentForm
+from web_collectors.models import Collection, CollectionGroup, User, Comment
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
@@ -32,7 +32,6 @@ class CollectionFormTest(TestCase):
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def setUp(self):
-        self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
 
@@ -94,6 +93,51 @@ class CollectionFormTest(TestCase):
         self.assertEqual(Collection.objects.count(), collection_count)
         self.assertFormError(response, 'form', 'name', 'Обязательное поле.')
         self.assertEqual(response.status_code, 200)
+
+
+class CommentFormTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.serialized_rollback = True
+        super().setUpClass()
+        cls.user = User.objects.create_user(username='User1')
+        group = CollectionGroup.objects.create(
+            name='Фильмы-2',
+            slug='films-2',
+            description='All films in the world -2'
+        )
+        Collection.objects.create(
+            name='Russian poems',
+            description='All Russian poems',
+            owner=cls.user,
+            group=group)
+
+        cls.form = CommentForm()
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
+
+    def setUp(self):
+        self.authorized_client = Client()
+        self.authorized_client.force_login(self.user)
+
+    def test_create_comment(self):
+        comment_count = Comment.objects.count()
+        form_data = {
+            'text': 'Super-puper!'
+        }
+        response = self.authorized_client.post(
+            reverse('web_collectors:add_comment',
+                    kwargs={'slug': 'films-2', 'collection_id': 1}),
+            data=form_data,
+            follow=True
+        )
+        self.assertRedirects(response, reverse('web_collectors:collection', kwargs={'slug': 'films-2', 'collection_id': 1}))
+        self.assertEqual(Comment.objects.count(), comment_count+1)
+
+
 
 
 
