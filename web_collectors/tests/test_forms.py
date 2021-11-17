@@ -16,19 +16,13 @@ TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 class CollectionFormTest(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.user = User.objects.create_user(username='User')
+        cls.serialized_rollback = True
         super().setUpClass()
-        group = CollectionGroup.objects.create(
+        cls.user = User.objects.create_user(username='User')
+        CollectionGroup.objects.create(
             name='Фильмы',
             slug='films',
             description='All films in the world'
-        )
-        user = User.objects.create_user(username='Mary')
-        cls.collection = Collection.objects.create(
-            name='Russian films',
-            description='All films of russian authors',
-            owner=user,
-            group=group
         )
         cls.form = CollectionForm()
 
@@ -68,8 +62,40 @@ class CollectionFormTest(TestCase):
             data=form_data,
             follow=True
         )
-        self.assertRedirects(response, reverse('web_collectors:collection', kwargs={'slug': 'films', 'collection_id': 2}))
+        self.assertRedirects(response, reverse('web_collectors:collection', kwargs={'slug': 'films', 'collection_id': 1}))
         self.assertEqual(Collection.objects.count(), collection_count+1)
+
+    def test_cant_create_collection_without_name_and_description(self):
+        collection_count = Collection.objects.count()
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x02\x00'
+            b'\x01\x00\x80\x00\x00\x00\x00\x00'
+            b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
+            b'\x00\x00\x00\x2C\x00\x00\x00\x00'
+            b'\x02\x00\x01\x00\x00\x02\x02\x0C'
+            b'\x0A\x00\x3B'
+        )
+        uploaded = SimpleUploadedFile(
+            name='small.gif',
+            content=small_gif,
+            content_type='image/gif'
+        )
+        form_data = {
+            'name': '',
+            'description': 'New cool film',
+            'photo': uploaded,
+            'group': 1
+        }
+        response = self.authorized_client.post(
+            reverse('web_collectors:new_collection'),
+            data=form_data,
+            follow=True
+        )
+        self.assertEqual(Collection.objects.count(), collection_count)
+        self.assertFormError(response, 'form', 'name', 'Обязательное поле.')
+        self.assertEqual(response.status_code, 200)
+
+
 
 
 
