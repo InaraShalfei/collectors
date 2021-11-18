@@ -48,10 +48,10 @@ class Photo(models.Model):
     class Meta:
         ordering = ['position']
 
-    def save(self, *args, **kwargs):
-        if self.photo:
-            self.photo = get_thumbnail(self.image, '500x600', quality=99, format='JPEG')
-        super(Photo, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.photo:
+    #         self.photo = get_thumbnail(self.photo, '500x600', quality=99, format='JPEG')
+    #     super(Photo, self).save(*args, **kwargs)
 
 
 class CollectionItem(models.Model):
