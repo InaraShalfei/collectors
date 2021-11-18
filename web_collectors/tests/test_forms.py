@@ -12,6 +12,21 @@ from web_collectors.models import Collection, CollectionGroup, User, Comment, Co
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
 
+def get_fake_image():
+    return SimpleUploadedFile(
+        name='small.gif',
+        content=(
+            b'\x47\x49\x46\x38\x39\x61\x02\x00'
+            b'\x01\x00\x80\x00\x00\x00\x00\x00'
+            b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
+            b'\x00\x00\x00\x2C\x00\x00\x00\x00'
+            b'\x02\x00\x01\x00\x00\x02\x02\x0C'
+            b'\x0A\x00\x3B'
+        ),
+        content_type='image/gif'
+    )
+
+
 @override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class CollectionFormTest(TestCase):
     @classmethod
@@ -66,23 +81,10 @@ class CollectionFormTest(TestCase):
 
     def test_cant_create_collection_without_name_and_description(self):
         collection_count = Collection.objects.count()
-        small_gif = (
-            b'\x47\x49\x46\x38\x39\x61\x02\x00'
-            b'\x01\x00\x80\x00\x00\x00\x00\x00'
-            b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
-            b'\x00\x00\x00\x2C\x00\x00\x00\x00'
-            b'\x02\x00\x01\x00\x00\x02\x02\x0C'
-            b'\x0A\x00\x3B'
-        )
-        uploaded = SimpleUploadedFile(
-            name='small.gif',
-            content=small_gif,
-            content_type='image/gif'
-        )
         form_data = {
             'name': '',
             'description': 'New cool film',
-            'photo': uploaded,
+            'photo': get_fake_image(),
             'group': 1
         }
         response = self.authorized_client.post(
@@ -168,7 +170,7 @@ class ItemFormTest(TestCase):
 
     def test_create_new_item(self):
         item_count = CollectionItem.objects.count()
-        Photo.objects.create(position=1, photo=self.get_fake_image())
+        Photo.objects.create(position=1, photo=get_fake_image())
         form_data = {
             'name': 'new_item',
             'description': 'very good new item',
@@ -183,19 +185,7 @@ class ItemFormTest(TestCase):
         self.assertRedirects(response, reverse('web_collectors:collection', kwargs={'slug': 'films-3', 'collection_id': 1}))
         self.assertEqual(CollectionItem.objects.count(), item_count+1)
 
-    def get_fake_image(self):
-        return SimpleUploadedFile(
-            name='small.gif',
-            content=(
-                b'\x47\x49\x46\x38\x39\x61\x02\x00'
-                b'\x01\x00\x80\x00\x00\x00\x00\x00'
-                b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
-                b'\x00\x00\x00\x2C\x00\x00\x00\x00'
-                b'\x02\x00\x01\x00\x00\x02\x02\x0C'
-                b'\x0A\x00\x3B'
-            ),
-            content_type='image/gif'
-        )
+
 
 
 
