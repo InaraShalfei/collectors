@@ -20,7 +20,7 @@ class ItemForm(forms.ModelForm):
         model = CollectionItem
         fields = ('name', 'description', 'photo', )
         description = forms.CharField(max_length=100, widget=forms.Textarea)
-        photo = forms.MultipleChoiceField()
+        photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
 
     def clean_data(self):
         name = self.cleaned_data['name']

@@ -61,7 +61,8 @@ class CollectionItem(models.Model):
                                    verbose_name='Коллекция объектов')
     creation_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания объекта коллекции')
     position = models.IntegerField()
-    photo = models.ManyToManyField(Photo, verbose_name='Фото объекта коллекции')
+    photo = models.ImageField(upload_to='media/', blank=True, null=True,
+                              verbose_name='Фото объекта коллекции')
 
     class Meta:
         ordering = ['position']

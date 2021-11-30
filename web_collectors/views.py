@@ -173,7 +173,7 @@ def collection_item(request, slug, collection_id, item_id):
 def create_item(request, slug, collection_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
-    form = ItemForm(request.POST or None, files=request.FILES or None)
+    form = ItemForm(request.POST or None, files=request.FILES.getlist('photo') or None)
     author = collection.owner
     if request.method == 'POST' and form.is_valid():
         item = form.save(commit=False)
