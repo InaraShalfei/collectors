@@ -1,4 +1,6 @@
 from django import forms
+from multiupload.fields import MultiImageField, MultiMediaField
+
 from .models import Collection, CollectionItem, Photo, Comment
 
 
@@ -18,9 +20,9 @@ class CollectionForm(forms.ModelForm):
 class ItemForm(forms.ModelForm):
     class Meta:
         model = CollectionItem
-        fields = ('name', 'description', 'photo', )
+        fields = ('name', 'description' )
         description = forms.CharField(max_length=100, widget=forms.Textarea)
-        photo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    photos = MultiMediaField(min_num=1, max_num=5, max_file_size=1024*1024*5, media_type='image')
 
     def clean_data(self):
         name = self.cleaned_data['name']

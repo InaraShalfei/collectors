@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 
 from web_collectors.forms import CollectionForm, ItemForm, CommentForm
-from web_collectors.models import Collection, CollectionGroup, CollectionItem, User, Follow, Comment
+from web_collectors.models import Collection, CollectionGroup, CollectionItem, User, Follow, Comment, Photo
 
 
 def index(request):
@@ -173,15 +173,17 @@ def collection_item(request, slug, collection_id, item_id):
 def create_item(request, slug, collection_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
-    form = ItemForm(request.POST or None, files=request.FILES.getlist('photo') or None)
+    form = ItemForm(request.POST or None, files=request.FILES or None)
     author = collection.owner
     if request.method == 'POST' and form.is_valid():
         item = form.save(commit=False)
-        item.position = 1
         item.collection = collection
-        collection.owner = request.user
-        form.save()
+        item.save()
+        for photo in form.cleaned_data['photos']:
+            Photo.objects.create(file=photo, item=item)
+
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
+
     return render(request, 'web_collectors/new_item.html', {'form': form, 'group': group, 'collection': collection,
                                                             'author': author})
 
