@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from pytils.translit import slugify
-from sorl.thumbnail import get_thumbnail
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
@@ -41,34 +41,20 @@ class Collection(models.Model):
         return self.name
 
 
-class Photo(models.Model):
-    photo = models.ImageField(upload_to='media/photo/', blank=True, null=True, verbose_name='Фото')
-    position = models.IntegerField()
-
-    class Meta:
-        ordering = ['position']
-
-    # def save(self, *args, **kwargs):
-    #     if self.photo:
-    #         self.photo = get_thumbnail(self.photo, '500x600', quality=99, format='JPEG')
-    #     super(Photo, self).save(*args, **kwargs)
-
-
 class CollectionItem(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название объекта коллекции')
     description = models.TextField(max_length=200, blank=True, verbose_name='Описание объекта коллекции')
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='collection_items',
                                    verbose_name='Коллекция объектов')
     creation_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания объекта коллекции')
-    position = models.IntegerField()
-    photo = models.ImageField(upload_to='media/', blank=True, null=True,
-                              verbose_name='Фото объекта коллекции')
-
-    class Meta:
-        ordering = ['position']
 
     def __str__(self):
         return self.name
+
+
+class Photo(models.Model):
+    item = models.ForeignKey(CollectionItem, on_delete=models.CASCADE, related_name='photos')
+    file = models.FileField(_('Photo'), upload_to='media/')
 
 
 class Comment(models.Model):
