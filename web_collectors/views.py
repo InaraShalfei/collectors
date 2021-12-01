@@ -181,9 +181,7 @@ def create_item(request, slug, collection_id):
         item.save()
         for photo in form.cleaned_data['photos']:
             Photo.objects.create(file=photo, item=item)
-
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
-
     return render(request, 'web_collectors/new_item.html', {'form': form, 'group': group, 'collection': collection,
                                                             'author': author})
 
@@ -200,6 +198,8 @@ def update_item(request, slug, collection_id, item_id):
                     files=request.FILES or None, instance=item)
     if request.method == "POST" and form.is_valid():
         form.save()
+        for photo in form.cleaned_data['photos']:
+            Photo.objects.create(file=photo, item=item)
         return redirect('web_collectors:item', slug=slug, collection_id=collection_id, item_id=item_id)
     return render(request, 'web_collectors/new_item.html', {
         'form': form, 'group': group, 'collection': collection, 'author': author, 'item': item
