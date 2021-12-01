@@ -30,12 +30,33 @@
             <a href="{% url 'web_collectors:delete_item' group.slug collection.id item.id %}"
                class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Удалить</a>
         {% endif %}
-        <br/>{% for photo in item.photos.all %}
-        {% thumbnail photo.file "500x600" crop="center" upscale=True as im %}
-            <img src="/{{ photo.file }}" width="{{ im.width }}" height="{{ im.height }}">
-        {% endthumbnail %}
-        <br/>{% endfor %}
-
+        <div id="carousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                {% for photo in item.photos.all %}
+                    <div
+                            {% if forloop.first %}
+                                class="carousel-item active"
+                            {% else %}
+                                class="carousel-item"
+                            {% endif %}
+                    >
+                        {% thumbnail photo.file "500x600" crop="center" upscale=True as im %}
+                            <img class="d-block w-100" src="/{{ photo.file }}" width="{{ im.width }}"
+                                 height="{{ im.height }}"
+                                 alt="{{ forloop.counter }}">
+                        {% endthumbnail %}
+                    </div>
+                {% endfor %}
+            </div>
+            <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
         {{ item.description }}
     </div>
 {% endblock %}
