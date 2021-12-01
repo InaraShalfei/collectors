@@ -48,6 +48,9 @@ class CollectionItem(models.Model):
                                    verbose_name='Коллекция объектов')
     creation_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания объекта коллекции')
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return self.name
 
