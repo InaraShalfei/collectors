@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import HttpResponseRedirect
 
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -217,6 +218,14 @@ def delete_item(request, slug, collection_id, item_id):
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
     return render(request, 'includes/delete_item.html', {'group': group, 'collection': collection, 'author': author,
                                                          'item': item})
+
+
+@login_required
+def delete_photo(request, photo_id):
+    photo = get_object_or_404(Photo, id=photo_id)
+    if photo.item.collection.owner == request.user:
+        photo.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def profile(request, username):

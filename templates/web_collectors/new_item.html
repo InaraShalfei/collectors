@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Объекты коллекции{% endblock %}
 <h1>{% block header %}{% endblock %}</h1>
+{% load thumbnail %}
 
 
 {% block content %}
@@ -45,18 +46,24 @@
                             <div class="card">
                         {% endfor %}
 
+                    <div>{% for photo in item.photos.all %}
+                        {% thumbnail photo.file "80x80" crop="center" upscale=True as im %}
+                            <img class="d-block" src="/{{ photo.file }}" width="{{ im.width }}"
+                                 height="{{ im.height }}">
+                            <a href="{% url 'web_collectors:delete_photo' photo.id %}">Удалить картинку</a>
+                        {% endthumbnail %}
+                    {% endfor %}</div>
+
                         <button type="submit" class="btn btn-outline-dark">
                             Сохранить
                         </button>
-                        <button type="submit" class="btn btn-outline-dark">
-                            <a
+                            <a class="btn btn-outline-dark"
                                 {% if form.instance.id %}
                                     href="{% url 'web_collectors:item' group.slug collection.id item.id %}"
                                 {% else %}
                                     href="{% url 'web_collectors:collection' group.slug collection.id %}"
                                 {% endif %}
                             >Отменить</a>
-                        </button>
                         </div>
                     </form>
                 </div>
