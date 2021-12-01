@@ -34,7 +34,6 @@ class CollectionUrlsTest(TestCase):
             name='Pushkin poems',
             description='Poems of A.S.Pushkin',
             collection=cls.collection,
-            position=1
         )
 
     def setUp(self):

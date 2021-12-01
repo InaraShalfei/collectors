@@ -7,7 +7,7 @@ from django.test import override_settings, TestCase, Client
 from django.urls import reverse
 
 from web_collectors.forms import CollectionForm, CommentForm, ItemForm
-from web_collectors.models import Collection, CollectionGroup, User, Comment, CollectionItem, Photo
+from web_collectors.models import Collection, CollectionGroup, User, Comment, CollectionItem
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
@@ -139,11 +139,16 @@ class ItemFormTest(TestCase):
             slug='films-3',
             description='All films in the world - 3'
         )
-        Collection.objects.create(
+        collection = Collection.objects.create(
             name='Russian poems-2',
             description='All Russian poems-2',
             owner=cls.user,
             group=group)
+        CollectionItem.objects.create(
+            name='Poem by Pushkin',
+            description='Poem written by Pushkin',
+            collection=collection
+        )
 
         cls.form = ItemForm()
 
@@ -158,11 +163,10 @@ class ItemFormTest(TestCase):
 
     def test_create_new_item(self):
         item_count = CollectionItem.objects.count()
-        Photo.objects.create(position=1, photo=get_fake_image())
         form_data = {
             'name': 'new_item',
             'description': 'very good new item',
-            'photo': [1]
+            'photos': [get_fake_image()]
         }
         response = self.authorized_client.post(
             reverse('web_collectors:new_item',
@@ -176,11 +180,10 @@ class ItemFormTest(TestCase):
 
     def test_cant_create_item_without_name(self):
         item_count = CollectionItem.objects.count()
-        Photo.objects.create(position=1, photo=get_fake_image())
         form_data = {
             'name': '',
             'description': 'very good new item-2',
-            'photo': [1]
+            'photo': [get_fake_image()]
         }
         response = self.authorized_client.post(
             reverse('web_collectors:new_item',

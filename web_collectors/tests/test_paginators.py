@@ -45,8 +45,8 @@ class PaginatorViewsTest(TestCase):
             collection_item = CollectionItem.objects.create(
                 name=f'Pushkin poems{i}',
                 description=f'Poems of A.S.Pushkin - {i}',
-                collection=collection,
-                position=i)
+                collection=collection
+            )
             collection_item.creation_date = now() - datetime.timedelta(minutes=15 - i)
             collection_item.save()
 

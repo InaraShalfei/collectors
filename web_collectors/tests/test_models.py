@@ -98,7 +98,6 @@ class CollectionItemTest(TestCase):
             name='Pushkin poems',
             description='Poems of A.S.Pushkin',
             collection=cls.collection,
-            position=0
         )
 
     def test_verbose_names(self):
