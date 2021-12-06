@@ -21,7 +21,7 @@ def index(request):
 
 
 def all_authors(request):
-    users = User.objects.get_queryset().order_by('id')
+    users = User.objects.order_by('id')
     paginator = Paginator(users, settings.ITEMS_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
