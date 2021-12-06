@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% block header %}<div class="w3-container w3-green"><strong>Лучшие коллекции со всего мира!</strong></div>{% endblock %}
 {% block content %}
-{#    {% load cache %}#}
-{#    {% cache 10 index_page page.number %}#}
         <div class="container">
             {% include "includes/menu.html" with index=True %}
             {% for collection in page %}
@@ -12,5 +10,4 @@
         {% if page.has_other_pages %}
             {% include "includes/paginator.html" with items=page paginator=paginator%}
         {% endif %}
-{#    {% endcache %}#}
 {% endblock %}
