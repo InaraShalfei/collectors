@@ -68,7 +68,7 @@ def update_collection(request, slug, collection_id):
         return redirect('web_collectors:groups')
     form = CollectionForm(request.POST or None,
                           files=request.FILES or None, instance=collection)
-    if request.method == "POST" and form.is_valid():
+    if request.method == 'POST' and form.is_valid():
         form.save()
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
     return render(request, 'web_collectors/new.html', {
@@ -197,7 +197,7 @@ def update_item(request, slug, collection_id, item_id):
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
     form = ItemForm(request.POST or None,
                     files=request.FILES or None, instance=item)
-    if request.method == "POST" and form.is_valid():
+    if request.method == 'POST' and form.is_valid():
         form.save()
         for photo in form.cleaned_data['photos']:
             Photo.objects.create(file=photo, item=item)
@@ -232,7 +232,7 @@ def profile(request, username):
     author = get_object_or_404(User, username=username)
     collections = Collection.objects.filter(owner=author)
     paginator = Paginator(collections, 5)
-    page_number = request.GET.get("page")
+    page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     following = request.user.is_authenticated and Follow.objects.filter(author=author, user=request.user).exists()
     return render(request, 'web_collectors/profile.html', {
