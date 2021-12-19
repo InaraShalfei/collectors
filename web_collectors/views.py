@@ -212,12 +212,9 @@ def delete_item(request, slug, collection_id, item_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
-    author = collection.owner
     if request.method == 'POST':
         item.delete()
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
-    return render(request, 'includes/delete_item.html', {'group': group, 'collection': collection, 'author': author,
-                                                         'item': item})
 
 
 @login_required

@@ -17,18 +17,18 @@
     {% endthumbnail %}
     <p>{{ collection.description }}</p>
     {% if request.user == author %}
-        <a href="{% url 'web_collectors:new_item' group.slug collection.id %}" class="btn btn-outline-dark btn-sm"
+        <a href="{% url 'web_collectors:new_item' group.slug collection.id %}" class="btn btn-success btn-sm"
            role="button" aria-pressed="true">Новый
             предмет коллекции</a>
         <a href="{% url 'web_collectors:update_collection' group.slug collection.id %}"
-           class="btn btn-outline-secondary btn-sm" role="button" aria-pressed="true">Редактировать</a>
+           class="btn btn-secondary btn-sm" role="button" aria-pressed="true">Редактировать</a>
         <a href="{% url 'web_collectors:delete_collection' group.slug collection.id %}"
-           class="btn btn-outline-danger btn-sm" role="button" aria-pressed="true">Удалить</a>
+           class="btn btn-danger btn-sm" role="button" aria-pressed="true">Удалить</a>
     {% endif %}
     <hr>
     {% for item in page %}
         <a class="p-2 text-light" href="{% url 'web_collectors:item' group.slug collection.id item.id %}">
-            <div class="d-block p-2 bg-danger text-white"><strong>{{ item }}</strong>
+            <div class="d-block p-2 bg-secondary text-white"><strong>{{ item }}</strong>
             </div>
         </a>
     {% endfor %}
