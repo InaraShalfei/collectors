@@ -137,12 +137,9 @@ def delete_comment(request, slug, collection_id, comment_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     comment = get_object_or_404(Comment, collection=collection, id=comment_id)
-    author = comment.author
     if request.method == 'POST':
         comment.delete()
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
-    return render(request, 'includes/delete_comment.html', {'group': group, 'collection': collection, 'author': author,
-                                                            'comment': comment})
 
 
 @login_required
