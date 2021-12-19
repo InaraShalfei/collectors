@@ -84,7 +84,7 @@ def delete_collection(request, slug,  collection_id):
         return redirect('web_collectors:groups')
     if request.method == 'POST':
         collection.delete()
-        return redirect('web_collectors:collection', slug=slug)
+        return redirect('web_collectors:group', slug=slug)
 
 
 def collection(request, slug, collection_id):
