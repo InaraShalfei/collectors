@@ -85,8 +85,6 @@ def delete_collection(request, slug,  collection_id):
     if request.method == 'POST':
         collection.delete()
         return redirect('web_collectors:collection', slug=slug)
-    return render(request, 'includes/delete_collection.html', {'group': group, 'author': author,
-                                                               'collection': collection})
 
 
 def collection(request, slug, collection_id):
