@@ -13,8 +13,8 @@ class CollectionForm(forms.ModelForm):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        if name is None:
-            self.add_error(NON_FIELD_ERRORS, 'Необходимо заполнить данное поле формы!')
+        if name.islower():
+            self.add_error(NON_FIELD_ERRORS, 'Название должно быть с заглавной буквы!')
         return name
 
 
@@ -27,8 +27,8 @@ class ItemForm(forms.ModelForm):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        if name is None:
-            self.add_error(NON_FIELD_ERRORS, 'Необходимо заполнить данное поле формы!')
+        if name.islower():
+            self.add_error(NON_FIELD_ERRORS, 'Название должно быть с заглавной буквы!')
         return name
 
 
