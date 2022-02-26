@@ -1,8 +1,8 @@
 from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS
-from multiupload.fields import MultiImageField, MultiMediaField
+from multiupload.fields import MultiMediaField
 
-from .models import Collection, CollectionItem, Photo, Comment
+from .models import Collection, CollectionItem, Comment
 
 
 class CollectionForm(forms.ModelForm):
