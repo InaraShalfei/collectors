@@ -27,7 +27,7 @@ class Collection(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название коллекции')
     description = models.TextField(max_length=300, blank=True, verbose_name='Описание коллекции')
     creation_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания коллекции')
-    photo = models.ImageField(upload_to='media/', blank=True, null=True,
+    photo = models.ImageField(upload_to='photos/', blank=True, null=True,
                               verbose_name='Фото коллекции')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections',
                               verbose_name='Создатель коллекции')
@@ -57,7 +57,7 @@ class CollectionItem(models.Model):
 
 class Photo(models.Model):
     item = models.ForeignKey(CollectionItem, on_delete=models.CASCADE, related_name='photos')
-    file = models.FileField(_('Photo'), upload_to='media/')
+    file = models.FileField(_('Photo'), upload_to='photos/')
 
 
 class Comment(models.Model):

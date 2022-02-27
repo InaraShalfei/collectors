@@ -2,6 +2,7 @@
 {% block title %}Коллекции группы {{ collection.group.name }} {% endblock %}
 {% block header %} {{ group.name }}{% endblock %}
 {% block content %}
+    {% load thumbnail %}
     {% if request.user == author %}
 <a class="p-2 text-dark" href="{% url 'web_collectors:new_collection' %}"><strong>Новая коллекция</strong></a>
     {%  endif %}
@@ -20,9 +21,9 @@
         <p><strong><a class="p-2 text-dark"
                       href="{% url 'web_collectors:collection' group.slug collection.id %}"><strong>{{ collection.name }}</strong></a></strong>
 
-        <p><img src="/{{ collection.photo }}" width="250" height="150"></p>
-
-
+        <p>{% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
+            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}</p>
     {% endfor %}
 </div>
 {% if page.has_other_pages %}
