@@ -7,6 +7,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from web_collectors.forms import CollectionForm, ItemForm, CommentForm
 from web_collectors.models import Collection, CollectionGroup, CollectionItem, User, Follow, Comment, Photo
+from web_collectors.watermark import watermark_image
 
 
 def index(request):
@@ -176,6 +177,7 @@ def create_item(request, slug, collection_id):
         item.collection = collection
         item.save()
         for photo in form.cleaned_data['photos']:
+            photo = watermark_image(photo)
             Photo.objects.create(file=photo, item=item)
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
     return render(request, 'web_collectors/new_item.html', {'form': form, 'group': group, 'collection': collection,
