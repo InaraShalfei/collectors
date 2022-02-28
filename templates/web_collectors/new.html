@@ -49,10 +49,10 @@
                             <div class="card">
                         {% endfor %}
 
-                        <button type="submit" class="btn btn-outline-dark">
+                        <button type="submit" class="btn btn-success">
                             Сохранить
                         </button>
-                    <button type="submit" class="btn btn-outline-dark">
+                    <button type="submit" class="btn btn-secondary">
                     <a
                             {% if form.instance.id %}
                                 href="{% url 'web_collectors:collection' collection.group.slug collection.id %}"

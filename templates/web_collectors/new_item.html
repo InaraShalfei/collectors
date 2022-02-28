@@ -22,9 +22,9 @@
                     <form
                             method="POST" enctype="multipart/form-data"
                             {% if form.instance.id %}
-                                action="{% url 'web_collectors:update_item' group.slug collection.id item.id %}"
+                            action="{% url 'web_collectors:update_item' group.slug collection.id item.id %}"
                             {% else %}
-                                action="{% url 'web_collectors:new_item' group.slug collection.id %}"
+                            action="{% url 'web_collectors:new_item' group.slug collection.id %}"
                             {% endif %}
 
                     >
@@ -51,29 +51,29 @@
                             <div class="card">
                         {% endfor %}
 
-                    <div>{% for photo in item.photos.all %}
-                        {% thumbnail photo.file "50x80" crop="center" upscale=True as im %}
-                            <div class="card text-center" style="width: 10rem;">
-                            <img class="card-img-top" src="/{{ photo.file }}" width="{{ im.width }}"
-                                 height="{{ im.height }}">
-                            <div class="card-body">
-                            <a href="{% url 'web_collectors:delete_photo' photo.id %}">Удалить</a>
-                            </div>
-                            </div>
-                        {% endthumbnail %}
-                    {% endfor %}
-                    </div>
+                        <div>{% for photo in item.photos.all %}
+                            {% thumbnail photo.file "50x80" crop="center" upscale=True as im %}
+                                <div class="card text-center" style="width: 10rem;">
+                                    <img class="card-img-top" src="/{{ photo.file }}" width="{{ im.width }}"
+                                         height="{{ im.height }}">
+                                    <div class="card-body">
+                                        <a href="{% url 'web_collectors:delete_photo' photo.id %}">Удалить</a>
+                                    </div>
+                                </div>
+                            {% endthumbnail %}
+                        {% endfor %}
+                        </div>
 
-                        <button type="submit" class="btn btn-outline-dark">
+                        <button type="submit" class="btn btn-success">
                             Сохранить
                         </button>
-                            <a class="btn btn-outline-dark"
+                        <a class="btn btn-secondary"
                                 {% if form.instance.id %}
-                                    href="{% url 'web_collectors:item' group.slug collection.id item.id %}"
+                           href="{% url 'web_collectors:item' group.slug collection.id item.id %}"
                                 {% else %}
-                                    href="{% url 'web_collectors:collection' group.slug collection.id %}"
+                           href="{% url 'web_collectors:collection' group.slug collection.id %}"
                                 {% endif %}
-                            >Отменить</a>
+                        >Отменить</a>
                         </div>
                     </form>
                 </div>
