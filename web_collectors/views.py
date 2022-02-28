@@ -54,6 +54,7 @@ def create_collection(request):
     if request.method == 'POST' and form.is_valid():
         collection = form.save(commit=False)
         collection.owner = request.user
+        collection.photo = watermark_image(collection.photo)
         form.save()
         group = collection.group
         return redirect('web_collectors:collection', slug=group.slug, collection_id=collection.id)
