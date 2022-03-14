@@ -52,15 +52,13 @@
                         <button type="submit" class="btn btn-success">
                             Сохранить
                         </button>
-                    <button type="submit" class="btn btn-secondary">
-                    <a
+                    <a class="btn btn-secondary"
                             {% if form.instance.id %}
-                                href="{% url 'web_collectors:collection' collection.group.slug collection.id %}"
+                       href="{% url 'web_collectors:collection' collection.group.slug collection.id %}"
                             {% else %}
-                                action="{% url 'web_collectors:groups' %}"
+                       href="{% url 'web_collectors:groups' %}"
                             {% endif %}
                     >Отменить</a>
-                        </button>
                         </div>
                     </form>
                 </div>
