@@ -6,8 +6,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 
 from web_collectors.forms import CollectionForm, ItemForm, CommentForm
-from web_collectors.models import Collection, CollectionGroup, CollectionItem, User, Follow, Comment, Photo
-from web_collectors.watermark import watermark_image
+from web_collectors.models import (Collection, CollectionGroup, CollectionItem,
+                                   User, Follow, Comment, Photo)
+from collectors.tasks import delayed_collection_watermark
 
 
 def index(request):
@@ -54,10 +55,11 @@ def create_collection(request):
     if request.method == 'POST' and form.is_valid():
         collection = form.save(commit=False)
         collection.owner = request.user
-        collection.photo = watermark_image(collection.photo)
         form.save()
         group = collection.group
-        return redirect('web_collectors:collection', slug=group.slug, collection_id=collection.id)
+        delayed_collection_watermark.delay(collection.id)
+        return redirect('web_collectors:collection', slug=group.slug,
+                        collection_id=collection.id)
     return render(request, 'web_collectors/new.html', {'form': form})
 
 
@@ -72,6 +74,7 @@ def update_collection(request, slug, collection_id):
                           files=request.FILES or None, instance=collection)
     if request.method == 'POST' and form.is_valid():
         form.save()
+        delayed_collection_watermark.delay(collection.id)
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
     return render(request, 'web_collectors/new.html', {
         'form': form, 'group': group, 'collection': collection, 'author': author})

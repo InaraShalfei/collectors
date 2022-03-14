@@ -12,7 +12,7 @@ def watermark_image(file):
     watermarked_image = watermarked_image.resize(image.size, Image.NEAREST)
     my_img = Image.blend(image, watermarked_image, 0.5)
     filename_prefix = ''.join(random.choices(string.ascii_uppercase, k=16))
-    new_filename = f'photos/{filename_prefix}-{file.name}'
+    new_filename = f'{file.name}'
     my_img.save(MEDIA_ROOT + '/' + new_filename)
 
     return new_filename
