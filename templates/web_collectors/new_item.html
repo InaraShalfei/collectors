@@ -54,7 +54,7 @@
                         <div>{% for photo in item.photos.all %}
                             {% thumbnail photo.file "50x80" crop="center" upscale=True as im %}
                                 <div class="card text-center" style="width: 10rem;">
-                                    <img class="card-img-top" src="/{{ photo.file }}" width="{{ im.width }}"
+                                    <img class="card-img-top" src="{{ photo.file.url }}" width="{{ im.width }}"
                                          height="{{ im.height }}">
                                     <div class="card-body">
                                         <a href="{% url 'web_collectors:delete_photo' photo.id %}">Удалить</a>
