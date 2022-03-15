@@ -8,7 +8,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from web_collectors.forms import CollectionForm, ItemForm, CommentForm
 from web_collectors.models import (Collection, CollectionGroup, CollectionItem,
                                    User, Follow, Comment, Photo)
-from collectors.tasks import delayed_collection_watermark
+from collectors.tasks import delayed_collection_watermark, \
+    delayed_photo_watermark
 
 
 def index(request):
@@ -180,9 +181,9 @@ def create_item(request, slug, collection_id):
         item = form.save(commit=False)
         item.collection = collection
         item.save()
-        for photo in form.cleaned_data['photos']:
-            photo = watermark_image(photo)
-            Photo.objects.create(file=photo, item=item)
+        for photo_data in form.cleaned_data['photos']:
+            photo = Photo.objects.create(file=photo_data, item=item)
+            delayed_photo_watermark.delay(photo.id)
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
     return render(request, 'web_collectors/new_item.html', {'form': form, 'group': group, 'collection': collection,
                                                             'author': author})
@@ -200,8 +201,9 @@ def update_item(request, slug, collection_id, item_id):
                     files=request.FILES or None, instance=item)
     if request.method == 'POST' and form.is_valid():
         form.save()
-        for photo in form.cleaned_data['photos']:
-            Photo.objects.create(file=photo, item=item)
+        for photo_data in form.cleaned_data['photos']:
+            photo = Photo.objects.create(file=photo_data, item=item)
+            delayed_photo_watermark.delay(photo.id)
         return redirect('web_collectors:item', slug=slug, collection_id=collection_id, item_id=item_id)
     return render(request, 'web_collectors/new_item.html', {
         'form': form, 'group': group, 'collection': collection, 'author': author, 'item': item
