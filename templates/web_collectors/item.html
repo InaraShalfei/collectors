@@ -29,7 +29,7 @@
                             {% endif %}
                     >
                         {% thumbnail photo.file "400x400" crop="center" upscale=True as im %}
-                            <img class="d-block w-100" src="{{ im.url }}" width="{{ im.width }}"
+                            <img class="d-block w-100" src="{{ im.url }}" style="margin:{{ item.image|margin:"200x100" }}" width="{{ im.width }}"
                                  height="{{ im.height }}"
                                  alt="{{ forloop.counter }}">
                         {% endthumbnail %}
