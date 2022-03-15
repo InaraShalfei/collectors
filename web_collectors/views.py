@@ -8,8 +8,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from web_collectors.forms import CollectionForm, ItemForm, CommentForm
 from web_collectors.models import (Collection, CollectionGroup, CollectionItem,
                                    User, Follow, Comment, Photo)
-from collectors.tasks import delayed_collection_watermark, \
-    delayed_photo_watermark
+from collectors.tasks import (delayed_collection_watermark,
+                              delayed_photo_watermark)
 
 
 def index(request):
