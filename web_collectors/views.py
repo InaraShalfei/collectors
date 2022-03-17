@@ -9,7 +9,7 @@ from web_collectors.forms import CollectionForm, ItemForm, CommentForm
 from web_collectors.models import (Collection, CollectionGroup, CollectionItem,
                                    CustomUser, Follow, Comment, Photo)
 from collectors.tasks import (delayed_collection_watermark,
-                              delayed_photo_watermark)
+                              delayed_photo_watermark, delayed_send_message)
 from web_collectors.send_message import send_message
 
 
@@ -61,8 +61,7 @@ def create_collection(request):
         group = collection.group
         delayed_collection_watermark.delay(collection.id)
         if collection.owner.followers:
-            for follower in collection.owner.followers.all():
-                send_message(follower.user, collection)
+            delayed_send_message.delay(collection.id)
         return redirect('web_collectors:collection', slug=group.slug,
                         collection_id=collection.id)
     return render(request, 'web_collectors/new.html', {'form': form})
