@@ -7,7 +7,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from web_collectors.forms import CollectionForm, ItemForm, CommentForm
 from web_collectors.models import (Collection, CollectionGroup, CollectionItem,
-                                   User, Follow, Comment, Photo)
+                                   CustomUser, Follow, Comment, Photo)
 from collectors.tasks import (delayed_collection_watermark,
                               delayed_photo_watermark)
 from web_collectors.send_message import send_message
@@ -25,7 +25,7 @@ def index(request):
 
 
 def all_authors(request):
-    users = User.objects.order_by('id')
+    users = CustomUser.objects.order_by('id')
     paginator = Paginator(users, settings.ITEMS_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -60,9 +60,9 @@ def create_collection(request):
         form.save()
         group = collection.group
         delayed_collection_watermark.delay(collection.id)
-        if collection.owner.followers.exist():
-            for follower in collection.onwer.followers:
-                send_message(follower, collection)
+        if collection.owner.followers:
+            for follower in collection.owner.followers.all():
+                send_message(follower.user, collection)
         return redirect('web_collectors:collection', slug=group.slug,
                         collection_id=collection.id)
     return render(request, 'web_collectors/new.html', {'form': form})
@@ -233,7 +233,7 @@ def delete_photo(request, photo_id):
 
 
 def profile(request, username):
-    author = get_object_or_404(User, username=username)
+    author = get_object_or_404(CustomUser, username=username)
     collections = Collection.objects.filter(owner=author)
     paginator = Paginator(collections, 5)
     page_number = request.GET.get('page')
@@ -246,7 +246,7 @@ def profile(request, username):
 
 
 def author_collection(request, username, collection_id):
-    author = get_object_or_404(User, username=username)
+    author = get_object_or_404(CustomUser, username=username)
     collection = get_object_or_404(Collection, owner=author, id=collection_id)
     items = CollectionItem.objects.filter(collection=collection)
     paginator = Paginator(items, 3)
@@ -259,7 +259,7 @@ def author_collection(request, username, collection_id):
 
 
 def author_collection_item(request, username, collection_id, item_id):
-    author = get_object_or_404(User, username=username)
+    author = get_object_or_404(CustomUser, username=username)
     collection = get_object_or_404(Collection, owner=author, id=collection_id)
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
     return render(request, 'web_collectors/author_collection_item.html', {
@@ -278,7 +278,7 @@ def follow_index(request):
 
 @login_required
 def profile_follow(request, username):
-    author = get_object_or_404(User, username=username)
+    author = get_object_or_404(CustomUser, username=username)
     if request.user != author:
         Follow.objects.get_or_create(author=author, user=request.user)
     return redirect('web_collectors:profile', username=username)
@@ -286,7 +286,7 @@ def profile_follow(request, username):
 
 @login_required
 def profile_unfollow(request, username):
-    author = get_object_or_404(User, username=username)
+    author = get_object_or_404(CustomUser, username=username)
     if request.method == 'POST':
         get_object_or_404(Follow, user=request.user, author=author).delete()
         return redirect('web_collectors:profile', username=username)

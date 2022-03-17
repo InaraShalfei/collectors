@@ -1,9 +1,23 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from pytils.translit import slugify
 from django.utils.translation import gettext_lazy as _
 
-User = get_user_model()
+
+class CustomUser(AbstractUser):
+    first_name = models.CharField(max_length=150, blank=False)
+    last_name = models.CharField(max_length=150, blank=False)
+    email = models.EmailField(blank=False, unique=True)
+
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'email']
+
+    class Meta:
+        ordering = ('first_name', 'last_name',)
+        verbose_name = 'user'
+        verbose_name_plural = 'users'
+
+    def __str__(self):
+        return self.get_full_name()
 
 
 class CollectionGroup(models.Model):
@@ -29,7 +43,7 @@ class Collection(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания коллекции')
     photo = models.ImageField(upload_to='photos/', blank=True, null=True,
                               verbose_name='Фото коллекции')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections',
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='collections',
                               verbose_name='Создатель коллекции')
     group = models.ForeignKey(CollectionGroup, on_delete=models.CASCADE, related_name='collections',
                               verbose_name='Группа коллекций')
@@ -63,7 +77,7 @@ class Photo(models.Model):
 class Comment(models.Model):
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='comments',
                                    verbose_name='Название коллекции')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', verbose_name='Автор коллекции')
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='comments', verbose_name='Автор коллекции')
     text = models.TextField(max_length=200, blank=False, verbose_name='Текст комментария')
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, related_name='comments', default=None,
                                        null=True, verbose_name='Ответный комментарий')
@@ -77,8 +91,8 @@ class Comment(models.Model):
 
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followed', verbose_name='Подписчик')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers', verbose_name='Автор коллекции')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='followed', verbose_name='Подписчик')
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='followers', verbose_name='Автор коллекции')
 
     class Meta:
         constraints = [
