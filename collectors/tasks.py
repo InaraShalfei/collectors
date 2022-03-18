@@ -1,4 +1,4 @@
-from web_collectors.models import Collection, Photo, CollectionItem
+from web_collectors.models import Collection, Photo, CollectionItem, Comment
 from web_collectors.send_message import send_message, notify_followers
 from web_collectors.watermark import watermark_image
 from .celery import app
@@ -36,3 +36,12 @@ def delayed_send_message_item(item_id):
     subject = f'Новый предмет из коллекции {collection.name}!'
     notify_followers(collection.owner, text, subject)
 
+
+@app.task
+def delayed_send_message_comment(comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    subject = f'Новый комментарий'
+    text = (f'Вашу коллекцию {comment.collection} '
+            f'прокомментировал пользователь {comment.author}. '
+            f'Текст комментария:{comment.text}')
+    send_message(comment.collection.owner, text, subject)

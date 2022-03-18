@@ -11,7 +11,8 @@ from web_collectors.models import (Collection, CollectionGroup, CollectionItem,
 from collectors.tasks import (delayed_collection_watermark,
                               delayed_photo_watermark,
                               delayed_send_message_collection,
-                              delayed_send_message_item)
+                              delayed_send_message_item,
+                              delayed_send_message_comment)
 
 
 def index(request):
@@ -121,6 +122,7 @@ def add_comment(request, slug, collection_id):
         comment.author = request.user
         comment.collection = collection
         comment.save()
+    delayed_send_message_comment(comment.id)
     return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
 
 
