@@ -15,3 +15,8 @@ def send_message(user, text, subject):
     server.login(msg['From'], os.getenv('SMTP_PASSWORD'))
     server.sendmail(msg['From'], [msg['To']], msg.as_string())
     server.quit()
+
+
+def notify_followers(author, text, subject):
+    for follower in author.followers.all():
+        send_message(follower.user, text, subject)
