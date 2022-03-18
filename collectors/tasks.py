@@ -1,4 +1,4 @@
-from web_collectors.models import Collection, Photo
+from web_collectors.models import Collection, Photo, CollectionItem
 from web_collectors.send_message import send_message
 from web_collectors.watermark import watermark_image
 from .celery import app
@@ -19,7 +19,21 @@ def delayed_photo_watermark(photo_id):
 
 
 @app.task
-def delayed_send_message(collection_id):
+def delayed_send_message_collection(collection_id):
     collection = Collection.objects.get(id=collection_id)
+    text = (f'У автора {collection.owner} появилась '
+            f'новая коллекция {collection.name}!')
+    subject = 'Новая коллекция!'
     for follower in collection.owner.followers.all():
-        send_message(follower.user, collection)
+        send_message(follower.user, text, subject)
+
+
+@app.task
+def delayed_send_message_item(item_id):
+    item = CollectionItem.objects.get(id=item_id)
+    collection = item.collection
+    text = (f'У автора {collection.owner} в коллекции {collection.name}'
+            f' появился новый предмет {item.name}!')
+    subject = f'Новый предмет из коллекции {collection.name}!'
+    for follower in collection.owner.followers.all():
+        send_message(follower.user, text, subject)

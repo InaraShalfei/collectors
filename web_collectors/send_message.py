@@ -3,10 +3,9 @@ import smtplib
 from email.mime.text import MIMEText
 
 
-def send_message(user, collection):
-    msg = MIMEText(
-        f'У автора {collection.owner} появилась новая коллекция {collection.name}!')
-    msg['Subject'] = 'Новая коллекция!'
+def send_message(user, text, subject):
+    msg = MIMEText(text)
+    msg['Subject'] = subject
     msg['From'] = os.getenv('SMTP_LOGIN')
     msg['To'] = user.email
     server = smtplib.SMTP(os.getenv('SMTP_HOST'), os.getenv('SMTP_PORT'))
