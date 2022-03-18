@@ -45,3 +45,13 @@ def delayed_send_message_comment(comment_id):
             f'прокомментировал пользователь {comment.author}. '
             f'Текст комментария:{comment.text}')
     send_message(comment.collection.owner, text, subject)
+
+
+@app.task
+def delayed_send_message_reply_comment(reply_id):
+    reply = Comment.objects.get(id=reply_id)
+    subject = f'Новый комментарий'
+    text = (f'На ваш комментарий "{reply.parent_comment}" '
+            f'ответил пользователь {reply.author.username}. '
+            f'Текст комментария:{reply.text}')
+    send_message(reply.parent_comment.author, text, subject)

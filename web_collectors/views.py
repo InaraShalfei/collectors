@@ -12,7 +12,8 @@ from collectors.tasks import (delayed_collection_watermark,
                               delayed_photo_watermark,
                               delayed_send_message_collection,
                               delayed_send_message_item,
-                              delayed_send_message_comment)
+                              delayed_send_message_comment,
+                              delayed_send_message_reply_comment)
 
 
 def index(request):
@@ -138,6 +139,7 @@ def reply_comment(request, slug, collection_id, comment_id):
         reply.collection = collection
         reply.parent_comment = comment
         reply.save()
+        delayed_send_message_reply_comment(reply.id)
         return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
     return render(request, 'includes/reply_comment.html', {
         'form': form, 'group': group, 'collection': collection, 'comment': comment})
