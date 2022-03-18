@@ -80,7 +80,7 @@ class Comment(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='comments', verbose_name='Автор коллекции')
     text = models.TextField(max_length=200, blank=False, verbose_name='Текст комментария')
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, related_name='comments', default=None,
-                                       null=True, verbose_name='Ответный комментарий')
+                                       null=True, verbose_name='Родительский комментарий')
     creation_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания комментария')
 
     class Meta:
