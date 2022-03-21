@@ -9,7 +9,8 @@ class CollectionGroupAdmin(admin.ModelAdmin):
 
 
 class CollectionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'creation_date', 'owner', 'photo', 'group')
+    list_display = ('name', 'description', 'creation_date', 'owner', 'photo',
+                    'group')
     list_filter = ('name', 'owner', )
     search_fields = ('name', )
     empty_value_display = '-пусто-'

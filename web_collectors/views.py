@@ -43,7 +43,8 @@ def collection_groups(request):
     paginator = Paginator(groups, settings.ITEMS_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, 'web_collectors/groups.html', {'page': page, 'paginator': paginator})
+    return render(request, 'web_collectors/groups.html',
+                  {'page': page, 'paginator': paginator})
 
 
 def collection_group(request, slug):
@@ -52,7 +53,8 @@ def collection_group(request, slug):
     paginator = Paginator(collections, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, 'web_collectors/group.html', {'page': page, 'paginator': paginator, 'group': group})
+    return render(request, 'web_collectors/group.html',
+                  {'page': page, 'paginator': paginator, 'group': group})
 
 
 @login_required
@@ -82,9 +84,11 @@ def update_collection(request, slug, collection_id):
     if request.method == 'POST' and form.is_valid():
         form.save()
         delayed_collection_watermark.delay(collection.id)
-        return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
+        return redirect('web_collectors:collection', slug=slug,
+                        collection_id=collection_id)
     return render(request, 'web_collectors/new.html', {
-        'form': form, 'group': group, 'collection': collection, 'author': author})
+        'form': form, 'group': group, 'collection': collection,
+        'author': author})
 
 
 @login_required
@@ -109,7 +113,8 @@ def collection(request, slug, collection_id):
     page = paginator.get_page(page_number)
     form = CommentForm()
     return render(request, 'web_collectors/collection.html', {
-        'page': page, 'paginator': paginator, 'group': group, 'collection': collection, 'author': author, 'form': form,
+        'page': page, 'paginator': paginator, 'group': group,
+        'collection': collection, 'author': author, 'form': form,
         'comments': collection.comments.filter(parent_comment=None)
     })
 
@@ -125,7 +130,8 @@ def add_comment(request, slug, collection_id):
         comment.collection = collection
         comment.save()
     delayed_send_message_comment(comment.id)
-    return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
+    return redirect('web_collectors:collection', slug=slug,
+                    collection_id=collection_id)
 
 
 @login_required
@@ -141,9 +147,11 @@ def reply_comment(request, slug, collection_id, comment_id):
         reply.parent_comment = comment
         reply.save()
         delayed_send_message_reply_comment(reply.id)
-        return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
+        return redirect('web_collectors:collection', slug=slug,
+                        collection_id=collection_id)
     return render(request, 'includes/reply_comment.html', {
-        'form': form, 'group': group, 'collection': collection, 'comment': comment})
+        'form': form, 'group': group, 'collection': collection,
+        'comment': comment})
 
 
 @login_required
@@ -153,7 +161,8 @@ def delete_comment(request, slug, collection_id, comment_id):
     comment = get_object_or_404(Comment, collection=collection, id=comment_id)
     if request.method == 'POST':
         comment.delete()
-        return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
+        return redirect('web_collectors:collection', slug=slug,
+                        collection_id=collection_id)
 
 
 @login_required
@@ -165,9 +174,11 @@ def update_comment(request, slug, collection_id, comment_id):
     form = CommentForm(request.POST or None, instance=comment)
     if form.is_valid():
         form.save()
-        return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
+        return redirect('web_collectors:collection', slug=slug,
+                        collection_id=collection_id)
     return render(request, 'includes/update_comment.html', {
-        'form': form, 'group': group, 'collection': collection, 'author': author, 'comment': comment})
+        'form': form, 'group': group, 'collection': collection,
+        'author': author, 'comment': comment})
 
 
 def collection_item(request, slug, collection_id, item_id):
@@ -175,8 +186,9 @@ def collection_item(request, slug, collection_id, item_id):
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     author = collection.owner
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
-    return render(request, 'web_collectors/item.html', {'group': group, 'item': item, 'collection': collection,
-                                                        'author': author})
+    return render(request, 'web_collectors/item.html',
+                  {'group': group, 'item': item, 'collection': collection,
+                   'author': author})
 
 
 @login_required
@@ -193,9 +205,11 @@ def create_item(request, slug, collection_id):
             photo = Photo.objects.create(file=photo_data, item=item)
             delayed_photo_watermark.delay(photo.id)
         delayed_send_message_item(item.id)
-        return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
-    return render(request, 'web_collectors/new_item.html', {'form': form, 'group': group, 'collection': collection,
-                                                            'author': author})
+        return redirect('web_collectors:collection', slug=slug,
+                        collection_id=collection_id)
+    return render(request, 'web_collectors/new_item.html',
+                  {'form': form, 'group': group, 'collection': collection,
+                   'author': author})
 
 
 @login_required
@@ -213,10 +227,11 @@ def update_item(request, slug, collection_id, item_id):
         for photo_data in form.cleaned_data['photos']:
             photo = Photo.objects.create(file=photo_data, item=item)
             delayed_photo_watermark.delay(photo.id)
-        return redirect('web_collectors:item', slug=slug, collection_id=collection_id, item_id=item_id)
+        return redirect('web_collectors:item', slug=slug,
+                        collection_id=collection_id, item_id=item_id)
     return render(request, 'web_collectors/new_item.html', {
-        'form': form, 'group': group, 'collection': collection, 'author': author, 'item': item
-    })
+        'form': form, 'group': group, 'collection': collection,
+        'author': author, 'item': item})
 
 
 @login_required
@@ -226,7 +241,8 @@ def delete_item(request, slug, collection_id, item_id):
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
     if request.method == 'POST':
         item.delete()
-        return redirect('web_collectors:collection', slug=slug, collection_id=collection_id)
+        return redirect('web_collectors:collection', slug=slug,
+                        collection_id=collection_id)
 
 
 @login_required
@@ -243,11 +259,12 @@ def profile(request, username):
     paginator = Paginator(collections, 5)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    following = request.user.is_authenticated and Follow.objects.filter(author=author, user=request.user).exists()
+    following = request.user.is_authenticated and Follow.objects.filter(
+        author=author, user=request.user).exists()
     return render(request, 'web_collectors/profile.html', {
-        'page': page, 'paginator': paginator, 'collection': collection, 'author': author,
-        'following': following
-    })
+        'page': page, 'paginator': paginator, 'collection': collection,
+        'author': author,
+        'following': following})
 
 
 def author_collection(request, username, collection_id):
@@ -259,7 +276,8 @@ def author_collection(request, username, collection_id):
     page = paginator.get_page(page_number)
     form = CommentForm()
     return render(request, 'web_collectors/author_collection.html', {
-        'page': page, 'paginator': paginator, 'author': author, 'collection': collection, 'form': form,
+        'page': page, 'paginator': paginator, 'author': author,
+        'collection': collection, 'form': form,
         'comments': collection.comments.all()})
 
 
@@ -298,7 +316,8 @@ def profile_unfollow(request, username):
     if request.method == 'POST':
         get_object_or_404(Follow, user=request.user, author=author).delete()
         return redirect('web_collectors:profile', username=username)
-    return render(request, 'includes/unfollow.html', {'author': author, 'user': request.user})
+    return render(request, 'includes/unfollow.html', {'author': author,
+                                                      'user': request.user})
 
 
 def page_not_found(request, exception):
