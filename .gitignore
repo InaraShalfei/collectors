@@ -32,3 +32,4 @@ coverage.xml
 /htmlcov/
 /cache/
 /my_env/
+/.idea
