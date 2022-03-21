@@ -13,7 +13,8 @@ from collectors.tasks import (delayed_collection_watermark,
                               delayed_send_message_collection,
                               delayed_send_message_item,
                               delayed_send_message_comment,
-                              delayed_send_message_reply_comment)
+                              delayed_send_message_reply_comment,
+                              delayed_send_message_follow)
 
 
 def index(request):
@@ -277,14 +278,17 @@ def follow_index(request):
     paginator = Paginator(followed, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, 'web_collectors/follow.html', {'page': page, 'paginator': paginator})
+    return render(request, 'web_collectors/follow.html',
+                  {'page': page, 'paginator': paginator})
 
 
 @login_required
 def profile_follow(request, username):
     author = get_object_or_404(CustomUser, username=username)
     if request.user != author:
-        Follow.objects.get_or_create(author=author, user=request.user)
+        follow, created = Follow.objects.get_or_create(author=author,
+                                                       user=request.user)
+        delayed_send_message_follow(follow.id)
     return redirect('web_collectors:profile', username=username)
 
 

@@ -1,4 +1,5 @@
-from web_collectors.models import Collection, Photo, CollectionItem, Comment
+from web_collectors.models import Collection, Photo, CollectionItem, Comment, \
+    Follow
 from web_collectors.send_message import send_message, notify_followers
 from web_collectors.watermark import watermark_image
 from .celery import app
@@ -55,3 +56,10 @@ def delayed_send_message_reply_comment(reply_id):
             f'ответил пользователь {reply.author.username}. '
             f'Текст комментария:{reply.text}')
     send_message(reply.parent_comment.author, text, subject)
+
+
+def delayed_send_message_follow(follow_id):
+    follow = Follow.objects.get(id=follow_id)
+    subject = f'Новая подписка'
+    text = f'На вас подписался новый пользователь {follow.user}.'
+    send_message(follow.author, text, subject)
