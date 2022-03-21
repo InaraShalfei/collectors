@@ -10,7 +10,7 @@
 </nav>
 
 {% for user in page %}
-<p><a class="p-2 text-dark" href="{% url 'web_collectors:profile' user.username %}"><strong>{{ user }}</strong></a></p>
+<p><a class="p-2 text-dark" href="{% url 'web_collectors:profile' user.username %}"><strong>{{ user.username }}</strong></a></p>
 {% endfor %}
 
 {% if page.has_other_pages %}
