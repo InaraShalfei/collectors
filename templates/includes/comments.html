@@ -125,9 +125,13 @@ listenForCommentFormSubmit('comment_form');
                         </div>
                     </div>
                 </div>
-                {% endif %}
-                <a href="{% url 'web_collectors:reply_comment' collection.id comment.id %}"
-                   class="btn btn-success btn-sm" role="button" aria-pressed="true">Ответить на комментарий</a>
+            <script>
+                listenForCommentFormSubmit('delete_comment_form{{ comment.id }}');
+            </script>
+            {% else %}
+            <a href="{% url 'web_collectors:reply_comment' collection.id comment.id %}"
+               class="btn btn-success btn-sm" role="button" aria-pressed="true">Ответить на комментарий</a>
+            {% endif %}
             </div>
             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body">
