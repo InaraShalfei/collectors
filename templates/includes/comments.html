@@ -3,89 +3,128 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 
 {% if user.is_authenticated and request.user != author %}
-    <div class="card my-4">
-        <form method="post" action="{% url 'web_collectors:add_comment' collection.id %}" id="comment_form">
+<div class="card my-4">
+    <form method="post" action="{% url 'web_collectors:add_comment' collection.id %}" id="comment_form">
 
-            {% csrf_token %}
-            <h5 class="card-header">Добавить комментарий:</h5>
-            <div class="card-body">
-                <div class="form-group">
-                    {{ form.as_p }}
-                </div>
-                <button type="submit" class="btn btn-dark">Отправить</button>
+        {% csrf_token %}
+        <h5 class="card-header">Добавить комментарий:</h5>
+        <div class="card-body">
+            <div class="form-group">
+                {{ form.as_p }}
             </div>
-        </form>
-    </div>
+            <button type="submit" class="btn btn-dark">Отправить</button>
+        </div>
+    </form>
+</div>
 <script>
 
-let form = document.getElementById('comment_form');
+function listenForCommentFormSubmit(formId) {
+    let form = document.getElementById(formId);
 
-form.addEventListener('submit', function(event) {
-    event.preventDefault()
+    form.addEventListener('submit', function(event) {
+        event.preventDefault()
 
-    let data = new FormData();
+        let data = new FormData();
 
-    data.append("text", document.getElementById('id_text').value)
-    data.append("csrfmiddlewaretoken", '{{csrf_token}}')
+        data.append("text", form.querySelector('textarea').value)
+        data.append("csrfmiddlewaretoken", '{{csrf_token}}')
 
-    axios.post(form.action, data)
-     .then(res => location.reload())
-     .catch(errors => console.log(errors))
-})
+        axios.post(form.action, data)
+         .then(res => location.reload())
+         .catch(errors => console.log(errors))
+    })
+}
 
+listenForCommentFormSubmit('comment_form');
 </script>
 {% endif %}
 
 <!-- Комментарии -->
 {% for comment in comments %}
 
-    <div id="accordion">
-        <div class="card">
-            <div class="card-header" id="headingOne">
-                <p><a href="{% url 'web_collectors:profile' comment.author.username %}">
-                    <strong>{{ comment.author.username }}</strong></a></p>
-                <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
-                            aria-expanded="true"
-                            aria-controls="collapseOne">
-                        {{ comment.text }}
-                    </button>
-                </h5>
-                {% if request.user == comment.author %}
-                    <a href="{% url 'web_collectors:update_comment' collection.id comment.id %}"
-                       class="btn btn-secondary btn-sm" role="button" aria-pressed="true">Редактировать</a>
-                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                            data-target="#confirmModal{{ comment.id }}">
-                        Удалить
-                    </button>
-                    <div class="modal fade" id="confirmModal{{ comment.id }}" tabindex="-1"
-                         aria-labelledby="confirmModalLabel{{ comment.id }}" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="confirmModalLabel{{ comment.id }}">Подтверждение
-                                        удаления</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
+<div id="accordion">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <p><a href="{% url 'web_collectors:profile' comment.author.username %}">
+                <strong>{{ comment.author.username }}</strong></a></p>
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                        aria-expanded="true"
+                        aria-controls="collapseOne">
+                    {{ comment.text }}
+                </button>
+            </h5>
+            {% if request.user == comment.author %}
+
+            <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
+                    data-target="#confirmModal{{ comment.id }}">
+                Редактировать
+            </button>
+            <div class="modal fade" id="confirmModal{{ comment.id }}" tabindex="-1"
+                 aria-labelledby="confirmModalLabel{{ comment.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel{{ comment.id }}">Редактирование
+                                комментария</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post"
+                                  id="update_comment_form{{ comment.id }}"
+                                  action="{% url 'web_collectors:update_comment' collection.id comment.id %}">
+                                {% csrf_token %}
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        {{ form.as_p }}
+                                    </div>
+                                    <button type="submit" class="btn btn-dark">Отправить</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                listenForCommentFormSubmit('update_comment_form{{ comment.id }}');
+            </script>
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                        data-target="#confirmModal{{ comment.id }}">
+                    Удалить
+                </button>
+                <div class="modal fade" id="confirmModal{{ id }}" tabindex="-1"
+                     aria-labelledby="confirmModalLabel{{ id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmModalLabel{{ id }}">Подтверждение
+                                    удаления</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Вы уверены, что хотите удалить комментарий?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                                <form method="post"
+                                      action="{% url 'web_collectors:delete_comment' collection.id comment.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger" data-toggle="modal"
+                                            data-target="#confirmModal{{ id }}">
+                                        Удалить
                                     </button>
-                                </div>
-                                <div class="modal-body">
-                                    Вы уверены, что хотите удалить комментарий?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                                    <form method="post"
-                                          action="{% url 'web_collectors:delete_comment' collection.id comment.id %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger" data-toggle="modal"
-                                                data-target="#confirmModal{{ comment.id }}">
-                                            Удалить
-                                        </button>
-                                    </form>
-                                </div>
+                                </form>
                             </div>
                         </div>
-            </div>
+                    </div>
+                </div>
                 {% endif %}
                 <a href="{% url 'web_collectors:reply_comment' collection.id comment.id %}"
                    class="btn btn-success btn-sm" role="button" aria-pressed="true">Ответить на комментарий</a>
@@ -93,15 +132,15 @@ form.addEventListener('submit', function(event) {
             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body">
                     {% for child_comment in comment.comments.all %}
-                        <div class="media card mb-4">
-                            <div class="media-body card-body">
-                                <h5 class="mt-0">
-                                    <a href="{% url 'web_collectors:profile' child_comment.author.username %}">
-                                        {{ child_comment.author.username }}
-                                    </a>
-                                </h5>
-                                <p>{{ child_comment.text }}</p></div>
-                        </div>
+                    <div class="media card mb-4">
+                        <div class="media-body card-body">
+                            <h5 class="mt-0">
+                                <a href="{% url 'web_collectors:profile' child_comment.author.username %}">
+                                    {{ child_comment.author.username }}
+                                </a>
+                            </h5>
+                            <p>{{ child_comment.text }}</p></div>
+                    </div>
 
                     {% endfor %}
                 </div>
