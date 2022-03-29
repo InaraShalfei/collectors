@@ -120,10 +120,9 @@ def collection(request, slug, collection_id):
 
 
 @login_required
-def add_comment(request, slug, collection_id):
+def add_comment(request, collection_id):
     form = CommentForm(request.POST or None)
-    group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, id=collection_id)
+    collection = get_object_or_404(Collection, id=collection_id)
     if request.method == 'POST' and form.is_valid():
         comment = form.save(commit=False)
         comment.author = request.user
