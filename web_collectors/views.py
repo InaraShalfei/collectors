@@ -133,9 +133,8 @@ def add_comment(request, collection_id):
 
 
 @login_required
-def reply_comment(request, slug, collection_id, comment_id):
-    group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, id=collection_id)
+def reply_comment(request, collection_id, comment_id):
+    collection = get_object_or_404(Collection, id=collection_id)
     comment = get_object_or_404(Comment, collection=collection, id=comment_id)
     form = CommentForm(request.POST or None)
     if form.is_valid():
@@ -145,38 +144,28 @@ def reply_comment(request, slug, collection_id, comment_id):
         reply.parent_comment = comment
         reply.save()
         delayed_send_message_reply_comment(reply.id)
-        return redirect('web_collectors:collection', slug=slug,
-                        collection_id=collection_id)
-    return render(request, 'includes/reply_comment.html', {
-        'form': form, 'group': group, 'collection': collection,
-        'comment': comment})
+    return JsonResponse({'status': 'Success'})
 
 
 @login_required
-def delete_comment(request, slug, collection_id, comment_id):
-    group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, id=collection_id)
+def delete_comment(request, collection_id, comment_id):
+    #TODO check that user is an author
+    collection = get_object_or_404(Collection, id=collection_id)
     comment = get_object_or_404(Comment, collection=collection, id=comment_id)
     if request.method == 'POST':
         comment.delete()
-        return redirect('web_collectors:collection', slug=slug,
-                        collection_id=collection_id)
+    return JsonResponse({'status': 'Success'})
 
 
 @login_required
-def update_comment(request, slug, collection_id, comment_id):
-    group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, id=collection_id)
+def update_comment(request, collection_id, comment_id):
+    # TODO check that user is an author
+    collection = get_object_or_404(Collection, id=collection_id)
     comment = get_object_or_404(Comment, collection=collection, id=comment_id)
-    author = comment.author
     form = CommentForm(request.POST or None, instance=comment)
     if form.is_valid():
         form.save()
-        return redirect('web_collectors:collection', slug=slug,
-                        collection_id=collection_id)
-    return render(request, 'includes/update_comment.html', {
-        'form': form, 'group': group, 'collection': collection,
-        'author': author, 'comment': comment})
+    return JsonResponse({'status': 'Success'})
 
 
 def collection_item(request, slug, collection_id, item_id):

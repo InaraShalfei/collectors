@@ -52,7 +52,7 @@ form.addEventListener('submit', function(event) {
                     </button>
                 </h5>
                 {% if request.user == comment.author %}
-                    <a href="{% url 'web_collectors:update_comment' group.slug collection.id comment.id %}"
+                    <a href="{% url 'web_collectors:update_comment' collection.id comment.id %}"
                        class="btn btn-secondary btn-sm" role="button" aria-pressed="true">Редактировать</a>
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
                             data-target="#confirmModal{{ comment.id }}">
@@ -75,7 +75,7 @@ form.addEventListener('submit', function(event) {
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
                                     <form method="post"
-                                          action="{% url 'web_collectors:delete_comment' group.slug collection.id comment.id %}">
+                                          action="{% url 'web_collectors:delete_comment' collection.id comment.id %}">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-danger" data-toggle="modal"
                                                 data-target="#confirmModal{{ comment.id }}">
@@ -87,7 +87,7 @@ form.addEventListener('submit', function(event) {
                         </div>
             </div>
                 {% endif %}
-                <a href="{% url 'web_collectors:reply_comment' group.slug collection.id comment.id %}"
+                <a href="{% url 'web_collectors:reply_comment' collection.id comment.id %}"
                    class="btn btn-success btn-sm" role="button" aria-pressed="true">Ответить на комментарий</a>
             </div>
             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
