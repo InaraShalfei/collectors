@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -129,9 +129,8 @@ def add_comment(request, slug, collection_id):
         comment.author = request.user
         comment.collection = collection
         comment.save()
-    delayed_send_message_comment(comment.id)
-    return redirect('web_collectors:collection', slug=slug,
-                    collection_id=collection_id)
+        delayed_send_message_comment(comment.id)
+    return JsonResponse({'status': 'Success'})
 
 
 @login_required
