@@ -11,7 +11,7 @@
         </ol>
     </nav>
     {% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
-    <img src="/{{ collection.photo }}" width="{{ im.width }}" height="{{ im.height }}">
+    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
     {% endthumbnail %}
 
     <p>{{ collection.description }}</p>
