@@ -18,24 +18,19 @@
 </div>
 <script>
 
-function listenForCommentFormSubmit(formId) {
+function submitAsynchronously(formId) {
     let form = document.getElementById(formId);
 
     form.addEventListener('submit', function(event) {
         event.preventDefault()
-
-        let data = new FormData();
-
-        data.append("text", form.querySelector('textarea').value)
-        data.append("csrfmiddlewaretoken", '{{csrf_token}}')
-
+        let data = new FormData(form);
         axios.post(form.action, data)
          .then(res => location.reload())
          .catch(errors => console.log(errors))
     })
 }
 
-listenForCommentFormSubmit('comment_form');
+submitAsynchronously('comment_form');
 </script>
 {% endif %}
 
@@ -57,15 +52,15 @@ listenForCommentFormSubmit('comment_form');
             {% if request.user == comment.author %}
 
             <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
-                    data-target="#confirmModal{{ comment.id }}">
+                    data-target="#editModal{{ comment.id }}">
                 Редактировать
             </button>
-            <div class="modal fade" id="confirmModal{{ comment.id }}" tabindex="-1"
-                 aria-labelledby="confirmModalLabel{{ comment.id }}" aria-hidden="true">
+            <div class="modal fade" id="editModal{{ comment.id }}" tabindex="-1"
+                 aria-labelledby="editModal{{ comment.id }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="confirmModalLabel{{ comment.id }}">Редактирование
+                            <h5 class="modal-title" id="editModal{{ comment.id }}">Редактирование
                                 комментария</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -91,18 +86,18 @@ listenForCommentFormSubmit('comment_form');
                 </div>
             </div>
             <script>
-                listenForCommentFormSubmit('update_comment_form{{ comment.id }}');
+                submitAsynchronously('update_comment_form{{ comment.id }}');
             </script>
                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
                         data-target="#confirmModal{{ comment.id }}">
                     Удалить
                 </button>
-                <div class="modal fade" id="confirmModal{{ id }}" tabindex="-1"
-                     aria-labelledby="confirmModalLabel{{ id }}" aria-hidden="true">
+                <div class="modal fade" id="confirmModal{{ comment.id }}" tabindex="-1"
+                     aria-labelledby="confirmModalLabel{{ comment.id }}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="confirmModalLabel{{ id }}">Подтверждение
+                                <h5 class="modal-title" id="confirmModalLabel{{ comment.id }}">Подтверждение
                                     удаления</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -114,10 +109,11 @@ listenForCommentFormSubmit('comment_form');
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
                                 <form method="post"
+                                      id="delete_comment_form{{ comment.id }}"
                                       action="{% url 'web_collectors:delete_comment' collection.id comment.id %}">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-danger" data-toggle="modal"
-                                            data-target="#confirmModal{{ id }}">
+                                            data-target="#confirmModal{{ comment.id }}">
                                         Удалить
                                     </button>
                                 </form>
@@ -126,7 +122,7 @@ listenForCommentFormSubmit('comment_form');
                     </div>
                 </div>
             <script>
-                listenForCommentFormSubmit('delete_comment_form{{ comment.id }}');
+                submitAsynchronously('delete_comment_form{{ comment.id }}');
             </script>
             {% else %}
             <a href="{% url 'web_collectors:reply_comment' collection.id comment.id %}"
