@@ -21,7 +21,8 @@ submitAsynchronously('comment_form');
 
 {% if user.is_authenticated and request.user != author %}
 <div class="card my-4">
-    <form method="post" action="{% url 'web_collectors:add_comment' collection.id %}" id="comment_form">
+    <form method="post"
+          action="{% url 'web_collectors:add_comment' collection.id %}" id="comment_form">
 
         {% csrf_token %}
         <h5 class="card-header">Добавить комментарий:</h5>
@@ -32,7 +33,11 @@ submitAsynchronously('comment_form');
             <button type="submit" class="btn btn-dark">Отправить</button>
         </div>
     </form>
+
 </div>
+<script>
+    submitAsynchronously('comment_form');
+</script>
 {% endif %}
 
 <!-- Комментарии -->
