@@ -2,20 +2,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 
-{% if user.is_authenticated and request.user != author %}
-<div class="card my-4">
-    <form method="post" action="{% url 'web_collectors:add_comment' collection.id %}" id="comment_form">
-
-        {% csrf_token %}
-        <h5 class="card-header">Добавить комментарий:</h5>
-        <div class="card-body">
-            <div class="form-group">
-                {{ form.as_p }}
-            </div>
-            <button type="submit" class="btn btn-dark">Отправить</button>
-        </div>
-    </form>
-</div>
 <script>
 
 function submitAsynchronously(formId) {
@@ -32,6 +18,21 @@ function submitAsynchronously(formId) {
 
 submitAsynchronously('comment_form');
 </script>
+
+{% if user.is_authenticated and request.user != author %}
+<div class="card my-4">
+    <form method="post" action="{% url 'web_collectors:add_comment' collection.id %}" id="comment_form">
+
+        {% csrf_token %}
+        <h5 class="card-header">Добавить комментарий:</h5>
+        <div class="card-body">
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-dark">Отправить</button>
+        </div>
+    </form>
+</div>
 {% endif %}
 
 <!-- Комментарии -->
@@ -125,8 +126,43 @@ submitAsynchronously('comment_form');
                 submitAsynchronously('delete_comment_form{{ comment.id }}');
             </script>
             {% else %}
-            <a href="{% url 'web_collectors:reply_comment' collection.id comment.id %}"
-               class="btn btn-success btn-sm" role="button" aria-pressed="true">Ответить на комментарий</a>
+            <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
+                    data-target="#replyModal{{ comment.id }}">
+                Ответить на комментарий
+            </button>
+            <div class="modal fade" id="replyModal{{ comment.id }}" tabindex="-1"
+                 aria-labelledby="replyModal{{ comment.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="replyModal{{ comment.id }}">Ответить на комментарий</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post"
+                                  id="reply_comment_form{{ comment.id }}"
+                                  action="{% url 'web_collectors:reply_comment' collection.id comment.id %}">
+                                {% csrf_token %}
+                                <h5 class="card-header">Ответить на комментарий:</h5>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        {{ form.as_p }}
+                                    </div>
+                                    <button type="submit" class="btn btn-dark">Отправить</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                submitAsynchronously('reply_comment_form{{ comment.id }}');
+            </script>
             {% endif %}
             </div>
             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">

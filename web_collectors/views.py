@@ -265,7 +265,7 @@ def author_collection(request, username, collection_id):
     return render(request, 'web_collectors/author_collection.html', {
         'page': page, 'paginator': paginator, 'author': author,
         'collection': collection, 'form': form,
-        'comments': collection.comments.all()})
+        'comments': collection.comments.filter(parent_comment=None)})
 
 
 def author_collection_item(request, username, collection_id, item_id):
