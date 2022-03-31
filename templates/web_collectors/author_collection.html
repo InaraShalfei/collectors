@@ -19,6 +19,7 @@
         <a class="p-2 text-light" href="{% url 'web_collectors:author_collection_item' author.username collection.id item.id %}"><div class="d-block p-2 bg-danger text-white"><strong>{{ item }}</strong>
         </div></a>
     {% endfor %}
+    <p></p>
     {% include "includes/comments.html" %}
     {% if page.has_other_pages %}
     {% include "includes/paginator.html" with items=page paginator=paginator%}
