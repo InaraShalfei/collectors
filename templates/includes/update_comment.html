@@ -1,26 +1,5 @@
 {% load user_filters %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
-
-<script>
-
-function submitAsynchronously(formId) {
-    let form = document.getElementById(formId);
-
-    form.addEventListener('submit', function(event) {
-        event.preventDefault()
-        let data = new FormData(form);
-        axios.post(form.action, data)
-         .then(res => location.reload())
-         .catch(errors => console.log(errors))
-    })
-}
-
-submitAsynchronously('comment_form');
-
-</script>
-
-
 <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
         data-target="#editModal{{ comment.id }}">
     Редактировать
@@ -56,6 +35,5 @@ submitAsynchronously('comment_form');
     </div>
 </div>
 <script>
-                submitAsynchronously('update_comment_form{{ comment.id }}');
-
+    submitAsynchronously('update_comment_form{{ comment.id }}');
 </script>

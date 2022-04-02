@@ -3,7 +3,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 
 <script>
-
 function submitAsynchronously(formId) {
     let form = document.getElementById(formId);
 
@@ -15,9 +14,6 @@ function submitAsynchronously(formId) {
          .catch(errors => console.log(errors))
     })
 }
-
-submitAsynchronously('comment_form');
-
 </script>
 
 {% if user.is_authenticated and request.user != author %}
@@ -58,8 +54,6 @@ submitAsynchronously('comment_form');
 </div>
 <script>
     submitAsynchronously('comment_form');
-
-
 </script>
 {% endif %}
 <p></p>
@@ -79,14 +73,13 @@ submitAsynchronously('comment_form');
             </h5>
             {% if request.user == comment.author %}
 
-            {% include "includes/update_comment.html" %}
+                {% include "includes/update_comment.html" %}
 
-            {% include "includes/delete_comment.html" %}
-
+                {% include "includes/delete_comment.html" %}
 
             {% else %}
 
-            {% include "includes/reply_comment.html" %}
+                {% include "includes/reply_comment.html" %}
 
             {% endif %}
         </div>
@@ -100,7 +93,8 @@ submitAsynchronously('comment_form');
                                 {{ child_comment.author.username }}
                             </a>
                         </h5>
-                        <p>{{ child_comment.text }}</p></div>
+                        <p>{{ child_comment.text }}</p>
+                    </div>
                 </div>
 
                 {% endfor %}
