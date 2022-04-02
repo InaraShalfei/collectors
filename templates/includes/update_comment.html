@@ -1,0 +1,61 @@
+{% load user_filters %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
+<script>
+
+function submitAsynchronously(formId) {
+    let form = document.getElementById(formId);
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault()
+        let data = new FormData(form);
+        axios.post(form.action, data)
+         .then(res => location.reload())
+         .catch(errors => console.log(errors))
+    })
+}
+
+submitAsynchronously('comment_form');
+
+</script>
+
+
+<button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
+        data-target="#editModal{{ comment.id }}">
+    Редактировать
+</button>
+<div class="modal fade" id="editModal{{ comment.id }}" tabindex="-1"
+     aria-labelledby="editModal{{ comment.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModal{{ comment.id }}">Редактирование
+                    комментария</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post"
+                      id="update_comment_form{{ comment.id }}"
+                      action="{% url 'web_collectors:update_comment' collection.id comment.id %}">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="form-group">
+                            {{ form.as_p }}
+                        </div>
+                        <button type="submit" class="btn btn-dark">Отправить</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+                submitAsynchronously('update_comment_form{{ comment.id }}');
+
+</script>
