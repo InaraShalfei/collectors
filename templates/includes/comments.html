@@ -94,6 +94,17 @@ function submitAsynchronously(formId) {
                             </a>
                         </h5>
                         <p>{{ child_comment.text }}</p>
+                        {% if request.user == child_comment.author %}
+
+                            {% include "includes/update_comment.html" with comment=child_comment %}
+
+                            {% include "includes/delete_comment.html" with comment=child_comment %}
+
+                        {% else %}
+
+                            {% include "includes/reply_comment.html" with comment=child_comment %}
+
+                        {% endif %}
                     </div>
                 </div>
 
