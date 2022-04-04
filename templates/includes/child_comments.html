@@ -1,0 +1,30 @@
+<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+                {% for child_comment in comment.comments.all %}
+                <div class="media card mb-4">
+                    <div class="media-body card-body">
+                        <h5 class="mt-0">
+                            <a href="{% url 'web_collectors:profile' child_comment.author.username %}">
+                                {{ child_comment.author.username }}
+                            </a>
+                        </h5>
+                        <p>{{ child_comment.text }}</p>
+                        {% if request.user == child_comment.author %}
+
+                        {% include "includes/update_comment.html" with comment=child_comment %}
+
+                        {% include "includes/delete_comment.html" with comment=child_comment %}
+
+                        {% else %}
+
+                        {% include "includes/reply_comment.html" with comment=child_comment %}
+
+                        {% endif %}
+                    </div>
+                </div>
+                {% if child_comment.comments.exists %}
+                {% include "includes/child_comments.html" with comment=child_comment %}
+                {% endif %}
+                {% endfor %}
+            </div>
+</div>
