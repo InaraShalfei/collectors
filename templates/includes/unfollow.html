@@ -1,7 +1,37 @@
 {% load user_filters %}
-<form method="post" action="">
-   {% csrf_token %}
-     <h1>Вы уверены, что хотите отписаться от автора?</h1><br>
-     <input class="btn btn-danger" type="submit" value="Да" />
-     <a href="{% url 'web_collectors:profile' author.username %}"><div class="btn btn-primary">Отменить</div></a>
-</form>
+
+<button type="button" class="btn btn-danger btn-lg" data-toggle="modal"
+        data-target="#confirmModal{{ author.username }}">
+    Отписаться
+</button>
+<div class="modal fade" id="confirmModal{{ author.username }}" tabindex="-1"
+     aria-labelledby="confirmModalLabel{{ author.username }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel{{ author.username }}">Подтверждение</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Вы уверены, что хотите отписаться от данного автора?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <form method="post"
+                      id="cancel_following_form{{ author.username }}"
+                      action="{% url 'web_collectors:profile_unfollow' author.username %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" data-toggle="modal"
+                            data-target="#confirmModal{{ comment.id }}">
+                        Отписаться
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    submitAsynchronously('cancel_following_form{{ author.username }}');
+</script>

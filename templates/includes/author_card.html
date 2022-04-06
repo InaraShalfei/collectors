@@ -1,3 +1,19 @@
+{% load user_filters %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
+<script>
+function submitAsynchronously(formId) {
+    let form = document.getElementById(formId);
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault()
+        let data = new FormData(form);
+        axios.post(form.action, data)
+         .then(res => location.reload())
+         .catch(errors => console.log(errors))
+    })
+}
+</script>
 <div class="card">
     <div class="card-body">
         <div class="h1">
@@ -12,15 +28,12 @@
         Всего коллекций: {{ author.collections.count }}
     </div>
     {% if following %}
-    <a
-            class="btn btn-lg btn-light"
-            href="{% url 'web_collectors:profile_unfollow' author.username %}" role="button"
-    >
-        Отписаться
-    </a>
+
+            {% include "includes/unfollow.html" %}
+
     {% else %}
     <a
-            class="btn btn-lg btn-primary"
+            class="btn btn-lg btn-success"
             href="{% url 'web_collectors:profile_follow' author.username %}" role="button"
     >
         Подписаться

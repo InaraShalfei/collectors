@@ -302,9 +302,10 @@ def profile_unfollow(request, username):
     author = get_object_or_404(CustomUser, username=username)
     if request.method == 'POST':
         get_object_or_404(Follow, user=request.user, author=author).delete()
-        return redirect('web_collectors:profile', username=username)
-    return render(request, 'includes/unfollow.html', {'author': author,
-                                                      'user': request.user})
+    return JsonResponse({'status': 'Success'})
+
+# @login_required
+# def favorite_collection(request, collection):
 
 
 def page_not_found(request, exception):
