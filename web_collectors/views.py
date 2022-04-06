@@ -7,7 +7,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from web_collectors.forms import CollectionForm, ItemForm, CommentForm
 from web_collectors.models import (Collection, CollectionGroup, CollectionItem,
-                                   CustomUser, Follow, Comment, Photo)
+                                   CustomUser, Follow, Comment, Photo,
+                                   Favorite)
 from collectors.tasks import (delayed_collection_watermark,
                               delayed_photo_watermark,
                               delayed_send_message_collection,
@@ -243,7 +244,7 @@ def delete_photo(request, photo_id):
 def profile(request, username):
     author = get_object_or_404(CustomUser, username=username)
     collections = Collection.objects.filter(owner=author)
-    paginator = Paginator(collections, 5)
+    paginator = Paginator(collections, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     following = request.user.is_authenticated and Follow.objects.filter(
@@ -304,8 +305,14 @@ def profile_unfollow(request, username):
         get_object_or_404(Follow, user=request.user, author=author).delete()
     return JsonResponse({'status': 'Success'})
 
-# @login_required
-# def favorite_collection(request, collection):
+
+@login_required
+def favorite_collection(request, collection_id):
+    collection = get_object_or_404(Collection, id=collection_id)
+    user = request.user
+    if user != collection.owner:
+        Favorite.objects.get_or_create(collection=collection, user=user)
+    return JsonResponse({'status': 'Success'})
 
 
 def page_not_found(request, exception):

@@ -23,13 +23,18 @@
         <p><strong><a class="p-2 text-dark"
                       href="{% url 'web_collectors:author_collection' author.username collection.id %}"><strong>
             {{ collection.name }}</strong></a></strong></p>
+        <p>{% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
+            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+            {% endthumbnail %}</p>
+          {% include "includes/favorite.html" %}
         {% if not forloop.last %}
         <hr>
         {% endif %}
         {% endfor %}
 
-        {% include "includes/paginator.html" %}
     </div>
-
+{% if page.has_other_pages %}
+          {% include "includes/paginator.html" with items=page paginator=paginator%}
+        {% endif %}
 </main>
 {% endblock %}

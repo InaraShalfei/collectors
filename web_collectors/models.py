@@ -120,3 +120,16 @@ class Follow(models.Model):
             models.UniqueConstraint(fields=['author', 'user'],
                                     name='unique_following')
         ]
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
+                             related_name='favorite_collection')
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE,
+                                   related_name='favorite_collection')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'collection'],
+                                    name='unique_favorite')
+        ]

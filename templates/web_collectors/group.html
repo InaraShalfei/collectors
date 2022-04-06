@@ -24,6 +24,7 @@
         <p>{% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
             <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
         {% endthumbnail %}</p>
+{% include "includes/favorite.html" %}
     {% endfor %}
 </div>
 {% if page.has_other_pages %}
