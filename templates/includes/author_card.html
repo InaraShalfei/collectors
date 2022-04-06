@@ -32,11 +32,7 @@ function submitAsynchronously(formId) {
             {% include "includes/unfollow.html" %}
 
     {% else %}
-    <a
-            class="btn btn-lg btn-success"
-            href="{% url 'web_collectors:profile_follow' author.username %}" role="button"
-    >
-        Подписаться
-    </a>
+     {% include "includes/follow.html" %}
+
     {% endif %}
 </div>

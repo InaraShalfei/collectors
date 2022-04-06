@@ -1,0 +1,17 @@
+{% load user_filters %}
+
+<div>
+<form method="post"
+      id="following_form{{ author.username }}"
+      action="{% url 'web_collectors:profile_follow' author.username %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success btn-lg"
+            data-target="#confirmModal{{ comment.id }}">
+        Подписаться
+    </button>
+</form>
+</div>
+
+<script>
+    submitAsynchronously('following_form{{ author.username }}');
+</script>

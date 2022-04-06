@@ -294,7 +294,7 @@ def profile_follow(request, username):
         follow, created = Follow.objects.get_or_create(author=author,
                                                        user=request.user)
         delayed_send_message_follow(follow.id)
-    return redirect('web_collectors:profile', username=username)
+    return JsonResponse({'status': 'Success'})
 
 
 @login_required
