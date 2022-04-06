@@ -28,11 +28,8 @@ function submitAsynchronously(formId) {
         Всего коллекций: {{ author.collections.count }}
     </div>
     {% if following %}
-
-            {% include "includes/unfollow.html" %}
-
+        {% include "includes/unfollow.html" %}
     {% else %}
-     {% include "includes/follow.html" %}
-
+        {% include "includes/follow.html" %}
     {% endif %}
 </div>
