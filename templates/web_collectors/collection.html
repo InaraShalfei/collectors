@@ -16,7 +16,7 @@
         <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
     {% endthumbnail %}
     <p>{{ collection.description }}</p>
-
+{% include "includes/favorite.html" %}
     {% if request.user == author %}
         <a href="{% url 'web_collectors:new_item' group.slug collection.id %}" class="btn btn-success btn-sm"
            role="button" aria-pressed="true">Новый

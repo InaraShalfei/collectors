@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Count
 from django.http import HttpResponseRedirect, JsonResponse
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -19,13 +20,14 @@ from collectors.tasks import (delayed_collection_watermark,
 
 
 def index(request):
-    #TODO: decide what to represent on the main page
-    collections = Collection.objects.all()
-    paginator = Paginator(collections, settings.ITEMS_PER_PAGE)
+    top_collections = Collection.objects.annotate(
+        favorited=Count(
+            'favorite_collection')).order_by('-favorited')[:4]
+    paginator = Paginator(top_collections, settings.ITEMS_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'web_collectors/index.html', {
-        'page': page, 'paginator': paginator, 'collections': collections
+        'page': page, 'paginator': paginator, 'collections': top_collections
     })
 
 

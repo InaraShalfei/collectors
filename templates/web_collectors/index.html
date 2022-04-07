@@ -1,13 +1,36 @@
 {% extends "base.html" %}
-{% block header %}<div class="w3-container w3-green"><strong>Лучшие коллекции со всего мира!</strong></div>{% endblock %}
+{% block header %}
+<div class="w3-container w3-green"><strong>Лучшие коллекции со всего мира!</strong></div>{% endblock %}
 {% block content %}
-        <div class="container">
-            {% include "includes/menu.html" with index=True %}
-            {% for collection in page %}
-            <p><strong>{{ collection.name }}</strong></p>
-            {% endfor %}
+{% load thumbnail %}
+<div class="container">
+    {% include "includes/menu.html" with index=True %}
+    {% for collection in page %}
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="heading{{ collection.id }}">
+                <p><a href="{% url 'web_collectors:collection' collection.group.slug collection.id %}">
+                    <strong>{{ collection.name }}</strong></a></p>
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ collection.id }}"
+                            aria-expanded="true" aria-controls="collapse{{ collection.id }}">
+                        Лучшая коллекция, количество лайков: <span class="badge bg-secondary">{{ collection.favorite_collection.count }}</span>
+                    </button>
+                </h5>
+            </div>
+
+            <div id="collapse{{ collection.id }}" class="collapse" aria-labelledby="{{ collection.id }}" data-parent="#accordion">
+                <div class="card-body">
+                    {% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                    {% endthumbnail %}
+                </div>
+            </div>
         </div>
-        {% if page.has_other_pages %}
-            {% include "includes/paginator.html" with items=page paginator=paginator%}
-        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% if page.has_other_pages %}
+{% include "includes/paginator.html" with items=page paginator=paginator%}
+{% endif %}
 {% endblock %}
