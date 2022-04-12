@@ -23,37 +23,7 @@
             предмет коллекции</a>
         <a href="{% url 'web_collectors:update_collection' group.slug collection.id %}"
            class="btn btn-secondary btn-sm" role="button" aria-pressed="true">Редактировать</a>
-        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                data-target="#confirmModal{{ collection.id }}">
-            Удалить
-        </button>
-        <div class="modal fade" id="confirmModal{{ collection.id }}" tabindex="-1"
-             aria-labelledby="confirmModalLabel{{ collection.id }}" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmModalLabel{{ collection.id }}">Подтверждение удаления</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Вы уверены, что хотите удалить коллекцию?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                        <form method="post"
-                              action="{% url 'web_collectors:delete_collection' group.slug collection.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger" data-toggle="modal"
-                                    data-target="#confirmModal{{ collection.id }}">
-                                Удалить
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            </div>
+
     {% endif %}
     <hr>
     {% for item in page %}

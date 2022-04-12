@@ -95,15 +95,13 @@ def update_collection(request, slug, collection_id):
 
 
 @login_required
-def delete_collection(request, slug,  collection_id):
-    group = get_object_or_404(CollectionGroup, slug=slug)
-    collection = get_object_or_404(Collection, group=group, id=collection_id)
-    author = collection.owner
-    if request.user != author:
+def delete_collection(request, collection_id):
+    collection = get_object_or_404(Collection, id=collection_id)
+    if request.user != collection.owner:
         return redirect('web_collectors:groups')
     if request.method == 'POST':
         collection.delete()
-        return redirect('web_collectors:group', slug=slug)
+    return JsonResponse({'status': 'Success'})
 
 
 def collection(request, slug, collection_id):

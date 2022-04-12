@@ -3,7 +3,23 @@
 {% block header %} {{ group.name }}{% endblock %}
 {% block content %}
     {% load thumbnail %}
-    {% if request.user == author %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
+<script>
+function submitAsynchronously(formId) {
+    let form = document.getElementById(formId);
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault()
+        let data = new FormData(form);
+        axios.post(form.action, data)
+         .then(res => location.reload())
+         .catch(errors => console.log(errors))
+    })
+}
+</script>
+
+    {% if request.user == collection.owner %}
 <a class="p-2 text-dark" href="{% url 'web_collectors:new_collection' %}"><strong>Новая коллекция</strong></a>
     {%  endif %}
 <p>{{ group.description }}</p>
@@ -18,6 +34,7 @@
         </ol>
     </nav>
     <p>{% for collection in page %}</p>
+
         <p><strong><a class="p-2 text-dark"
                       href="{% url 'web_collectors:collection' group.slug collection.id %}"><strong>{{ collection.name }}</strong></a></strong>
 
@@ -25,6 +42,9 @@
             <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
         {% endthumbnail %}</p>
 {% include "includes/favorite.html" %}
+    {% if request.user == collection.owner %}
+ {% include "includes/delete_collection.html" %}
+     {%  endif %}
     {% endfor %}
 </div>
 {% if page.has_other_pages %}

@@ -27,6 +27,9 @@
             <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
             {% endthumbnail %}</p>
           {% include "includes/favorite.html" %}
+        {% if request.user == collection.owner %}
+        {% include "includes/delete_collection.html" %}
+        {% endif %}
         {% if not forloop.last %}
         <hr>
         {% endif %}

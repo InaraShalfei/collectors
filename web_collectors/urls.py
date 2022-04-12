@@ -39,7 +39,7 @@ urlpatterns = [
          name='update_comment'),
     path('group/<slug:slug>/<int:collection_id>/edit', views.update_collection,
          name='update_collection'),
-    path('group/<slug:slug>/<int:collection_id>/delete', views.delete_collection,
+    path('collection/<int:collection_id>/delete', views.delete_collection,
          name='delete_collection'),
     path('group/<slug:slug>/<int:collection_id>/new', views.create_item,
          name='new_item'),
