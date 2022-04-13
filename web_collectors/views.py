@@ -67,12 +67,9 @@ def create_collection(request):
         collection = form.save(commit=False)
         collection.owner = request.user
         form.save()
-        group = collection.group
         delayed_collection_watermark.delay(collection.id)
         delayed_send_message_collection.delay(collection.id)
-        return redirect('web_collectors:collection', slug=group.slug,
-                        collection_id=collection.id)
-    return render(request, 'web_collectors/new.html', {'form': form})
+    return JsonResponse({'status': 'Success'})
 
 
 @login_required

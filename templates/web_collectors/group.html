@@ -19,12 +19,8 @@ function submitAsynchronously(formId) {
 }
 </script>
 
-    {% if request.user == collection.owner %}
-<a class="p-2 text-dark" href="{% url 'web_collectors:new_collection' %}"><strong>Новая коллекция</strong></a>
-    {%  endif %}
 <p>{{ group.description }}</p>
-    <a href="{% url 'web_collectors:new_collection' %}" class="btn btn-success btn-sm"
-           role="button" aria-pressed="true">Новая коллекция</a>
+{% include "includes/create_collection.html" %}
     <hr>
 <div class="container">
     <nav aria-label="breadcrumb">

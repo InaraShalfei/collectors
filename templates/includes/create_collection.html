@@ -1,0 +1,67 @@
+{% load user_filters %}
+
+<button type="button" class="btn btn-success" data-toggle="modal"
+        data-target="#addModal">
+    Новая коллекция
+</button>
+<div class="modal fade" id="addModal" tabindex="-1"
+     aria-labelledby="addModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModal">Новая коллекция</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data"
+                      id="collection_form"
+                      action="{% url 'web_collectors:new_collection' %}">
+
+                    <h5 class="card-header">Новая коллекция</h5>
+                    <div class="card-body">
+                        <div class="form-group">
+                            {{ form.as_p }}
+                        </div>
+                        {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                        {% endfor %}
+
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div
+                                class="form-group row"
+                                aria-required="{% if field.field.required %}true{% else %}false{% endif %}"
+                        >
+                            <label for="{{ field.id_for_label }}" class="col-md-4 col-form-label text-md-right">
+                                {{ field.label }}{% if field.field.required %}
+                                <span class="required">*</span>{% endif %}
+                            </label>
+                            <div class="col-md-6">
+                                {{ field|addclass:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="card">
+                            {% endfor %}
+
+                        </div>
+                        <button type="submit" class="btn btn-dark">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    submitAsynchronously('collection_form');
+
+
+</script>
