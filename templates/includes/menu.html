@@ -1,18 +1,19 @@
 {% if user.is_authenticated %}
-<div class="row">
-    <ul class="nav nav-tabs">
+<div class="row justify-content-evenly">
+    <div class="col-4">
         {% if request.resolver_match.url_name == 'index' %}
-        <li class="nav-item">
-            <a class="nav-link " href="{% url 'web_collectors:all_authors' %}">
-                <strong><span style="color:gray">Все авторы коллекций</span></strong>
-            </a>
-        </li>
-        {% endif %}
-        <li class="nav-item">
-            <a class="nav-link {% if follow %}active{% endif %}" href="{% url 'web_collectors:follow_index' %}">
-                <strong><span style="color:red">Избранные авторы коллекций&#128151;</span></strong>
-           </a>
-        </li>
-    </ul>
+
+        <a class="nav-link " href="{% url 'web_collectors:all_authors' %}">
+            <strong><span style="color:gray">Все авторы коллекций</span></strong>
+        </a>
+
+    </div>
+    {% endif %}
+    <div class="col-4">
+        <a class="nav-link {% if follow %}active{% endif %}" href="{% url 'web_collectors:follow_index' %}">
+            <strong><span style="color:black">Избранные авторы коллекций</span></strong>
+        </a>
+
+    </div>
+    {% endif %}
 </div>
-{% endif %}
