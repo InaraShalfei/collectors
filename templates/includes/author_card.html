@@ -13,6 +13,7 @@ function submitAsynchronously(formId) {
          .catch(errors => console.log(errors))
     })
 }
+
 </script>
 <div class="card">
     <div class="card-body">
@@ -27,9 +28,11 @@ function submitAsynchronously(formId) {
     <div class="h6 text-muted">
         Всего коллекций: {{ author.collections.count }}
     </div>
+    {% if author != request.user %}
     {% if following %}
-        {% include "includes/unfollow.html" %}
+    {% include "includes/unfollow.html" %}
     {% else %}
-        {% include "includes/follow.html" %}
+    {% include "includes/follow.html" %}
+    {% endif %}
     {% endif %}
 </div>
