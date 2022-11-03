@@ -1,36 +1,67 @@
 {% extends "base.html" %}
 {% block header %}
-<div class="w3-container w3-green"><strong>Лучшие коллекции со всего мира!</strong></div>{% endblock %}
+<div class="container my-5">
+    <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+        <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
+            <h1 class="display-4 fw-bold lh-1">Лучшие коллекции со всего мира!</h1>
+            <p class="lead">Погрузитесь с головой в мир удивительных коллекций. Здесь каждый может поделиться своими
+                сокровищами и лучшими воспоминаниями своей жизни.</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+                {% if request.resolver_match.url_name == 'index' %}
+                <button type="button" class="btn btn-secondary btn-lg px-4 me-md-2 fw-bold"><a class="nav-link "
+                                                                                               href="{% url 'web_collectors:all_authors' %}">Все
+                    авторы</a></button>
+                {% endif %}
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4"><a
+                        class="nav-link {% if follow %}active{% endif %}"
+                        href="{% url 'web_collectors:follow_index' %}">Избранные авторы</a></button>
+
+            </div>
+        </div>
+        <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+            <img class="rounded-lg-3" src="/media/index.jpg" alt="" width="720">
+        </div>
+    </div>
+</div>
+{% endblock %}
 {% block content %}
 {% load thumbnail %}
-<div class="container">
-    {% include "includes/menu.html" with index=True %}
-    {% for collection in page %}
-    <div id="accordion">
-        <div class="card">
-            <div class="card-header" id="heading{{ collection.id }}">
-                <p><a href="{% url 'web_collectors:collection' collection.group.slug collection.id %}">
-                    <strong>{{ collection.name }}</strong></a></p>
-                <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ collection.id }}"
-                            aria-expanded="true" aria-controls="collapse{{ collection.id }}">
-                        Лучшая коллекция, количество лайков: <span class="badge bg-secondary">{{ collection.favorite_collection.count }}</span>
-                    </button>
-                </h5>
-            </div>
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for collection in page %}
+            <div class="col">
 
-            <div id="collapse{{ collection.id }}" class="collapse" aria-labelledby="{{ collection.id }}" data-parent="#accordion">
-                <div class="card-body">
+                <div class="card shadow-sm">
                     {% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
                     {% endthumbnail %}
+
+                    <div class="card-body">
+                        <p class="card-text">Лучшая коллекция {{ collection.name }}.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                            </div>
+                            <small class="text-muted">likes: <span class="badge bg-secondary">{{ collection.favorite_collection.count }}</span></small>
+
+
+                        </div>
+                    </div>
+
                 </div>
+
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
+
+    {% if page.has_other_pages %}
+    {% include "includes/paginator.html" with items=page paginator=paginator%}
+    {% endif %}
+    {% endblock %}
+
+
 </div>
-{% if page.has_other_pages %}
-{% include "includes/paginator.html" with items=page paginator=paginator%}
-{% endif %}
-{% endblock %}
+
