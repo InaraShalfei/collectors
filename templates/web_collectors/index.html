@@ -34,7 +34,7 @@
 
                 <div class="card shadow-sm">
                     {% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
-                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                    <img src="{{ im.url }}" class="card-img-top" alt="...">
                     {% endthumbnail %}
 
                     <div class="card-body">
