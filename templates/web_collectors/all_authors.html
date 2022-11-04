@@ -1,19 +1,33 @@
 {% extends "base.html" %}
-{% block title %}Коллекции авторов{% endblock %}
-{% block header %}Коллекции авторов{% endblock %}
-{% block content %}
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'web_collectors:index' %}">Главная</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Все авторы</li>
-    </ol>
-</nav>
+{% block header %}
+<div class="text-bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+    <div class="my-3 py-3">
+        <h2 class="display-5">Коллекции авторов</h2>
+        <p class="lead">Удивительные коллекции удивительных людей.</p>
 
-{% for user in page %}
-<p><a class="p-2 text-dark" href="{% url 'web_collectors:profile' user.username %}"><strong>{{ user.username }}</strong></a></p>
-{% endfor %}
+    </div>
 
+    {% endblock %}
+
+    {% block content %}
+                        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'web_collectors:index' %}">Главная</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Все авторы</li>
+            </ol>
+        </nav>
+
+    {% for user in page %}
+    <p><a class="p-2 text-dark" href="{% url 'web_collectors:profile' user.username %}"><strong>{{ user.username }}</strong></a></p>
+    {% endfor %}
+
+
+
+
+
+</div>
 {% if page.has_other_pages %}
 {% include "includes/paginator.html" with items=page paginator=paginator%}
 {% endif %}
 {% endblock %}
+
