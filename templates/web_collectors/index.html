@@ -6,6 +6,7 @@
             <h1 class="display-4 fw-bold lh-1">Лучшие коллекции со всего мира!</h1>
             <p class="lead">Погрузитесь с головой в мир удивительных коллекций. Здесь каждый может поделиться своими
                 сокровищами и лучшими воспоминаниями своей жизни.</p>
+            {% if user.is_authenticated %}
             <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
                 {% if request.resolver_match.url_name == 'index' %}
                 <button type="button" class="btn btn-secondary btn-lg px-4 me-md-2 fw-bold"><a class="nav-link "
@@ -23,6 +24,7 @@
         </div>
     </div>
 </div>
+   {% endif %}
 {% endblock %}
 {% block content %}
 {% if user.is_authenticated %}
