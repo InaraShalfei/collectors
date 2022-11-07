@@ -14,25 +14,25 @@ function submitAsynchronously(formId) {
     })
 }
 
+
+
 </script>
-<div class="card">
-    <div class="card-body">
-        <div class="h1">
-            Автор: {{ author.get_full_name }}
+<div class="container">
+
+    <div class="p-4 p-md-5 mb-4 rounded text-bg-dark">
+        <div class="col-md-6 px-0">
+            <h1 class="display-4 fst-italic">Автор: {{ author.username }}</h1>
+            <p class="lead my-3"> Всего коллекций: {{ author.collections.count }}</p>
         </div>
-        <div class="h3 text-muted">
-            {{ author.username }}
-        </div>
+
+
+        {% if author != request.user %}
+        {% if following %}
+        {% include "includes/unfollow.html" %}
+        {% else %}
+        {% include "includes/follow.html" %}
+        {% endif %}
+        {% endif %}
     </div>
 
-    <div class="h6 text-muted">
-        Всего коллекций: {{ author.collections.count }}
-    </div>
-    {% if author != request.user %}
-    {% if following %}
-    {% include "includes/unfollow.html" %}
-    {% else %}
-    {% include "includes/follow.html" %}
-    {% endif %}
-    {% endif %}
 </div>
