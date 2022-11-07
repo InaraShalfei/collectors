@@ -1,8 +1,24 @@
 {% extends "base.html" %}
-{% block title %}Коллекции группы {{ collection.group.name }} {% endblock %}
-{% block header %} {{ group.name }}{% endblock %}
+{% block title %}Коллекции группы {{ group.name }} {% endblock %}
+{% block header %}
+<div class="text-bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden"
+     xmlns="http://www.w3.org/1999/html">
+    <div class="my-3 py-3">
+        <h2 class="display-5"><strong>{{ group.name }}</strong></h2>
+        <p class="lead">{{ group.description }}</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button type="button" class="btn btn-outline-secondary btn-sm px-4 "><a
+                    class="nav-link"
+                    href="{% url 'web_collectors:new_collection' %}">Новая коллекция</a></button>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
 {% block content %}
-    {% load thumbnail %}
+{% load thumbnail %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 
 <script>
@@ -17,33 +33,51 @@ function submitAsynchronously(formId) {
          .catch(errors => console.log(errors))
     })
 }
+
+
 </script>
 
-<p>{{ group.description }}</p>
-{% include "includes/create_collection.html" %}
-    <hr>
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'web_collectors:groups' %}">Группы коллекций</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:groups' %}">Коллекции</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ group.name }}</li>
         </ol>
     </nav>
-    <p>{% for collection in page %}</p>
 
-        <p><strong><a class="p-2 text-dark"
-                      href="{% url 'web_collectors:collection' group.slug collection.id %}"><strong>{{ collection.name }}</strong></a></strong>
+    <div class="row mb-2">
+        {% for collection in page %}
+        <div class="col-md-6">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-secondary">{% include "includes/favorite.html" %}</strong>
+                    <h3 class="mb-0"><a class="nav-link"
+                                        href="{% url 'web_collectors:collection' group.slug collection.id %}"><strong>
+                        {{ collection.name }}</strong></a></h3>
 
-        <p>{% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
-            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-        {% endthumbnail %}</p>
-{% include "includes/favorite.html" %}
-    {% if request.user == collection.owner %}
- {% include "includes/delete_collection.html" %}
-     {%  endif %}
-    {% endfor %}
+                    <p class="card-text mb-auto">This is a wider card with supporting text below as a natural
+                        lead-in to
+                        additional content.</p>
+                    {% if request.user == collection.owner %}
+                    {% include "includes/delete_collection.html" %}
+                    {% endif %}
+                </div>
+                <div class="col-auto d-none d-lg-block">
+                    {% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                    {% endthumbnail %}
+
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+
+
+    {% if page.has_other_pages %}
+    {% include "includes/paginator.html" with items=page paginator=paginator%}
+    {% endif %}
+    {% endblock %}
 </div>
-{% if page.has_other_pages %}
-{% include "includes/paginator.html" with items=page paginator=paginator%}
-{% endif %}
-{% endblock %} 
