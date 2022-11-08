@@ -15,8 +15,43 @@ function submitAsynchronously(formId) {
     })
 }
 
-</script>
 
+</script>
+{% for comment in comments %}
+<div id="accordion">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <a href="{% url 'web_collectors:profile' comment.author.username %}">
+                <strong>{{ comment.author.username }}</strong>
+            </a>
+            <div>
+                {{ comment.text }}
+            </div>
+            {% if request.user == comment.author %}
+
+            {% include "includes/update_comment.html" %}
+
+            {% include "includes/delete_comment.html" %}
+
+            {% else %}
+
+            {% include "includes/reply_comment.html" %}
+
+            {% endif %}
+            <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne">
+                Свернуть/показать
+            </button>
+        </div>
+
+        {% include "includes/child_comments.html" with comment=comment %}
+
+    </div>
+</div>
+
+{% endfor %}
+<p></p>
 {% if user.is_authenticated and request.user != collection.owner %}
 
 <button type="button" class="btn btn-success" data-toggle="modal"
@@ -56,40 +91,6 @@ function submitAsynchronously(formId) {
 <script>
     submitAsynchronously('comment_form');
 
+
 </script>
 {% endif %}
-
-{% for comment in comments %}
-<div id="accordion">
-    <div class="card">
-        <div class="card-header" id="headingOne">
-            <a href="{% url 'web_collectors:profile' comment.author.username %}">
-                <strong>{{ comment.author.username }}</strong>
-            </a>
-            <div>
-                {{ comment.text }}
-            </div>
-            {% if request.user == comment.author %}
-
-            {% include "includes/update_comment.html" %}
-
-            {% include "includes/delete_comment.html" %}
-
-            {% else %}
-
-            {% include "includes/reply_comment.html" %}
-
-            {% endif %}
-            <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#collapseOne"
-                    aria-expanded="true"
-                    aria-controls="collapseOne">
-                Свернуть/показать
-            </button>
-        </div>
-
-        {% include "includes/child_comments.html" with comment=comment %}
-
-    </div>
-</div>
-
-{% endfor %}
