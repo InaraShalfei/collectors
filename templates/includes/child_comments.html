@@ -3,12 +3,10 @@
                 {% for child_comment in comment.comments.all %}
                 <div class="media card mb-4">
                     <div class="media-body card-body">
-                        <h5 class="mt-0">
-                            <a href="{% url 'web_collectors:profile' child_comment.author.username %}">
-                                {{ child_comment.author.username }}
-                            </a>
-                        </h5>
-                        <p>{{ child_comment.text }}</p>
+                        <a href="{% url 'web_collectors:profile' child_comment.author.username %}">
+                            <strong>{{ child_comment.author.username }}</strong>
+                        </a>
+                        <div>{{ child_comment.text }}</div>
                         {% if request.user == child_comment.author %}
 
                         {% include "includes/update_comment.html" with comment=child_comment %}

@@ -6,7 +6,7 @@
 
 <div class="container">
 
-    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+    <div class="d-grid gap-3 d-md-flex justify-content-md-start">
         {% if request.user == author %}
         <button type="button" class="btn btn-outline-secondary btn-sm px-4 "><a
                 class="nav-link"
@@ -21,31 +21,32 @@
     </div>
 
 
-    <div class="container col-xxl-8 px-4 py-5">
-        <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-            <div class="col-10 col-sm-8 col-lg-6">
+    <div class="px-4 py-5">
+        <div class="row g-5 py-5">
+            <div class="col-4">
+                <h1 class="display-5 fw-bold lh-1 mb-3">{{ collection.name }}</h1>
+                <p class="lead">{{ collection.description }}</p>
+            </div>
+            <div class="col-4">
                 {% thumbnail collection.photo "350x250" crop="center" upscale=True as im %}
                 <img src="{{ im.url }}" class="d-block mx-lg-auto img-fluid" alt="" width="800" height="600"
                      loading="lazy">
                 {% endthumbnail %}
                 {% include "includes/favorite.html" %}
             </div>
-            <div class="col-lg-6">
-                <h1 class="display-5 fw-bold lh-1 mb-3">{{ collection.name }}</h1>
-                <p class="lead">{{ collection.description }}</p>
+            <div class="col-4">
+                {% include "includes/comments.html" %}
             </div>
-
         </div>
-
     </div>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'web_collectors:groups' %}">Коллекции</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'web_collectors:group' group.slug %}">{{ group.name }}</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">{{ collection.name }}</li>
-            </ol>
-        </nav>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:groups' %}">Коллекции</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:group' group.slug %}">{{ group.name }}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ collection.name }}</li>
+        </ol>
+    </nav>
 
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         {% for item in page %}
@@ -64,14 +65,12 @@
                 <span class="d-block">@name</span>
             </div>
         </div>
-   {% endfor %}
+        {% endfor %}
+
     </div>
 
-
-
-    {% include "includes/comments.html" %}
     {% if page.has_other_pages %}
     {% include "includes/paginator.html" with items=page paginator=paginator %}
     {% endif %}
     {% endblock %}
- </div>
+</div>

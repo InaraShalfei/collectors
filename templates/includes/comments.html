@@ -56,37 +56,38 @@ function submitAsynchronously(formId) {
     submitAsynchronously('comment_form');
 </script>
 {% endif %}
-<p></p>
 
 {% for comment in comments %}
-<div id="accordion">
-    <div class="card">
-        <div class="card-header" id="headingOne">
-            <p><a href="{% url 'web_collectors:profile' comment.author.username %}">
-                <strong>{{ comment.author.username }}</strong></a></p>
-            <h5 class="mb-0">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
-                        aria-expanded="true"
-                        aria-controls="collapseOne">
-                    {{ comment.text }}
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <a href="{% url 'web_collectors:profile' comment.author.username %}">
+                    <strong>{{ comment.author.username }}</strong>
+                </a>
+                <div>
+                        {{ comment.text }}
+                </div>
+                {% if request.user == comment.author %}
+
+                    {% include "includes/update_comment.html" %}
+
+                    {% include "includes/delete_comment.html" %}
+
+                {% else %}
+
+                    {% include "includes/reply_comment.html" %}
+
+                {% endif %}
+                <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne">
+                    Свернуть/показать
                 </button>
-            </h5>
-            {% if request.user == comment.author %}
+            </div>
 
-                {% include "includes/update_comment.html" %}
+            {% include "includes/child_comments.html" with comment=comment %}
 
-                {% include "includes/delete_comment.html" %}
-
-            {% else %}
-
-                {% include "includes/reply_comment.html" %}
-
-            {% endif %}
         </div>
-        {% include "includes/child_comments.html" with comment=comment %}
-
     </div>
 
-
-</div>
 {% endfor %}
