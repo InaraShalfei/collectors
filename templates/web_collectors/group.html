@@ -7,9 +7,7 @@
         <h2 class="display-5"><strong>{{ group.name }}</strong></h2>
         <p class="lead">{{ group.description }}</p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button type="button" class="btn btn-outline-secondary btn-sm px-4 "><a
-                    class="nav-link"
-                    href="{% url 'web_collectors:new_collection' %}">Новая коллекция</a></button>
+            {% include "includes/create_collection.html" %}
         </div>
 
     </div>
@@ -21,21 +19,7 @@
 {% load thumbnail %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 
-<script>
-function submitAsynchronously(formId) {
-    let form = document.getElementById(formId);
 
-    form.addEventListener('submit', function(event) {
-        event.preventDefault()
-        let data = new FormData(form);
-        axios.post(form.action, data)
-         .then(res => location.reload())
-         .catch(errors => console.log(errors))
-    })
-}
-
-
-</script>
 
 <div class="container">
     <nav aria-label="breadcrumb">
