@@ -14,6 +14,7 @@ function submitAsynchronously(formId) {
          .catch(errors => console.log(errors))
     })
 }
+
 </script>
 
 {% if user.is_authenticated and request.user != collection.owner %}
@@ -37,7 +38,7 @@ function submitAsynchronously(formId) {
                       action="{% url 'web_collectors:add_comment' collection.id %}" id="comment_form">
 
                     {% csrf_token %}
-                    <h5 class="card-header">Добавить комментарий:</h5>
+
                     <div class="card-body">
                         <div class="form-group">
                             {{ form.as_p }}
@@ -54,40 +55,41 @@ function submitAsynchronously(formId) {
 </div>
 <script>
     submitAsynchronously('comment_form');
+
 </script>
 {% endif %}
 
 {% for comment in comments %}
-    <div id="accordion">
-        <div class="card">
-            <div class="card-header" id="headingOne">
-                <a href="{% url 'web_collectors:profile' comment.author.username %}">
-                    <strong>{{ comment.author.username }}</strong>
-                </a>
-                <div>
-                        {{ comment.text }}
-                </div>
-                {% if request.user == comment.author %}
+<div id="accordion">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <a href="{% url 'web_collectors:profile' comment.author.username %}">
+                <strong>{{ comment.author.username }}</strong>
+            </a>
+            <div>
+                {{ comment.text }}
+            </div>
+            {% if request.user == comment.author %}
 
-                    {% include "includes/update_comment.html" %}
+            {% include "includes/update_comment.html" %}
 
-                    {% include "includes/delete_comment.html" %}
+            {% include "includes/delete_comment.html" %}
 
-                {% else %}
+            {% else %}
 
-                    {% include "includes/reply_comment.html" %}
+            {% include "includes/reply_comment.html" %}
 
-                {% endif %}
-                <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#collapseOne"
+            {% endif %}
+            <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#collapseOne"
                     aria-expanded="true"
                     aria-controls="collapseOne">
-                    Свернуть/показать
-                </button>
-            </div>
-
-            {% include "includes/child_comments.html" with comment=comment %}
-
+                Свернуть/показать
+            </button>
         </div>
+
+        {% include "includes/child_comments.html" with comment=comment %}
+
     </div>
+</div>
 
 {% endfor %}
