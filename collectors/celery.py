@@ -5,10 +5,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# user = os.getenv('RABBITMQ_USERNAME')
-# password = os.getenv('RABBITMQ_PASSWORD')
+user = os.getenv('RABBITMQ_USERNAME')
+password = os.getenv('RABBITMQ_PASSWORD')
 app = Celery('collectors',
-             broker='amqp://localhost',
+             broker=f'amqp://{user}:{password}@localhost',
              include=['collectors.tasks'])
 
 if __name__ == '__main__':
