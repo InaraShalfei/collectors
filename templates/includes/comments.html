@@ -54,7 +54,7 @@ function submitAsynchronously(formId) {
 <p></p>
 {% if user.is_authenticated and request.user != collection.owner %}
 
-<button type="button" class="btn btn-success" data-toggle="modal"
+<button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
         data-target="#addModal">
     Добавить комментарий
 </button>
@@ -90,7 +90,5 @@ function submitAsynchronously(formId) {
 </div>
 <script>
     submitAsynchronously('comment_form');
-
-
 </script>
 {% endif %}
