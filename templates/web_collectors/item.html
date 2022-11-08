@@ -1,85 +1,99 @@
 {% extends "base.html" %}
-{% block title %}Коллекция {{ collection.name }} {% endblock %}
-{% block header %} {{ collection.name }} {% endblock %}
-{% block content %}
+
+<div class="container">
+    {% block title %}Коллекция {{ collection.name }} {% endblock %}
+    {% block header %} {{ collection.name }} {% endblock %}
+    {% block content %}
     {% load thumbnail %}
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'web_collectors:groups' %}">Группы коллекций</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'web_collectors:group' group.slug %}">{{ group.name }}</a>
-                </li>
-                <li class="breadcrumb-item"><a
-                        href="{% url 'web_collectors:collection' group.slug collection.id %}">{{ collection.name }}</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">{{ item.name }}</li>
-            </ol>
-        </nav>
-        <p><strong>
-            <mark>{{ item.name }}</mark>
-        </strong></p>
-        <div id="carousel" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-                {% for photo in item.photos.all %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:groups' %}">Коллекции</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:group' group.slug %}">{{ group.name }}</a>
+            </li>
+            <li class="breadcrumb-item"><a
+                    href="{% url 'web_collectors:collection' group.slug collection.id %}">{{ collection.name }}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ item.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+        <div class="col-10 col-sm-8 col-lg-6">
+            <div id="carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    {% for photo in item.photos.all %}
                     <div
                             {% if forloop.first %}
-                                class="carousel-item active"
+                            class="carousel-item active"
                             {% else %}
-                                class="carousel-item"
+                            class="carousel-item"
                             {% endif %}
                     >
                         {% thumbnail photo.file "400x400" crop="center" upscale=True as im %}
-                            <img class="d-block w-100" src="{{ im.url }}" style="margin:{{ item.image }}" width="{{ im.width }}"
-                                 height="{{ im.height }}"
-                                 alt="{{ forloop.counter }}">
+                        <img class="d-block w-100" src="{{ im.url }}" style="margin:{{ item.image }}"
+                             width="{{ im.width }}"
+                             height="{{ im.height }}"
+                             alt="{{ forloop.counter }}">
                         {% endthumbnail %}
                     </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
+                <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
             </div>
-            <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
         </div>
-        <p>{{ item.description }}</p>
-        {% if request.user == author %}
-            <a href="{% url 'web_collectors:update_item' group.slug collection.id item.id %}"
-               class="btn btn-secondary btn-sm" role="button" aria-pressed="true">Редактировать</a>
-            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                    data-target="#confirmModal{{ item.id }}">
-                Удалить
-            </button>
-            <div class="modal fade" id="confirmModal{{ item.id }}" tabindex="-1"
-                 aria-labelledby="confirmModalLabel{{ item.id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="confirmModalLabel{{ item.id }}">Подтверждение удаления</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            Вы уверены, что хотите удалить объект коллекции?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-                            <form method="post"
-                                  action="{% url 'web_collectors:delete_item' group.slug collection.id item.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger" data-toggle="modal"
-                                        data-target="#confirmModal{{ item.id }}">
-                                    Удалить
+        <div class="col-lg-6">
+            <h1 class="display-5 fw-bold lh-1 mb-3">{{ item.name }}</h1>
+            <p class="lead">{{ item.description }}</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                {% if request.user == author %}
+                <a href="{% url 'web_collectors:update_item' group.slug collection.id item.id %}"
+                   class="btn btn-secondary btn-sm px-4 me-md-2" role="button" aria-pressed="true">Редактировать</a>
+                <button type="button" class="btn btn-danger btn-sm px-4 me-md-2" data-toggle="modal"
+                        data-target="#confirmModal{{ item.id }}">
+                    Удалить
+                </button>
+                <div class="modal fade" id="confirmModal{{ item.id }}" tabindex="-1"
+                     aria-labelledby="confirmModalLabel{{ item.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmModalLabel{{ item.id }}">Подтверждение удаления</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
                                 </button>
-                            </form>
+                            </div>
+                            <div class="modal-body">
+                                Вы уверены, что хотите удалить объект коллекции?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Отмена
+                                </button>
+                                <form method="post"
+                                      action="{% url 'web_collectors:delete_item' group.slug collection.id item.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                            data-toggle="modal"
+                                            data-target="#confirmModal{{ item.id }}">
+                                        Удалить
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
-        {% endif %}
+        </div>
     </div>
-{% endblock %}
+
+
+    {% endblock %}
+
+</div>
