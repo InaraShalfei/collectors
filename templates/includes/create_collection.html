@@ -1,6 +1,22 @@
 {% load user_filters %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+<script>
+function submitAsynchronously(formId) {
+    let form = document.getElementById(formId);
 
-<button type="button" class="btn btn-success" data-toggle="modal"
+    form.addEventListener('submit', function(event) {
+        event.preventDefault()
+        let data = new FormData(form);
+        axios.post(form.action, data)
+         .then(res => location.reload())
+         .catch(errors => console.log(errors))
+    })
+}
+
+
+</script>
+
+<button type="button" class="btn btn-outline-secondary" data-toggle="modal"
         data-target="#addModal">
     Новая коллекция
 </button>
@@ -15,22 +31,25 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" enctype="multipart/form-data"
+                <form method="post"
                       id="collection_form"
                       action="{% url 'web_collectors:new_collection' %}">
 
-                    <h5 class="card-header">Новая коллекция</h5>
+                    {% csrf_token %}
+
                     <div class="card-body">
                         <div class="form-group">
                             {{ form.as_p }}
                         </div>
+                        <button type="submit" class="btn btn-dark">Сохранить</button>
+
                         {% for error in form.non_field_errors %}
                         <div class="alert alert-danger" role="alert">
                             {{ error }}
                         </div>
                         {% endfor %}
 
-                        {% csrf_token %}
+
                         {% for field in form %}
                         <div
                                 class="form-group row"
@@ -44,24 +63,19 @@
                                 {{ field|addclass:"form-control" }}
                             </div>
                         </div>
-                        <div class="card">
-                            {% endfor %}
 
-                        </div>
-                        <button type="submit" class="btn btn-dark">Сохранить</button>
+                        {% endfor %}
+
+
                     </div>
                 </form>
             </div>
-
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+            </div>
         </div>
     </div>
 </div>
-</div>
 <script>
     submitAsynchronously('collection_form');
-
-
 </script>
