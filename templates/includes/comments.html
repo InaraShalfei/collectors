@@ -16,7 +16,7 @@ function submitAsynchronously(formId) {
 }
 </script>
 
-{% if user.is_authenticated and request.user != author %}
+{% if user.is_authenticated and request.user != collection.owner %}
 
 <button type="button" class="btn btn-success" data-toggle="modal"
         data-target="#addModal">
@@ -57,7 +57,7 @@ function submitAsynchronously(formId) {
 </script>
 {% endif %}
 <p></p>
-<!-- Комментарии -->
+
 {% for comment in comments %}
 <div id="accordion">
     <div class="card">
