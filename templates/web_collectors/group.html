@@ -6,19 +6,20 @@
     <div class="my-3 py-3">
         <h2 class="display-5"><strong>{{ group.name }}</strong></h2>
         <p class="lead">{{ group.description }}</p>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            {% include "includes/create_collection.html" %}
-        </div>
-
     </div>
 </div>
 
 {% endblock %}
 
 {% block content %}
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    {% include "includes/create_collection.html" %}
+</div>
+
+
 {% load thumbnail %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
-
 
 
 <div class="container">
