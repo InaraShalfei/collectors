@@ -63,9 +63,9 @@ class Collection(models.Model):
 
 class CollectionItem(models.Model):
     name = models.CharField(max_length=100,
-                            verbose_name='Название объекта коллекции')
+                            verbose_name='Название объекта')
     description = models.TextField(max_length=200, blank=True,
-                                   verbose_name='Описание объекта коллекции')
+                                   verbose_name='Описание объекта')
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE,
                                    related_name='collection_items',
                                    verbose_name='Коллекция объектов')
