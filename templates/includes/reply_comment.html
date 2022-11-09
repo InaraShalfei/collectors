@@ -19,7 +19,6 @@
                       id="reply_comment_form{{ comment.id }}"
                       action="{% url 'web_collectors:reply_comment' collection.id comment.id %}">
                     {% csrf_token %}
-                    <h5 class="card-header">Ответить на комментарий:</h5>
                     <div class="card-body">
                         <div class="form-group">
                             {{ form.as_p }}
