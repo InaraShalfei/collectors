@@ -51,13 +51,14 @@ def collection_groups(request):
 
 
 def collection_group(request, slug):
+    form = CollectionForm(request.POST or None, files=request.FILES or None)
     group = get_object_or_404(CollectionGroup, slug=slug)
     collections = group.collections.all()
     paginator = Paginator(collections, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'web_collectors/group.html',
-                  {'page': page, 'paginator': paginator, 'group': group})
+                  {'page': page, 'paginator': paginator, 'group': group, 'form': form})
 
 
 @login_required
