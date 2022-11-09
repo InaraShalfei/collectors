@@ -256,6 +256,7 @@ def profile(request, username):
 def author_collection(request, username, collection_id):
     author = get_object_or_404(CustomUser, username=username)
     collection = get_object_or_404(Collection, owner=author, id=collection_id)
+    group = collection.group
     items = CollectionItem.objects.filter(collection=collection)
     paginator = Paginator(items, 3)
     page_number = request.GET.get('page')
@@ -263,7 +264,7 @@ def author_collection(request, username, collection_id):
     form = CommentForm()
     return render(request, 'web_collectors/author_collection.html', {
         'page': page, 'paginator': paginator, 'author': author,
-        'collection': collection, 'form': form,
+        'collection': collection, 'form': form, 'group': group,
         'comments': collection.comments.filter(parent_comment=None)})
 
 
