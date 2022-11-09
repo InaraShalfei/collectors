@@ -271,10 +271,10 @@ def author_collection(request, username, collection_id):
 def author_collection_item(request, username, collection_id, item_id):
     author = get_object_or_404(CustomUser, username=username)
     collection = get_object_or_404(Collection, owner=author, id=collection_id)
+    group = collection.group
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
     return render(request, 'web_collectors/author_collection_item.html', {
-        'user': author, 'item': item, 'collection': collection}
-                  )
+        'author': author, 'item': item, 'collection': collection, 'group': group})
 
 
 @login_required

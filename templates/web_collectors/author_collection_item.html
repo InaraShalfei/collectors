@@ -1,31 +1,21 @@
 {% extends "base.html" %}
-{% block title %}Коллекция {{ collection.name }} {% endblock %}
-{% block header %} {{ collection.name }} {% endblock %}
-{% block content %}
-{% load thumbnail %}
-<style>
-mark {
-  background-color: black;
-  color: white;
-}
-</style>
+
 <div class="container">
+    {% block title %}Коллекция {{ collection.name }} {% endblock %}
+    {% block header %} {{ collection.name }} {% endblock %}
+    {% block content %}
+
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'web_collectors:profile' user.username %}">Коллекции автора</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'web_collectors:author_collection' user.username collection.id %}">{{ collection.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'web_collectors:profile' user.username %}">Коллекции автора</a>
+            </li>
+            <li class="breadcrumb-item"><a
+                    href="{% url 'web_collectors:author_collection' user.username collection.id %}">{{ collection.name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ item.name }}</li>
         </ol>
     </nav>
-    <p><strong><mark>{{ item.name }}</mark></strong></p>
 
-    <br/>{% for photo in item.photo.all %}
-    {% thumbnail photo.photo "500x600" crop="center" upscale=True as im %}
-    <img src="/{{ photo.photo }}" width="{{ im.width }}" height="{{ im.height }}">
-    {% endthumbnail %}
-    <br/>{% endfor %}
+    {% include "includes/item.html" %}
 
-    {{ item.description }}
-
+    {% endblock %}
 </div>
-{% endblock %}
