@@ -58,7 +58,8 @@ def collection_group(request, slug):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'web_collectors/group.html',
-                  {'page': page, 'paginator': paginator, 'group': group, 'form': form})
+                  {'page': page, 'paginator': paginator, 'group': group,
+                   'form': form})
 
 
 @login_required
@@ -148,7 +149,6 @@ def reply_comment(request, collection_id, comment_id):
 
 @login_required
 def delete_comment(request, collection_id, comment_id):
-    #TODO check that user is an author
     collection = get_object_or_404(Collection, id=collection_id)
     comment = get_object_or_404(Comment, collection=collection, id=comment_id)
     if request.method == 'POST':
@@ -158,7 +158,6 @@ def delete_comment(request, collection_id, comment_id):
 
 @login_required
 def update_comment(request, collection_id, comment_id):
-    # TODO check that user is an author
     collection = get_object_or_404(Collection, id=collection_id)
     comment = get_object_or_404(Comment, collection=collection, id=comment_id)
     form = CommentForm(request.POST or None, instance=comment)
@@ -240,6 +239,7 @@ def delete_photo(request, photo_id):
 
 
 def profile(request, username):
+    form = CollectionForm(request.POST or None, files=request.FILES or None)
     author = get_object_or_404(CustomUser, username=username)
     collections = Collection.objects.filter(owner=author)
     paginator = Paginator(collections, 3)
@@ -250,7 +250,7 @@ def profile(request, username):
     return render(request, 'web_collectors/profile.html', {
         'page': page, 'paginator': paginator, 'collection': collection,
         'author': author,
-        'following': following})
+        'following': following, 'form': form})
 
 
 def author_collection(request, username, collection_id):
