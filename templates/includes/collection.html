@@ -5,14 +5,11 @@
         <h1 class="display-5 fw-bold lh-1 mb-3">{{ collection.name }}</h1>
         <p class="lead">{{ collection.description }}</p>
         {% if request.user == author %}
-        <button type="button" class="btn btn-success btn-sm px-4 "><a
+        <button type="button" class="btn btn-outline-dark"><a
                 class="nav-link"
                 href="{% url 'web_collectors:new_item' group.slug collection.id %}">Новый объект</a>
         </button>
-        <button type="button" class="btn btn-secondary btn-sm px-4 "><a
-                class="nav-link"
-                href="{% url 'web_collectors:update_collection' group.slug collection.id %}">Редактировать</a>
-        </button>
+        {% include "includes/create_collection.html" %}
         {% endif %}
     </div>
     <div class="col-6 col-lg-4">

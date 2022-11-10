@@ -88,9 +88,7 @@ def update_collection(request, slug, collection_id):
         delayed_collection_watermark.delay(collection.id)
         return redirect('web_collectors:collection', slug=slug,
                         collection_id=collection_id)
-    return render(request, 'web_collectors/new.html', {
-        'form': form, 'group': group, 'collection': collection,
-        'author': author})
+    return JsonResponse({'status': 'Success'})
 
 
 @login_required
@@ -111,7 +109,10 @@ def collection(request, slug, collection_id):
     paginator = Paginator(items, 4)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    form = CommentForm()
+    if request == 'POST' and "collection_submit" in request.POST:
+        form = CollectionForm()
+    else:
+        form = CommentForm()
     return render(request, 'web_collectors/collection.html', {
         'page': page, 'paginator': paginator, 'group': group,
         'collection': collection, 'author': author, 'form': form,
