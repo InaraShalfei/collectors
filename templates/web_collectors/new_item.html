@@ -62,20 +62,19 @@
                         {% endfor %}
 
 
-                        <div class="card-footer">
-                            <div class="d-grid gap-2 col-2 mx-auto">
-                                <button type="submit" class="btn btn-success">
-                                    Сохранить
-                                </button>
-                                <a class="btn btn-secondary"
-                                   {% if form.instance.id %}
-                                   href="{% url 'web_collectors:item' group.slug collection.id item.id %}"
-                                   {% else %}
-                                   href="{% url 'web_collectors:collection' group.slug collection.id %}"
-                                   {% endif %}
-                                >Отменить</a>
-                            </div>
-                        </div>
+                        <p></p>
+                        <button type="submit" class="btn btn-success">
+                            Сохранить
+                        </button>
+                        <a class="btn btn-secondary"
+                           {% if form.instance.id %}
+                           href="{% url 'web_collectors:item' group.slug collection.id item.id %}"
+                           {% else %}
+                           href="{% url 'web_collectors:collection' group.slug collection.id %}"
+                           {% endif %}
+                        >Отменить</a>
+
+
                     </form>
 
 
