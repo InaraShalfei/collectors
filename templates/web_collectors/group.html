@@ -1,26 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Коллекции группы {{ group.name }} {% endblock %}
 {% block header %}
+{% load thumbnail %}
 <div class="text-bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden"
      xmlns="http://www.w3.org/1999/html">
     <div class="my-3 py-3">
         <h2 class="display-5"><strong>{{ group.name }}</strong></h2>
         <p class="lead">{{ group.description }}</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            {% include "includes/create_collection.html" %}
+        </div>
     </div>
 </div>
 
 {% endblock %}
 
 {% block content %}
-
-<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    {% include "includes/create_collection.html" %}
-</div>
-
-
-{% load thumbnail %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
-
 
 <div class="container">
     <nav aria-label="breadcrumb">
@@ -35,14 +30,15 @@
         <div class="col-md-6">
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                 <div class="col p-4 d-flex flex-column position-static">
+                    <a class="nav-link"
+                       href="{% url 'web_collectors:profile' collection.owner.username %}"><strong>
+                        {{ collection.owner.username }}</strong></a>
                     <strong class="d-inline-block mb-2 text-secondary">{% include "includes/favorite.html" %}</strong>
                     <h3 class="mb-0"><a class="nav-link"
                                         href="{% url 'web_collectors:collection' group.slug collection.id %}"><strong>
                         {{ collection.name }}</strong></a></h3>
 
-                    <p class="card-text mb-auto">This is a wider card with supporting text below as a natural
-                        lead-in to
-                        additional content.</p>
+                    <p class="card-text mb-auto">{{ collection.description }}</p>
                     {% if request.user == collection.owner %}
                     {% include "includes/delete_collection.html" %}
                     {% endif %}
