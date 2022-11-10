@@ -242,7 +242,7 @@ def profile(request, username):
     form = CollectionForm(request.POST or None, files=request.FILES or None)
     author = get_object_or_404(CustomUser, username=username)
     collections = Collection.objects.filter(owner=author)
-    paginator = Paginator(collections, 3)
+    paginator = Paginator(collections, 4)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     following = request.user.is_authenticated and Follow.objects.filter(
