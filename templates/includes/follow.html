@@ -7,7 +7,7 @@
     {% csrf_token %}
 </form>
 
-    <button type="submit" class="btn btn-success btn-lg" form="following_form{{ author.username }}"
+    <button type="submit" class="btn btn-success btn-sm" form="following_form{{ author.username }}"
             data-target="#confirmModal{{ comment.id }}">
         Подписаться
     </button>
