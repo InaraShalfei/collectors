@@ -54,7 +54,7 @@ def collection_group(request, slug):
     form = CollectionForm(request.POST or None, files=request.FILES or None)
     group = get_object_or_404(CollectionGroup, slug=slug)
     collections = group.collections.all()
-    paginator = Paginator(collections, 3)
+    paginator = Paginator(collections, 4)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'web_collectors/group.html',
@@ -108,7 +108,7 @@ def collection(request, slug, collection_id):
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     author = collection.owner
     items = CollectionItem.objects.filter(collection=collection)
-    paginator = Paginator(items, 3)
+    paginator = Paginator(items, 4)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     form = CommentForm()
