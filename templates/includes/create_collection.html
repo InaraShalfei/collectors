@@ -14,23 +14,25 @@ function submitAsynchronously(formId) {
 }
 
 </script>
-
-<button type="button" name="collection_edit" class="btn btn-outline-secondary" data-toggle="modal"
+{% url 'web_collectors:collection' group.slug collection.id as the_url %}
+{% if request.path == the_url %}
+<button type="button" class="btn btn-outline-secondary" data-toggle="modal"
         data-target="#addModal">
     Редактировать
 </button>
-
-<button type="button" name="collection_create" class="btn btn-outline-secondary" data-toggle="modal"
+{% else %}
+<button type="button" class="btn btn-outline-secondary" data-toggle="modal"
         data-target="#addModal">
     Новая коллекция
 </button>
+{% endif %}
 
 <div class="modal fade" id="addModal" tabindex="-1"
      aria-labelledby="addModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                {% if form.instance.id %}
+                {% if request.path == the_url %}
                 <h5 class="modal-title" id="addModal">Редактировать запись</h5>
                 {% else %}
                 <h5 class="modal-title" id="addModal">Новая коллекция</h5>
