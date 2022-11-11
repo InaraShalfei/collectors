@@ -79,7 +79,6 @@ class CollectionUrlsTest(TestCase):
 
     def test_pages_for_authorized_client_have_correct_templates(self):
         templates_url_names = {
-        'web_collectors/new.html': '/new_collection/',
         'includes/delete_collection.html': '/group/knigi/1/delete',
         'includes/reply_comment.html': '/group/knigi/1/1/reply',
         'includes/delete_comment.html': '/group/knigi/1/1/delete_comment',
