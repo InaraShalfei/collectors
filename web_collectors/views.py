@@ -65,7 +65,7 @@ def collection_group(request, slug):
 @login_required
 def create_collection(request):
     form = CollectionForm(request.POST or None, files=request.FILES or None)
-    if request.method == 'POST' and 'collection_create' in request.POST and form.is_valid():
+    if request.method == 'POST' and form.is_valid():
         collection = form.save(commit=False)
         collection.owner = request.user
         form.save()
@@ -111,7 +111,7 @@ def collection(request, slug, collection_id):
     paginator = Paginator(items, 4)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    if request == 'POST' and 'collection_edit' in request.POST:
+    if request == 'POST':
         if 'edit_collection' in request.POST:
             edit_form = CollectionForm(instance=collection)
             if edit_form.is_valid():
