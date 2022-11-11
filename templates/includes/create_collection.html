@@ -45,7 +45,7 @@ function submitAsynchronously(formId) {
 
                 <form method="post"
                       id="collection_form"
-                      {% if form.instance.id %}
+                      {% if edit_form.instance.id %}
                       action="{% url 'web_collectors:update_collection' group.slug collection.id %}"
                       {% else %}
                       action="{% url 'web_collectors:new_collection' %}"

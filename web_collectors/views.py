@@ -111,16 +111,6 @@ def collection(request, slug, collection_id):
     paginator = Paginator(items, 4)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    if request == 'POST':
-        if 'edit_collection' in request.POST:
-            edit_form = CollectionForm(instance=collection)
-            if edit_form.is_valid():
-                edit_form.save()
-            delayed_collection_watermark.delay(collection.id)
-        if 'add_comment' in request.POST:
-            add_form = CommentForm()
-            if add_form.is_valid():
-                add_form.save()
 
     return render(request, 'web_collectors/collection.html',
                   {'page': page, 'paginator': paginator, 'group': group,
