@@ -58,7 +58,6 @@ class CollectionViewsTest(TestCase):
         'web_collectors/author_collection_item.html': reverse('web_collectors:author_collection_item', kwargs={
                                                                   'username': 'Boba', 'collection_id': 1,
                                                               'item_id': 1}),
-        'web_collectors/new.html': reverse('web_collectors:new_collection'),
         'includes/delete_collection.html': reverse('web_collectors:delete_collection', kwargs={
             'slug': 'knigi', 'collection_id': 1}),
         'includes/reply_comment.html': reverse('web_collectors:reply_comment', kwargs={
