@@ -1,28 +1,28 @@
 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
                 {% for child_comment in comment.comments.all %}
-                <div class="media card mb-4">
-                    <div class="media-body card-body">
-                        <a href="{% url 'web_collectors:profile' child_comment.author.username %}">
-                            <strong>{{ child_comment.author.username }}</strong>
-                        </a>
-                        <div>{{ child_comment.text }}</div>
-                        {% if request.user == child_comment.author %}
+                    <div class="media card mb-4">
+                        <div class="media-body card-body">
+                            <a href="{% url 'web_collectors:profile' child_comment.author.username %}">
+                                <strong>{{ child_comment.author.username }}</strong>
+                            </a>
+                            <div>{{ child_comment.text }}</div>
+                            {% if request.user == child_comment.author %}
 
-                        {% include "includes/update_comment.html" with comment=child_comment %}
+                                {% include "includes/update_comment.html" with comment=child_comment %}
 
-                        {% include "includes/delete_comment.html" with comment=child_comment %}
+                                {% include "includes/delete_comment.html" with comment=child_comment %}
 
-                        {% else %}
+                            {% else %}
 
-                        {% include "includes/reply_comment.html" with comment=child_comment %}
+                                {% include "includes/reply_comment.html" with comment=child_comment %}
 
-                        {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-                {% if child_comment.comments.exists %}
-                {% include "includes/child_comments.html" with comment=child_comment %}
-                {% endif %}
+                    {% if child_comment.comments.exists %}
+                        {% include "includes/child_comments.html" with comment=child_comment %}
+                    {% endif %}
                 {% endfor %}
             </div>
 </div>

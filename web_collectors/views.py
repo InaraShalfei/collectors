@@ -161,9 +161,9 @@ def delete_comment(request, collection_id, comment_id):
 def update_comment(request, collection_id, comment_id):
     collection = get_object_or_404(Collection, id=collection_id)
     comment = get_object_or_404(Comment, collection=collection, id=comment_id)
-    form = CommentForm(request.POST or None, instance=comment)
-    if form.is_valid():
-        form.save()
+    add_form = CommentForm(request.POST or None, instance=comment)
+    if add_form.is_valid():
+        add_form.save()
     return JsonResponse({'status': 'Success'})
 
 

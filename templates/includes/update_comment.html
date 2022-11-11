@@ -22,7 +22,11 @@
                     {% csrf_token %}
                     <div class="card-body">
                         <div class="form-group">
-                            {{ add_form.as_p }}
+                            <div class="fieldWrapper">
+                                <label for="{{ add_form.text.id_for_label }}">Текст комментария:</label>
+                                <textarea name="text" cols="40" rows="10" maxlength="200" required="" id="id_text"
+                                >{{ comment.text }}</textarea>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-dark">Отправить</button>
                     </div>
