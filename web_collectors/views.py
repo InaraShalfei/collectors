@@ -59,13 +59,13 @@ def collection_group(request, slug):
     page = paginator.get_page(page_number)
     return render(request, 'web_collectors/group.html',
                   {'page': page, 'paginator': paginator, 'group': group,
-                   'form': form})
+                   'edit_form': form})
 
 
 @login_required
 def create_collection(request):
     form = CollectionForm(request.POST or None, files=request.FILES or None)
-    if request.method == 'POST' and form.is_valid():
+    if request.method == 'POST' and 'collection_create' in request.POST and form.is_valid():
         collection = form.save(commit=False)
         collection.owner = request.user
         form.save()
@@ -106,18 +106,28 @@ def collection(request, slug, collection_id):
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     author = collection.owner
     items = CollectionItem.objects.filter(collection=collection)
+    edit_form = CollectionForm(instance=collection)
+    add_form = CommentForm()
     paginator = Paginator(items, 4)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    if request == 'POST' and "collection_submit" in request.POST:
-        form = CollectionForm()
-    else:
-        form = CommentForm()
-    return render(request, 'web_collectors/collection.html', {
-        'page': page, 'paginator': paginator, 'group': group,
-        'collection': collection, 'author': author, 'form': form,
-        'comments': collection.comments.filter(parent_comment=None)
-    })
+    if request == 'POST' and 'collection_edit' in request.POST:
+        if 'edit_collection' in request.POST:
+            edit_form = CollectionForm(instance=collection)
+            if edit_form.is_valid():
+                edit_form.save()
+            delayed_collection_watermark.delay(collection.id)
+        if 'add_comment' in request.POST:
+            add_form = CommentForm()
+            if add_form.is_valid():
+                add_form.save()
+
+    return render(request, 'web_collectors/collection.html',
+                  {'page': page, 'paginator': paginator, 'group': group,
+                   'collection': collection, 'author': author,
+                   'comments': collection.comments.filter(parent_comment=None),
+                   'edit_form': edit_form, 'add_form': add_form
+                   })
 
 
 @login_required

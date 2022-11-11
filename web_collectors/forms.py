@@ -10,6 +10,7 @@ class CollectionForm(forms.ModelForm):
         model = Collection
         fields = ('name', 'description', 'photo', 'group')
         description = forms.CharField(max_length=100, widget=forms.Textarea)
+        edit_collection = forms.BooleanField(widget=forms.HiddenInput, initial=True)
 
     def clean_name(self):
         name = self.cleaned_data['name']
@@ -40,3 +41,4 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ('text', )
         text = forms.CharField(max_length=100, widget=forms.Textarea)
+        add_comment = forms.BooleanField(widget=forms.HiddenInput, initial=True)
