@@ -49,7 +49,7 @@ function submitAsynchronously(formId) {
 
                 <form method="post"
                       id="item_form"
-                      {% if form.instance.id %}
+                      {% if item_form.instance.id %}
                       action="{% url 'web_collectors:update_item' group.slug collection.id item.id %}"
                       {% else %}
                       action="{% url 'web_collectors:new_item' group.slug collection.id %}"
@@ -58,7 +58,7 @@ function submitAsynchronously(formId) {
 
                     <div class="card-body">
                         <div class="form-group">
-                            {{ form.as_p }}
+                            {{ item_form.as_p }}
                         </div>
                         {% for photo in item.photos.all %}
                         {% thumbnail photo.file "50x80" crop="center" upscale=True as im %}
@@ -74,7 +74,7 @@ function submitAsynchronously(formId) {
                         <p></p>
                         <button type="submit" class="btn btn-dark">Сохранить</button>
 
-                        {% for error in form.non_field_errors %}
+                        {% for error in item_form.non_field_errors %}
                         <div class="alert alert-danger" role="alert">
                             {{ error }}
                         </div>

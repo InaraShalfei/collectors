@@ -105,7 +105,7 @@ def collection(request, slug, collection_id):
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     author = collection.owner
     items = CollectionItem.objects.filter(collection=collection)
-    form = ItemForm()
+    item_form = ItemForm()
     collection_form = CollectionForm(instance=collection)
     comment_form = CommentForm()
     paginator = Paginator(items, 4)
@@ -117,7 +117,7 @@ def collection(request, slug, collection_id):
                    'collection': collection, 'author': author,
                    'comments': collection.comments.filter(parent_comment=None),
                    'collection_form': collection_form, 'comment_form': comment_form,
-                   'form': form})
+                   'item_form': item_form})
 
 
 @login_required
@@ -172,10 +172,10 @@ def collection_item(request, slug, collection_id, item_id):
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     author = collection.owner
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
-    form = ItemForm(instance=item)
+    item_form = ItemForm(instance=item)
     return render(request, 'web_collectors/item.html',
                   {'group': group, 'item': item, 'collection': collection,
-                   'author': author, 'form': form})
+                   'author': author, 'item_form': item_form})
 
 
 @login_required
@@ -256,7 +256,7 @@ def author_collection(request, username, collection_id):
     paginator = Paginator(items, 4)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    form = ItemForm()
+    item_form = ItemForm()
     collection_form = CollectionForm(instance=collection)
     comment_form = CommentForm()
     return render(request, 'web_collectors/author_collection.html', {
@@ -264,7 +264,7 @@ def author_collection(request, username, collection_id):
         'collection': collection, 'group': group,
         'comments': collection.comments.filter(parent_comment=None),
         'collection_form': collection_form, 'comment_form': comment_form,
-        'form': form})
+        'item_form': item_form})
 
 
 def author_collection_item(request, username, collection_id, item_id):
@@ -272,10 +272,10 @@ def author_collection_item(request, username, collection_id, item_id):
     collection = get_object_or_404(Collection, owner=author, id=collection_id)
     group = collection.group
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
-    form = ItemForm(instance=item)
+    item_form = ItemForm(instance=item)
     return render(request, 'web_collectors/author_collection_item.html', {
         'author': author, 'item': item, 'collection': collection,
-        'group': group, 'form': form})
+        'group': group, 'item_form': item_form})
 
 
 @login_required
