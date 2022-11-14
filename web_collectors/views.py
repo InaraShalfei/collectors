@@ -107,7 +107,7 @@ def collection(request, slug, collection_id):
     items = CollectionItem.objects.filter(collection=collection)
     form = ItemForm()
     edit_form = CollectionForm(instance=collection)
-    add_form = CommentForm()
+    comment_form = CommentForm()
     paginator = Paginator(items, 4)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -116,7 +116,7 @@ def collection(request, slug, collection_id):
                   {'page': page, 'paginator': paginator, 'group': group,
                    'collection': collection, 'author': author,
                    'comments': collection.comments.filter(parent_comment=None),
-                   'edit_form': edit_form, 'add_form': add_form,
+                   'edit_form': edit_form, 'comment_form': comment_form,
                    'form': form})
 
 
@@ -161,9 +161,9 @@ def delete_comment(request, collection_id, comment_id):
 def update_comment(request, collection_id, comment_id):
     collection = get_object_or_404(Collection, id=collection_id)
     comment = get_object_or_404(Comment, collection=collection, id=comment_id)
-    add_form = CommentForm(request.POST or None, instance=comment)
-    if add_form.is_valid():
-        add_form.save()
+    form = CommentForm(request.POST or None, instance=comment)
+    if form.is_valid():
+        form.save()
     return JsonResponse({'status': 'Success'})
 
 
@@ -258,12 +258,12 @@ def author_collection(request, username, collection_id):
     page = paginator.get_page(page_number)
     form = ItemForm()
     edit_form = CollectionForm(instance=collection)
-    add_form = CommentForm()
+    comment_form = CommentForm()
     return render(request, 'web_collectors/author_collection.html', {
         'page': page, 'paginator': paginator, 'author': author,
         'collection': collection, 'group': group,
         'comments': collection.comments.filter(parent_comment=None),
-        'edit_form': edit_form, 'add_form': add_form,
+        'edit_form': edit_form, 'comment_form': comment_form,
         'form': form})
 
 
