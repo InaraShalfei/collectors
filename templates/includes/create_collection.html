@@ -46,7 +46,7 @@ function submitAsynchronously(formId) {
 
                 <form method="post"
                       id="collection_form"
-                      {% if edit_form.instance.id %}
+                      {% if collection_form.instance.id %}
                       action="{% url 'web_collectors:update_collection' group.slug collection.id %}"
                       {% else %}
                       action="{% url 'web_collectors:new_collection' %}"
@@ -55,11 +55,11 @@ function submitAsynchronously(formId) {
 
                     <div class="card-body">
                         <div class="form-group">
-                            {{ edit_form.as_p }}
+                            {{ collection_form.as_p }}
                         </div>
                         <button type="submit" class="btn btn-dark" >Сохранить</button>
 
-                        {% for error in edit_form.non_field_errors %}
+                        {% for error in collection_form.non_field_errors %}
                         <div class="alert alert-danger" role="alert">
                             {{ error }}
                         </div>
