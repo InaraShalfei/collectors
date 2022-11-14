@@ -14,8 +14,8 @@ function submitAsynchronously(formId) {
 }
 
 </script>
-{% url 'web_collectors:collection' group.slug collection.id as the_url %}
-{% if request.path == the_url %}
+
+{% if request.path  %}
 <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
         data-target="#addModal">
     Редактировать
@@ -32,7 +32,7 @@ function submitAsynchronously(formId) {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                {% if request.path == the_url %}
+                {% if request.path %}
                 <h5 class="modal-title" id="addModal">Редактировать запись</h5>
                 {% else %}
                 <h5 class="modal-title" id="addModal">Новая коллекция</h5>
