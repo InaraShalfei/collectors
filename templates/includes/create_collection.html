@@ -14,8 +14,9 @@ function submitAsynchronously(formId) {
 }
 
 </script>
-
-{% if request.path  %}
+{% url 'web_collectors:collection' group.slug collection.id as the_url %}
+{% url 'web_collectors:author_collection' author.username collection.id as the_url_2 %}
+{% if request.get_full_path == the_url or request.get_full_path == the_url_2 %}
 <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
         data-target="#addModal">
     Редактировать
@@ -32,7 +33,7 @@ function submitAsynchronously(formId) {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                {% if request.path %}
+                {% if request.get_full_path == the_url or request.get_full_path == the_url_2 %}
                 <h5 class="modal-title" id="addModal">Редактировать запись</h5>
                 {% else %}
                 <h5 class="modal-title" id="addModal">Новая коллекция</h5>
