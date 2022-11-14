@@ -86,8 +86,7 @@ def update_collection(request, slug, collection_id):
     if request.method == 'POST' and form.is_valid():
         form.save()
         delayed_collection_watermark.delay(collection.id)
-        return redirect('web_collectors:collection', slug=slug,
-                        collection_id=collection_id)
+        return HttpResponseRedirect(request.POST.get('next', '/'))
     return JsonResponse({'status': 'Success'})
 
 
