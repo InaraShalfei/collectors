@@ -259,7 +259,7 @@ def author_collection(request, username, collection_id):
     collection = get_object_or_404(Collection, owner=author, id=collection_id)
     group = collection.group
     items = CollectionItem.objects.filter(collection=collection)
-    paginator = Paginator(items, 3)
+    paginator = Paginator(items, 4)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     form = CommentForm()
@@ -281,7 +281,7 @@ def author_collection_item(request, username, collection_id, item_id):
 @login_required
 def follow_index(request):
     followed = request.user.followed.get_queryset().order_by('id')
-    paginator = Paginator(followed, 3)
+    paginator = Paginator(followed, 4)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'web_collectors/follow.html',
