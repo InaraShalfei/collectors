@@ -250,7 +250,7 @@ def profile(request, username):
     return render(request, 'web_collectors/profile.html', {
         'page': page, 'paginator': paginator, 'collection': collection,
         'author': author,
-        'following': following, 'form': form})
+        'following': following, 'edit_form': form})
 
 
 def author_collection(request, username, collection_id):
