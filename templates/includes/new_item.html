@@ -19,7 +19,7 @@ function submitAsynchronously(formId) {
 </script>
 
 {% url 'web_collectors:item' group.slug collection.id item.id as the_url %}
-{% url 'web_collectors:author_collection' author.username collection.id item.id as the_url_2 %}
+{% url 'web_collectors:author_collection_item' author.username collection.id item.id as the_url_2 %}
 {% if request.get_full_path == the_url or request.get_full_path == the_url_2 %}
 <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
         data-target="#itemFormModal">

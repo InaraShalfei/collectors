@@ -256,13 +256,15 @@ def author_collection(request, username, collection_id):
     paginator = Paginator(items, 4)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
+    form = ItemForm()
     edit_form = CollectionForm(instance=collection)
     add_form = CommentForm()
     return render(request, 'web_collectors/author_collection.html', {
         'page': page, 'paginator': paginator, 'author': author,
         'collection': collection, 'group': group,
         'comments': collection.comments.filter(parent_comment=None),
-                  'edit_form': edit_form, 'add_form': add_form})
+        'edit_form': edit_form, 'add_form': add_form,
+        'form': form})
 
 
 def author_collection_item(request, username, collection_id, item_id):
@@ -270,8 +272,10 @@ def author_collection_item(request, username, collection_id, item_id):
     collection = get_object_or_404(Collection, owner=author, id=collection_id)
     group = collection.group
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
+    form = ItemForm(instance=item)
     return render(request, 'web_collectors/author_collection_item.html', {
-        'author': author, 'item': item, 'collection': collection, 'group': group})
+        'author': author, 'item': item, 'collection': collection,
+        'group': group, 'form': form})
 
 
 @login_required
