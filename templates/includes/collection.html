@@ -5,10 +5,7 @@
         <h1 class="display-5 fw-bold lh-1 mb-3">{{ collection.name }}</h1>
         <p class="lead">{{ collection.description }}</p>
         {% if request.user == author %}
-        <button type="button" class="btn btn-outline-dark"><a
-                class="nav-link"
-                href="{% url 'web_collectors:new_item' group.slug collection.id %}">Новый объект</a>
-        </button>
+        {% include "includes/new_item.html" %}
         {% include "includes/create_collection.html" %}
         {% endif %}
     </div>

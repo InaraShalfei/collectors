@@ -35,8 +35,7 @@
             <p class="lead">{{ item.description }}</p>
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                 {% if request.user == author %}
-                <a href="{% url 'web_collectors:update_item' group.slug collection.id item.id %}"
-                   class="btn btn-secondary btn-sm px-4 me-md-2" role="button" aria-pressed="true">Редактировать</a>
+                {% include "includes/new_item.html" %}
                 <button type="button" class="btn btn-danger btn-sm px-4 me-md-2" data-toggle="modal"
                         data-target="#confirmModal{{ item.id }}">
                     Удалить

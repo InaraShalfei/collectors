@@ -1,3 +1,4 @@
+{% load thumbnail %}
 {% load user_filters %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 <script>
@@ -13,30 +14,32 @@ function submitAsynchronously(formId) {
     })
 }
 
+
+
 </script>
-{% url 'web_collectors:collection' group.slug collection.id as the_url %}
-{% url 'web_collectors:author_collection' author.username collection.id as the_url_2 %}
+
+{% url 'web_collectors:item' group.slug collection.id item.id as the_url %}
+{% url 'web_collectors:author_collection' author.username collection.id item.id as the_url_2 %}
 {% if request.get_full_path == the_url or request.get_full_path == the_url_2 %}
 <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
-        data-target="#collectionFormModal">
+        data-target="#itemFormModal">
     Редактировать
 </button>
 {% else %}
 <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
-        data-target="#collectionFormModal">
-    Новая коллекция
+        data-target="#itemFormModal">
+    Новый объект
 </button>
 {% endif %}
-
-<div class="modal fade" id="collectionFormModal" tabindex="-1"
-     aria-labelledby="collectionFormModal" aria-hidden="true">
+<div class="modal fade" id="itemFormModal" tabindex="-1"
+     aria-labelledby="itemFormModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 {% if request.get_full_path == the_url or request.get_full_path == the_url_2 %}
                 <h5 class="modal-title">Редактировать запись</h5>
                 {% else %}
-                <h5 class="modal-title">Новая коллекция</h5>
+                <h5 class="modal-title">Новый объект</h5>
                 {% endif %}
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -45,35 +48,50 @@ function submitAsynchronously(formId) {
             <div class="modal-body">
 
                 <form method="post"
-                      id="collection_form"
-                      {% if edit_form.instance.id %}
-                      action="{% url 'web_collectors:update_collection' group.slug collection.id %}"
+                      id="item_form"
+                      {% if form.instance.id %}
+                      action="{% url 'web_collectors:update_item' group.slug collection.id item.id %}"
                       {% else %}
-                      action="{% url 'web_collectors:new_collection' %}"
+                      action="{% url 'web_collectors:new_item' group.slug collection.id %}"
                       {% endif %}>
                     {% csrf_token %}
 
                     <div class="card-body">
                         <div class="form-group">
-                            {{ edit_form.as_p }}
+                            {{ form.as_p }}
                         </div>
-                        <button type="submit" class="btn btn-dark" >Сохранить</button>
+                        {% for photo in item.photos.all %}
+                        {% thumbnail photo.file "50x80" crop="center" upscale=True as im %}
+                        <div class="card text-center" style="width: 10rem;">
+                            <img class="card-img-top" src="{{ photo.file.url }}" width="{{ im.width }}"
+                                 height="{{ im.height }}">
+                            <div class="card-body">
+                                <a href="{% url 'web_collectors:delete_photo' photo.id %}">Удалить</a>
+                            </div>
+                        </div>
+                        {% endthumbnail %}
+                        {% endfor %}
+                        <p></p>
+                        <button type="submit" class="btn btn-dark">Сохранить</button>
 
-                        {% for error in edit_form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
                         <div class="alert alert-danger" role="alert">
                             {{ error }}
                         </div>
                         {% endfor %}
 
+
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" name="next" value="{{ request.path }}">Отмена</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" name="next"
+                        value="{{ request.path }}">Отмена
+                </button>
             </div>
         </div>
     </div>
 </div>
 <script>
-    submitAsynchronously('collection_form');
+    submitAsynchronously('item_form');
 </script>

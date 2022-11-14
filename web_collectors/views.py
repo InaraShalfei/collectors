@@ -105,6 +105,7 @@ def collection(request, slug, collection_id):
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     author = collection.owner
     items = CollectionItem.objects.filter(collection=collection)
+    form = ItemForm()
     edit_form = CollectionForm(instance=collection)
     add_form = CommentForm()
     paginator = Paginator(items, 4)
@@ -115,8 +116,8 @@ def collection(request, slug, collection_id):
                   {'page': page, 'paginator': paginator, 'group': group,
                    'collection': collection, 'author': author,
                    'comments': collection.comments.filter(parent_comment=None),
-                   'edit_form': edit_form, 'add_form': add_form
-                   })
+                   'edit_form': edit_form, 'add_form': add_form,
+                   'form': form})
 
 
 @login_required
@@ -171,9 +172,10 @@ def collection_item(request, slug, collection_id, item_id):
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     author = collection.owner
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
+    form = ItemForm(instance=item)
     return render(request, 'web_collectors/item.html',
                   {'group': group, 'item': item, 'collection': collection,
-                   'author': author})
+                   'author': author, 'form': form})
 
 
 @login_required
@@ -181,7 +183,6 @@ def create_item(request, slug, collection_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     form = ItemForm(request.POST or None, files=request.FILES or None)
-    author = collection.owner
     if request.method == 'POST' and form.is_valid():
         item = form.save(commit=False)
         item.collection = collection
@@ -190,11 +191,8 @@ def create_item(request, slug, collection_id):
             photo = Photo.objects.create(file=photo_data, item=item)
             delayed_photo_watermark.delay(photo.id)
         delayed_send_message_item(item.id)
-        return redirect('web_collectors:collection', slug=slug,
-                        collection_id=collection_id)
-    return render(request, 'web_collectors/new_item.html',
-                  {'form': form, 'group': group, 'collection': collection,
-                   'author': author})
+        return HttpResponseRedirect(request.POST.get('next', '/'))
+    return JsonResponse({'status': 'Success'})
 
 
 @login_required
@@ -212,11 +210,8 @@ def update_item(request, slug, collection_id, item_id):
         for photo_data in form.cleaned_data['photos']:
             photo = Photo.objects.create(file=photo_data, item=item)
             delayed_photo_watermark.delay(photo.id)
-        return redirect('web_collectors:item', slug=slug,
-                        collection_id=collection_id, item_id=item_id)
-    return render(request, 'web_collectors/new_item.html', {
-        'form': form, 'group': group, 'collection': collection,
-        'author': author, 'item': item})
+        return HttpResponseRedirect(request.POST.get('next', '/'))
+    return JsonResponse({'status': 'Success'})
 
 
 @login_required
