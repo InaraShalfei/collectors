@@ -6,6 +6,7 @@ app_name = 'web_collectors'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('search/', views.search, name='search'),
     path('delete_photo/<int:photo_id>', views.delete_photo, name='delete_photo'),
     path('groups/', views.collection_groups, name='groups'),
     path('all/', views.all_authors, name='all_authors'),

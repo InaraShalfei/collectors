@@ -17,6 +17,8 @@ from collectors.tasks import (delayed_collection_watermark,
                               delayed_send_message_comment,
                               delayed_send_message_reply_comment,
                               delayed_send_message_follow)
+from web_collectors.search_providers import group_search, collection_search, \
+    item_search, author_search
 
 
 def index(request):
@@ -313,6 +315,16 @@ def favorite_collection(request, collection_id):
     if user != collection.owner:
         Favorite.objects.get_or_create(collection=collection, user=user)
     return JsonResponse({'status': 'Success'})
+
+
+@login_required
+def search(request):
+    el = request.GET.get('q')
+    providers = [group_search, collection_search, item_search, author_search]
+    results = []
+    for provider in providers:
+        results.append(provider(el))
+    return render(request, 'includes/search.html', {'results': results})
 
 
 def page_not_found(request, exception):
