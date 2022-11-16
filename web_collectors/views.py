@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -321,9 +323,9 @@ def favorite_collection(request, collection_id):
 def search(request):
     el = request.GET.get('q')
     providers = [group_search, collection_search, item_search, author_search]
-    results = []
-    for provider in providers:
-        results.append(provider(el))
+    lst = [provider(el) for provider in providers]
+    results = list(OrderedDict.fromkeys(lst))
+
     return render(request, 'includes/search.html', {'results': results})
 
 

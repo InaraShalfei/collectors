@@ -1,18 +1,23 @@
 {% extends "base.html" %}
+{% block header %}Полученные результаты{% endblock %}
 {% block content %}
 {% if user.is_authenticated %}
 
 <div class="container">
-    {% for element in results %}
-
+    {% for result in results %}
+    {% for element in result %}
+    <p></p>
     <div class="d-flex justify-content-between">
         <strong class="text-gray-dark">{{ element }}</strong>
     </div>
+    <p></p>
     {% empty %}
     <strong class="text-gray-dark">Нет результатов поиска</strong>
-
+    <p></p>
     {% if not forloop.last %}
     {% endif %}
+    {% endfor %}
+
     {% endfor %}
 
     {% if page.has_other_pages %}
