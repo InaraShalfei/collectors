@@ -325,8 +325,13 @@ def search(request):
     providers = [group_search, collection_search, item_search, author_search]
     lst = [provider(el) for provider in providers]
     results = list(OrderedDict.fromkeys(lst))
+    paginator = Paginator(results, 1)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
 
-    return render(request, 'includes/search.html', {'results': results})
+    return render(request, 'includes/search.html', {'results': results,
+                                                    'page': page,
+                                                    'paginator': paginator})
 
 
 def page_not_found(request, exception):
