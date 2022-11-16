@@ -1,37 +1,53 @@
 {% extends "base.html" %}
 {% load utils %}
 
-{% block header %}Полученные результаты{% endblock %}
+{% block header %}
+<div class="text-bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden"
+     xmlns="http://www.w3.org/1999/html">
+    <div class="my-3 py-3">
+        <h2 class="display-5"><strong>Полученные результаты запроса</strong></h2>
+
+    </div>
+</div>
+{% endblock %}
 
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container">
+
     {% for result in results %}
     {% for element in result %}
-    <p></p>
-    <div class="d-flex justify-content-between">
-        {% if element|get_type == 'CollectionGroup' %}
-        <a class="nav-link " href="{% url 'web_collectors:group' element.slug %}">
-            <strong class="text-gray-dark">{{ element }}</strong>
-        </a>
-        {% elif element|get_type == 'Collection' %}
-        <a class="nav-link " href="{% url 'web_collectors:collection' element.group.slug element.id %}">
-            <strong class="text-gray-dark">{{ element }}</strong>
-        </a>
-        {% elif element|get_type == 'CollectionItem' %}
-        <a class="nav-link "
-           href="{% url 'web_collectors:item' element.collection.group.slug element.collection.id element.id %}">
-            <strong class="text-gray-dark">{{ element }}</strong>
-        </a>
-        {% else %}
-        <a class="nav-link " href="{% url 'web_collectors:profile' element.username %}">
-            <strong class="text-gray-dark">{{ element }}</strong>
-        </a>
-        {% endif %}
+    <div class="d-flex text-muted pt-3">
+        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32"
+             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+             preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+            <rect width="100%" height="100%" fill="#0dcaf0"></rect>
+            <text x="50%" y="50%" fill="#007bff" dy=".3em"></text>
+        </svg>
+        <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+            <div class="d-flex justify-content-between">
+                {% if element|get_type == 'CollectionGroup' %}
+                <a class="nav-link " href="{% url 'web_collectors:group' element.slug %}">
+                    <strong class="text-gray-dark">{{ element }}</strong>
+                </a>
+                {% elif element|get_type == 'Collection' %}
+                <a class="nav-link " href="{% url 'web_collectors:collection' element.group.slug element.id %}">
+                    <strong class="text-gray-dark">{{ element }}</strong>
+                </a>
+                {% elif element|get_type == 'CollectionItem' %}
+                <a class="nav-link "
+                   href="{% url 'web_collectors:item' element.collection.group.slug element.collection.id element.id %}">
+                    <strong class="text-gray-dark">{{ element }}</strong>
+                </a>
+                {% else %}
+                <a class="nav-link " href="{% url 'web_collectors:profile' element.username %}">
+                    <strong class="text-gray-dark">{{ element }}</strong>
+                </a>
+                {% endif %}
 
+            </div>
+        </div>
     </div>
-    <p></p>
-
     {% if not forloop.last %}
     {% endif %}
 
