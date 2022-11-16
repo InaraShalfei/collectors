@@ -1,28 +1,34 @@
 {% extends "base.html" %}
+{% load utils %}
+
 {% block header %}Полученные результаты{% endblock %}
+
 {% block content %}
-{% if user.is_authenticated %}
+    {% if user.is_authenticated %}
+        <div class="container">
+            {% for result in results %}
+                {% for element in result %}
+                    <p></p>
+                    <div class="d-flex justify-content-between">
+                        <strong class="text-gray-dark">{{ element }}</strong>
+                        {% if element|get_type == 'Group' %}
+                            group link
+                        {% elif element|get_type == 'Collection' %}
+                            collection link
+                        {% endif %}
+                    </div>
+                    <p></p>
+                    {% empty %}
+                    <strong class="text-gray-dark">Нет результатов поиска</strong>
+                    <p></p>
+                    {% if not forloop.last %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
 
-<div class="container">
-    {% for result in results %}
-    {% for element in result %}
-    <p></p>
-    <div class="d-flex justify-content-between">
-        <strong class="text-gray-dark">{{ element }}</strong>
-    </div>
-    <p></p>
-    {% empty %}
-    <strong class="text-gray-dark">Нет результатов поиска</strong>
-    <p></p>
-    {% if not forloop.last %}
+            {% if page.has_other_pages %}
+                {% include "includes/paginator.html" with items=page paginator=paginator%}
+            {% endif %}
+        </div>
     {% endif %}
-    {% endfor %}
-
-    {% endfor %}
-
-    {% if page.has_other_pages %}
-    {% include "includes/paginator.html" with items=page paginator=paginator%}
-    {% endif %}
-    {% endif %}
-    {% endblock %}
-</div>
+{% endblock %}
