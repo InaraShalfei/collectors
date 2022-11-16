@@ -4,31 +4,46 @@
 {% block header %}Полученные результаты{% endblock %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <div class="container">
-            {% for result in results %}
-                {% for element in result %}
-                    <p></p>
-                    <div class="d-flex justify-content-between">
-                        <strong class="text-gray-dark">{{ element }}</strong>
-                        {% if element|get_type == 'Group' %}
-                            group link
-                        {% elif element|get_type == 'Collection' %}
-                            collection link
-                        {% endif %}
-                    </div>
-                    <p></p>
-                    {% empty %}
-                    <strong class="text-gray-dark">Нет результатов поиска</strong>
-                    <p></p>
-                    {% if not forloop.last %}
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
+{% if user.is_authenticated %}
+<div class="container">
+    {% for result in results %}
+    {% for element in result %}
+    <p></p>
+    <div class="d-flex justify-content-between">
+        {% if element|get_type == 'CollectionGroup' %}
+        <a class="nav-link " href="{% url 'web_collectors:group' element.slug %}">
+            <strong class="text-gray-dark">{{ element }}</strong>
+        </a>
+        {% elif element|get_type == 'Collection' %}
+        <a class="nav-link " href="{% url 'web_collectors:collection' element.group.slug element.id %}">
+            <strong class="text-gray-dark">{{ element }}</strong>
+        </a>
+        {% elif element|get_type == 'CollectionItem' %}
+        <a class="nav-link "
+           href="{% url 'web_collectors:item' element.collection.group.slug element.collection.id element.id %}">
+            <strong class="text-gray-dark">{{ element }}</strong>
+        </a>
+        {% else %}
+        <a class="nav-link " href="{% url 'web_collectors:profile' element.username %}">
+            <strong class="text-gray-dark">{{ element }}</strong>
+        </a>
+        {% endif %}
 
-            {% if page.has_other_pages %}
-                {% include "includes/paginator.html" with items=page paginator=paginator%}
-            {% endif %}
-        </div>
+    </div>
+    <p></p>
+
+    {% if not forloop.last %}
     {% endif %}
+
+    {% endfor %}
+    {% empty %}
+    <strong class="text-gray-dark">Нет результатов поиска</strong>
+    <p></p>
+    {% endfor %}
+
+    {% if page.has_other_pages %}
+    {% include "includes/paginator.html" with items=page paginator=paginator%}
+    {% endif %}
+</div>
+{% endif %}
 {% endblock %}
