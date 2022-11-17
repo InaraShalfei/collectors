@@ -14,7 +14,7 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container">
-
+    {% if results %}
     {% for result in results %}
     {% for element in result %}
     <div class="d-flex text-muted pt-3">
@@ -50,12 +50,15 @@
     </div>
     {% if not forloop.last %}
     {% endif %}
+    {% endfor %}
+    {% endfor %}
 
-    {% endfor %}
-    {% empty %}
-    <strong class="text-gray-dark">Нет результатов поиска</strong>
-    <p></p>
-    {% endfor %}
+    {% else %}
+        <div class="container px-5">
+            <img class="img-fluid rounded mx-auto d-block" src="/media/no_results.png" alt="" width="700">
+        </div>
+    {% endif %}
+
 
     {% if page.has_other_pages %}
     {% include "includes/paginator.html" with items=page paginator=paginator%}
