@@ -324,7 +324,7 @@ def search(request):
     el = request.GET.get('q')
     providers = [group_search, collection_search, item_search, author_search]
     lst = [provider(el) for provider in providers]
-    results = list(OrderedDict.fromkeys(lst))
+    results = list(filter(None, list(OrderedDict.fromkeys(lst))))
     # paginator = Paginator(results, 1)
     # page_number = request.GET.get('page')
     # page = paginator.get_page(page_number)
