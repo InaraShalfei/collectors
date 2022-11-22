@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'web_collectors',
     'users',
-
+    'tests'
 ]
 
 MIDDLEWARE = [
