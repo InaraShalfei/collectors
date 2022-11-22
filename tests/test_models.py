@@ -2,7 +2,7 @@ from django.db.utils import IntegrityError
 
 from django.test import TestCase
 
-from web_collectors.models import CollectionGroup, Collection, User, CollectionItem, Comment, Follow
+from web_collectors.models import CollectionGroup, Collection, CustomUser, CollectionItem, Comment, Follow
 
 
 class CollectionGroupTest(TestCase):
@@ -52,7 +52,7 @@ class CollectionTest(TestCase):
             slug='',
             description='All books in the world'
         )
-        cls.user = User.objects.create_user(username='auth')
+        cls.user = CustomUser.objects.create_user(username='auth')
         cls.collection = Collection.objects.create(
             name='Russian authors',
             description='All books of russian authors',
@@ -87,7 +87,7 @@ class CollectionItemTest(TestCase):
             slug='',
             description='All books in the world'
         )
-        cls.user = User.objects.create_user(username='auth')
+        cls.user = CustomUser.objects.create_user(username='auth')
         cls.collection = Collection.objects.create(
             name='Russian authors',
             description='All books of russian authors',
@@ -103,8 +103,8 @@ class CollectionItemTest(TestCase):
     def test_verbose_names(self):
         collection_item = CollectionItemTest.collection_item
         field_verboses = {
-            'name': 'Название объекта коллекции',
-            'description': 'Описание объекта коллекции',
+            'name': 'Название объекта',
+            'description': 'Описание объекта',
             'collection': 'Коллекция объектов'
         }
         for field, expected_value in field_verboses.items():
@@ -126,7 +126,7 @@ class CommentTest(TestCase):
             slug='',
             description='All books in the world'
         )
-        cls.user = User.objects.create_user(username='auth')
+        cls.user = CustomUser.objects.create_user(username='auth')
         cls.collection = Collection.objects.create(
             name='Russian authors',
             description='All books of russian authors',
@@ -145,7 +145,7 @@ class CommentTest(TestCase):
             'collection': 'Название коллекции',
             'author': 'Автор коллекции',
             'text': 'Текст комментария',
-            'parent_comment': 'Ответный комментарий'
+            'parent_comment': 'Родительский комментарий'
         }
         for field, expected_value in field_verboses.items():
             with self.subTest(field=field):
@@ -161,8 +161,8 @@ class FollowTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user1 = User.objects.create_user(username='arm')
-        cls.user2 = User.objects.create_user(username='bcd')
+        cls.user1 = CustomUser.objects.create_user(username='arm')
+        cls.user2 = CustomUser.objects.create_user(username='bcd')
         cls.follow = Follow.objects.create(
             user=cls.user1,
             author=cls.user2
@@ -179,8 +179,8 @@ class FollowTest(TestCase):
                 self.assertEqual(follow._meta.get_field(field).verbose_name, expected_value)
 
     def test_unique_constraint_relation(self):
-        user_1 = User.objects.create(username='123')
-        user_2 = User.objects.create(username='345')
+        user_1 = CustomUser.objects.create(username='123')
+        user_2 = CustomUser.objects.create(username='345')
         Follow.objects.create(user=user_1, author=user_2)
         follow = Follow(user=user_1, author=user_2)
         with self.assertRaises(Exception) as raised:
