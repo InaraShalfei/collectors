@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 
-from web_collectors.models import Comment, Collection, User, CollectionGroup, CollectionItem
+from web_collectors.models import Comment, Collection, CustomUser, CollectionGroup, CollectionItem
 
 
 class CollectionUrlsTest(TestCase):
@@ -17,8 +17,8 @@ class CollectionUrlsTest(TestCase):
             slug='toys',
             description='Все игрушки мира'
         )
-        cls.user = User.objects.create_user(username='Boba')
-        cls.user2 = User.objects.create_user(username='Vera')
+        cls.user = CustomUser.objects.create_user(username='Boba')
+        cls.user2 = CustomUser.objects.create_user(username='Vera')
         cls.collection = Collection.objects.create(
             name='Russian authors',
             description='All books of russian authors',
@@ -102,3 +102,4 @@ class CollectionUrlsTest(TestCase):
             with self.subTest(address=address):
                 response = self.guest_client.get(address, follow=True)
                 self.assertRedirects(response, f'/auth/login/?next={address}')
+

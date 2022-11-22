@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from web_collectors.models import Comment, Collection, User, CollectionGroup, CollectionItem
+from web_collectors.models import Comment, Collection, CustomUser, CollectionGroup, CollectionItem
 
 
 class CollectionViewsTest(TestCase):
@@ -18,8 +18,8 @@ class CollectionViewsTest(TestCase):
             slug='toys',
             description='Все игрушки мира'
         )
-        cls.user = User.objects.create_user(username='Boba')
-        cls.user2 = User.objects.create_user(username='Vera')
+        cls.user = CustomUser.objects.create_user(username='Boba')
+        cls.user2 = CustomUser.objects.create_user(username='Vera')
         cls.collection = Collection.objects.create(
             name='Russian authors',
             description='All books of russian authors',

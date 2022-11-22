@@ -5,7 +5,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.utils.timezone import now
 
-from web_collectors.models import CollectionGroup, User, Collection, CollectionItem, Follow
+from web_collectors.models import CollectionGroup, CustomUser, Collection, CollectionItem, Follow
 
 
 class PaginatorViewsTest(TestCase):
@@ -13,11 +13,11 @@ class PaginatorViewsTest(TestCase):
     def setUpClass(cls):
         cls.serialized_rollback = True
         super().setUpClass()
-        cls.user = User.objects.create_user(username='Visitor')
+        cls.user = CustomUser.objects.create_user(username='Visitor')
         for i in range(5):
             Follow.objects.create(
                 user=cls.user,
-                author=User.objects.create(username=f'Borya{i}')
+                author=CustomUser.objects.create(username=f'Borya{i}')
             )
         for i in range(12):
             CollectionGroup.objects.create(
@@ -26,10 +26,10 @@ class PaginatorViewsTest(TestCase):
                 description=f'All books in the world - {i}'
             )
         for i in range(12):
-            User.objects.create_user(username=f'Boba - {i}')
+            CustomUser.objects.create_user(username=f'Boba - {i}')
 
         group = CollectionGroup.objects.create(name='Стихи', slug='poems', description='Poems of all russian authors')
-        author = User.objects.create(username='Ira')
+        author = CustomUser.objects.create(username='Ira')
         for i in range(12):
             collection = Collection.objects.create(
                 name=f'Russian authors{i}',
