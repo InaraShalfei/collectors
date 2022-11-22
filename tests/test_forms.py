@@ -1,9 +1,9 @@
 import shutil
 import tempfile
 
+
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.http import HttpResponseRedirect, request
 from django.test import override_settings, TestCase, Client
 from django.urls import reverse
 
@@ -175,7 +175,7 @@ class ItemFormTest(TestCase):
             data=form_data,
             follow=True
         )
-        self.assertRedirects(response, HttpResponseRedirect(request.POST.get('next', '/')))
+        self.assertRedirects(response, ('next', '/'))
         self.assertEqual(CollectionItem.objects.count(), item_count+1)
 
     def test_cant_create_item_without_name(self):
