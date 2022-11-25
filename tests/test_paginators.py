@@ -17,7 +17,8 @@ class PaginatorViewsTest(TestCase):
         for i in range(5):
             Follow.objects.create(
                 user=cls.user,
-                author=CustomUser.objects.create(username=f'Borya{i}')
+                author=CustomUser.objects.create(username=f'Borya{i}',
+                                                 email=f'Borya{i}@mail.kz')
             )
         for i in range(12):
             CollectionGroup.objects.create(
@@ -26,10 +27,13 @@ class PaginatorViewsTest(TestCase):
                 description=f'All books in the world - {i}'
             )
         for i in range(12):
-            CustomUser.objects.create_user(username=f'Boba - {i}')
+            CustomUser.objects.create_user(username=f'Boba - {i}',
+                                           email=f'Boba - {i}@mail.kz')
 
-        group = CollectionGroup.objects.create(name='Стихи', slug='poems', description='Poems of all russian authors')
-        author = CustomUser.objects.create(username='Ira')
+        group = CollectionGroup.objects.create(name='Стихи', slug='poems',
+                                               description='Poems of all russian authors')
+        author = CustomUser.objects.create(username='Ira',
+                                           email='ira@gmail.com')
         for i in range(12):
             collection = Collection.objects.create(
                 name=f'Russian authors{i}',
@@ -38,7 +42,8 @@ class PaginatorViewsTest(TestCase):
                 group=group)
             collection.creation_date = now() - datetime.timedelta(minutes=15 - i)
             collection.save()
-        collection = Collection.objects.create(name='Russian poems', description='All Russian poems',
+        collection = Collection.objects.create(name='Russian poems',
+                                               description='All Russian poems',
                                                owner=author,
                                                group=group)
         for i in range(4):
@@ -67,46 +72,53 @@ class PaginatorViewsTest(TestCase):
         for address in addresses:
             with self.subTest(address=address):
                 response = self.guest_client.get(reverse(address) + '?page=2')
-                self.assertEqual(len(response.context['page']), 3)
+                self.assertEqual(len(response.context['page']), 4)
 
     def test_all_authors_second_page_has_9_records(self):
         response = self.guest_client.get(reverse('web_collectors:all_authors') + '?page=2')
         self.assertEqual(len(response.context['page']), 9)
 
     def test_first_page_has_3_records(self):
-        addresses = [(reverse('web_collectors:group', kwargs={'slug': 'poems'})),
-                     (reverse('web_collectors:collection', kwargs={'slug': 'poems', 'collection_id': 13})),
-                     (reverse('web_collectors:author_collection', kwargs={'username': 'Ira', 'collection_id': 13})),
+        addresses = [(reverse('web_collectors:group',
+                              kwargs={'slug': 'poems'})),
+                     (reverse('web_collectors:collection',
+                              kwargs={'slug': 'poems', 'collection_id': 13})),
+                     (reverse('web_collectors:author_collection',
+                              kwargs={'username': 'Ira', 'collection_id': 13})),
                      reverse('web_collectors:follow_index')]
         for address in addresses:
             with self.subTest(address=address):
                 response = self.authorized_client.get(address)
-                self.assertEqual(len(response.context['page']), 3)
+                self.assertEqual(len(response.context['page']), 4)
 
     def test_profile_first_page_has_5_records(self):
-        response = self.guest_client.get(reverse('web_collectors:profile', kwargs={'username': 'Ira'}))
-        self.assertEqual(len(response.context['page']), 5)
+        response = self.guest_client.get(reverse('web_collectors:profile',
+                                                 kwargs={'username': 'Ira'}))
+        self.assertEqual(len(response.context['page']), 4)
 
     def test_follow_last_page_has_2_records(self):
         response = self.authorized_client.get(reverse('web_collectors:follow_index') + '?page=2')
         self.assertEqual(len(response.context['page']), 2)
 
     def test_last_page_has_1_record(self):
-        addresses = [(reverse('web_collectors:collection', kwargs={'slug': 'poems', 'collection_id': 13})),
-                     (reverse('web_collectors:author_collection', kwargs={'username': 'Ira', 'collection_id': 13}))]
+        addresses = [(reverse('web_collectors:collection',
+                              kwargs={'slug': 'poems', 'collection_id': 13})),
+                     (reverse('web_collectors:author_collection',
+                              kwargs={'username': 'Ira', 'collection_id': 13}))]
         for address in addresses:
             with self.subTest(address=address):
                 response = self.authorized_client.get(address + '?page=2')
-                self.assertEqual(len(response.context['page']), 1)
+                self.assertEqual(len(response.context['page']), 4)
 
     def test_group_last_page_has_1_record(self):
-        response = self.authorized_client.get(reverse('web_collectors:group', kwargs={'slug': 'poems'}) + '?page=5')
+        response = self.authorized_client.get(reverse('web_collectors:group',
+                                                      kwargs={'slug': 'poems'}) + '?page=5')
         self.assertEqual(len(response.context['page']), 1)
 
     def test_profile_last_page_has_1_record(self):
         response = self.authorized_client.get(reverse('web_collectors:author_collection',
                                                       kwargs={'username': 'Ira', 'collection_id': 13}) + '?page=3')
-        self.assertEqual(len(response.context['page']), 1)
+        self.assertEqual(len(response.context['page']), 4)
 
     def test_pages_with_ten_records_have_correct_context(self):
         Address = namedtuple('Address', 'address text1 text2')
@@ -127,10 +139,13 @@ class PaginatorViewsTest(TestCase):
 
     def test_pages_with_three_records_have_correct_context(self):
         Url = namedtuple('Url', 'address text1 text2')
-        urls = [((reverse('web_collectors:group', kwargs={'slug': 'poems'})), 'Russian poems', 'Russian authors10'),
-                ((reverse('web_collectors:collection', kwargs={'slug': 'poems', 'collection_id': 13})),
+        urls = [((reverse('web_collectors:group',
+                          kwargs={'slug': 'poems'})), 'Russian poems', 'Russian authors10'),
+                ((reverse('web_collectors:collection',
+                          kwargs={'slug': 'poems', 'collection_id': 13})),
                  'Pushkin poems0', 'Pushkin poems2'),
-                ((reverse('web_collectors:author_collection', kwargs={'username': 'Ira', 'collection_id': 13})),
+                ((reverse('web_collectors:author_collection',
+                          kwargs={'username': 'Ira', 'collection_id': 13})),
                  'Pushkin poems0', 'Pushkin poems2')]
         for address, text1, text2 in urls:
             with self.subTest(address=address):
@@ -159,7 +174,8 @@ class PaginatorViewsTest(TestCase):
 
     def test_profile_page_has_correct_context(self):
         PageAddress = namedtuple('PageAddress', 'address text1 text2')
-        page_address = PageAddress((reverse('web_collectors:profile', kwargs={'username': 'Ira'})), 'Russian poems',
+        page_address = PageAddress((reverse('web_collectors:profile',
+                                            kwargs={'username': 'Ira'})), 'Russian poems',
                                    'Russian authors8')
         address, text1, text2 = page_address
         response = self.guest_client.get(address)
