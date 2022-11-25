@@ -161,8 +161,10 @@ class FollowTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user1 = CustomUser.objects.create_user(username='arm')
-        cls.user2 = CustomUser.objects.create_user(username='bcd')
+        cls.user1 = CustomUser.objects.create_user(username='arm',
+                                                   email='user1@gmail.com')
+        cls.user2 = CustomUser.objects.create_user(username='bcd',
+                                                   email='user2@gmail.com')
         cls.follow = Follow.objects.create(
             user=cls.user1,
             author=cls.user2
