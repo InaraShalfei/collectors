@@ -4,7 +4,8 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, \
+    HttpResponseNotAllowed, HttpResponseBadRequest
 
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -187,15 +188,17 @@ def create_item(request, slug, collection_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     form = ItemForm(request.POST or None, files=request.FILES or None)
-    if request.method == 'POST' and form.is_valid():
-        item = form.save(commit=False)
-        item.collection = collection
-        item.save()
-        for photo_data in form.cleaned_data['photos']:
-            photo = Photo.objects.create(file=photo_data, item=item)
-            delayed_photo_watermark.delay(photo.id)
-        delayed_send_message_item(item.id)
-        return HttpResponseRedirect(request.POST.get('next', '/'))
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    if not form.is_valid():
+        return JsonResponse({'status': 'Invalid form', 'errors': form.errors}, status=422)
+    item = form.save(commit=False)
+    item.collection = collection
+    item.save()
+    for photo_data in form.cleaned_data['photos']:
+        photo = Photo.objects.create(file=photo_data, item=item)
+        delayed_photo_watermark.delay(photo.id)
+    delayed_send_message_item(item.id)
     return JsonResponse({'status': 'Success'})
 
 
