@@ -124,8 +124,7 @@ class CommentFormTest(TestCase):
             data=form_data,
             follow=True
         )
-        # self.assertRedirects(response, reverse('web_collectors:collection',
-        #                                        kwargs={'slug': 'films-2', 'collection_id': 1}))
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(Comment.objects.count(), comment_count+1)
 
 
