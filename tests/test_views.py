@@ -18,8 +18,10 @@ class CollectionViewsTest(TestCase):
             slug='toys',
             description='Все игрушки мира'
         )
-        cls.user = CustomUser.objects.create_user(username='Boba')
-        cls.user2 = CustomUser.objects.create_user(username='Vera')
+        cls.user = CustomUser.objects.create_user(username='Boba',
+                                                  email='boba@boba.com')
+        cls.user2 = CustomUser.objects.create_user(username='Vera',
+                                                   email='vera@vera.com')
         cls.collection = Collection.objects.create(
             name='Russian authors',
             description='All books of russian authors',
@@ -58,20 +60,27 @@ class CollectionViewsTest(TestCase):
         'web_collectors/author_collection_item.html': reverse('web_collectors:author_collection_item', kwargs={
                                                                   'username': 'Boba', 'collection_id': 1,
                                                               'item_id': 1}),
-        'includes/delete_collection.html': reverse('web_collectors:delete_collection', kwargs={
-            'slug': 'knigi', 'collection_id': 1}),
-        'includes/reply_comment.html': reverse('web_collectors:reply_comment', kwargs={
-            'slug': 'knigi', 'collection_id': 1, 'comment_id': 1}),
-        'includes/delete_comment.html': reverse('web_collectors:delete_comment', kwargs={
-            'slug': 'knigi', 'collection_id': 1, 'comment_id': 1}),
-        'includes/update_comment.html': reverse('web_collectors:update_comment', kwargs={
-            'slug': 'knigi', 'collection_id': 1, 'comment_id': 1}),
-        'web_collectors/new_item.html': reverse('web_collectors:new_item', kwargs={'slug': 'knigi',
-                                                                                   'collection_id': 1}),
-        'includes/delete_item.html': reverse('web_collectors:delete_item', kwargs={
-            'slug': 'knigi', 'collection_id': 1, 'item_id': 1}),
+        'includes/delete_collection.html': reverse('web_collectors:delete_collection',
+                                                   kwargs={'collection_id': 1}),
+        'includes/reply_comment.html': reverse('web_collectors:reply_comment',
+                                               kwargs={'collection_id': 1,
+                                                       'comment_id': 1}),
+        # 'includes/delete_comment.html': reverse('web_collectors:delete_comment',
+        #                                         kwargs={'collection_id': 1,
+        #                                                 'comment_id': 1}),
+        # 'includes/update_comment.html': reverse('web_collectors:update_comment',
+        #                                         kwargs={'collection_id': 1,
+        #                                                 'comment_id': 1}),
+        # 'web_collectors/new_item.html': reverse('web_collectors:new_item',
+        #                                         kwargs={'slug': 'knigi',
+        #                                                 'collection_id': 1}),
+        'includes/delete_item.html': reverse('web_collectors:delete_item',
+                                             kwargs={'slug': 'knigi',
+                                                     'collection_id': 1,
+                                                     'item_id': 1}),
         'web_collectors/follow.html': reverse('web_collectors:follow_index'),
-        'includes/unfollow.html': reverse('web_collectors:profile_unfollow', kwargs={'username': 'Boba'}),
+        'includes/unfollow.html': reverse('web_collectors:profile_unfollow',
+                                          kwargs={'username': 'Boba'}),
         }
         for template, reverse_name in template_page_names.items():
             with self.subTest(reverse_name=reverse_name):
