@@ -181,7 +181,7 @@ class FollowTest(TestCase):
                 self.assertEqual(follow._meta.get_field(field).verbose_name, expected_value)
 
     def test_unique_constraint_relation(self):
-Add        user_1 = CustomUser.objects.create(username='123',
+        user_1 = CustomUser.objects.create(username='123',
                                            email='user1@mail.kz')
         user_2 = CustomUser.objects.create(username='345',
                                            email='user2@mail.kz')
