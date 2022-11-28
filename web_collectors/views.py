@@ -4,8 +4,8 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count
-from django.http import HttpResponseRedirect, JsonResponse, \
-    HttpResponseNotAllowed, HttpResponseBadRequest
+from django.http import (HttpResponseRedirect, JsonResponse,
+                         HttpResponseNotAllowed)
 
 from django.shortcuts import render, get_object_or_404, redirect
 
