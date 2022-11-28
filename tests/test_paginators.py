@@ -67,12 +67,12 @@ class PaginatorViewsTest(TestCase):
                 response = self.guest_client.get(reverse(address))
                 self.assertEqual(len(response.context['page']), 10)
 
-    def test_second_page_has_3_records(self):
+    def test_second_page_has_2_records(self):
         addresses = ['web_collectors:index', 'web_collectors:groups']
         for address in addresses:
             with self.subTest(address=address):
                 response = self.guest_client.get(reverse(address) + '?page=2')
-                self.assertEqual(len(response.context['page']), 4)
+                self.assertEqual(len(response.context['page']), 2)
 
     def test_all_authors_second_page_has_9_records(self):
         response = self.guest_client.get(reverse('web_collectors:all_authors') + '?page=2')
@@ -91,14 +91,14 @@ class PaginatorViewsTest(TestCase):
                 response = self.authorized_client.get(address)
                 self.assertEqual(len(response.context['page']), 4)
 
-    def test_profile_first_page_has_5_records(self):
+    def test_profile_first_page_has_4_records(self):
         response = self.guest_client.get(reverse('web_collectors:profile',
                                                  kwargs={'username': 'Ira'}))
         self.assertEqual(len(response.context['page']), 4)
 
-    def test_follow_last_page_has_2_records(self):
+    def test_follow_last_page_has_1_record(self):
         response = self.authorized_client.get(reverse('web_collectors:follow_index') + '?page=2')
-        self.assertEqual(len(response.context['page']), 2)
+        self.assertEqual(len(response.context['page']), 1)
 
     def test_last_page_has_1_record(self):
         addresses = [(reverse('web_collectors:collection',
@@ -175,14 +175,15 @@ class PaginatorViewsTest(TestCase):
     def test_profile_page_has_correct_context(self):
         PageAddress = namedtuple('PageAddress', 'address text1 text2')
         page_address = PageAddress((reverse('web_collectors:profile',
-                                            kwargs={'username': 'Ira'})), 'Russian poems',
-                                   'Russian authors8')
+                                            kwargs={'username': 'Ira'})),
+                                   'Russian poems',
+                                   'Russian authors9')
         address, text1, text2 = page_address
         response = self.guest_client.get(address)
         page_collections = response.context['page']
         first_record = page_collections[0]
         first_record_name = first_record.name
-        last_record = page_collections[4]
+        last_record = page_collections[3]
         last_record_name = last_record.name
         self.assertEqual(first_record_name, text1)
         self.assertEqual(last_record_name, text2)
