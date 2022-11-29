@@ -18,13 +18,15 @@
                         href="{% url 'web_collectors:follow_index' %}">Избранные авторы</a></button>
 
             </div>
+            {% endif %}
         </div>
+
         <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
             <img class="rounded-lg-3" src="/media/index.jpg" alt="" width="720">
         </div>
     </div>
 </div>
-   {% endif %}
+
 {% endblock %}
 {% block content %}
 {% if user.is_authenticated %}
