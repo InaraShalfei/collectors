@@ -19,11 +19,11 @@
 
 
         {% if author != request.user %}
-        {% if following %}
-        {% include "includes/unfollow.html" %}
-        {% else %}
-        {% include "includes/follow.html" %}
-        {% endif %}
+            {% if following %}
+                {% include "includes/unfollow.html" %}
+            {% else %}
+                {% include "includes/follow.html" %}
+            {% endif %}
         {% endif %}
     </div>
 
