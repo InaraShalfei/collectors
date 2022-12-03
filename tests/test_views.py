@@ -54,6 +54,8 @@ class CollectionViewsTest(TestCase):
     def test_simple_pages_use_correct_template(self):
         template_page_names = {
             'web_collectors/index.html': reverse('web_collectors:index'),
+            # 'web_collectors/search.html': reverse('web_collectors:search',
+            #                                       kwargs={'collection_name':self.collection.name}),
             'web_collectors/groups.html': reverse('web_collectors:groups'),
             'web_collectors/all_authors.html':
                 reverse('web_collectors:all_authors'),
@@ -113,12 +115,21 @@ class CollectionViewsTest(TestCase):
                     response = self.authorized_client.get(reverse_name)
                     self.assertTemplateUsed(response, template)
 
+    def test_group_page_render_all_templates(self):
+        reverse_name = reverse('web_collectors:group',
+                               kwargs={'slug': self.group.slug})
+
+        template_page_names = {
+                               'includes/create_collection.html': reverse_name,
+                               'includes/delete_collection.html': reverse_name
+                               }
+
+        for template, reverse_names in template_page_names.items():
+            with self.subTest(reverse_name=reverse_name):
+                response = self.authorized_client.get(reverse_name)
+                self.assertTemplateUsed(response, template)
 
 
-
-
-    # 'includes/delete_collection.html': reverse('web_collectors:delete_collection',
-    #                                            kwargs={'collection_id': 1}),
     # 'includes/delete_item.html': reverse('web_collectors:delete_item',
     #                                      kwargs={'slug': 'knigi',
     #                                              'collection_id': 1,
