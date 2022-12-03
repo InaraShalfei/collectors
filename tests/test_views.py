@@ -33,6 +33,12 @@ class CollectionViewsTest(TestCase):
             author=cls.user2,
             text='Cool!',
         )
+        cls.comment_answer = Comment.objects.create(
+            collection=cls.collection,
+            author=cls.user,
+            text='Thanks!',
+            parent_comment=cls.comment
+        )
         cls.collection_item = CollectionItem.objects.create(
             name='Pushkin poems',
             description='Poems of A.S.Pushkin',
@@ -69,12 +75,31 @@ class CollectionViewsTest(TestCase):
                         kwargs={'username': 'Boba', 'collection_id': 1,
                                 'item_id': 1}),
             'web_collectors/follow.html':
-                reverse('web_collectors:follow_index')
+                reverse('web_collectors:follow_index'),
+
         }
         for template, reverse_name in template_page_names.items():
             with self.subTest(reverse_name=reverse_name):
                 response = self.authorized_client.get(reverse_name)
-                self.assertTemplateUsed(response, template, template)
+                self.assertTemplateUsed(response, template)
+
+    def test_reply_comment(self):
+        comment = Comment.objects.create(
+            collection=self.collection,
+            author=self.user2,
+            text='Cool!',
+        )
+        comment.save()
+        reverse_name = reverse('web_collectors:collection',
+                                           kwargs={'slug': self.group.slug,
+                                               'collection_id': 1
+                                                   })
+        response = self.authorized_client.get(reverse_name)
+        self.assertTemplateUsed(response, 'includes/reply_comment.html')
+
+
+
+
 
     # 'includes/delete_collection.html': reverse('web_collectors:delete_collection',
     #                                            kwargs={'collection_id': 1}),
@@ -95,4 +120,4 @@ class CollectionViewsTest(TestCase):
     #                                              'collection_id': 1,
     #                                              'item_id': 1}),
     # 'includes/follow.html': reverse('web_collectors:profile',kwargs={'username': 'Vera'}),
-    # 'includes/unfollow.html': reverse('web_collectors:profile',kwargs={'username': 'Vera'}),
+    # 'includes/unfollow.html': reverse('web_collectors:profile',kwargs={'username': 'Vera'})
