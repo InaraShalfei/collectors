@@ -1,7 +1,8 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from web_collectors.models import Comment, Collection, CustomUser, CollectionGroup, CollectionItem
+from web_collectors.models import (Comment, Collection, CustomUser,
+                                   CollectionGroup, CollectionItem)
 
 
 class CollectionViewsTest(TestCase):
@@ -83,19 +84,30 @@ class CollectionViewsTest(TestCase):
                 response = self.authorized_client.get(reverse_name)
                 self.assertTemplateUsed(response, template)
 
-    def test_reply_comment(self):
+    def test_collection_page_render_all_templates(self):
+        reverse_name = reverse('web_collectors:collection',
+                               kwargs={'slug': self.group.slug,
+                                       'collection_id': 1
+                                       })
+        template_page_names = {'includes/reply_comment.html': reverse_name,
+                               'includes/delete_comment.html': reverse_name,
+                               'includes/update_comment.html': reverse_name,
+                               'includes/child_comments.html': reverse_name,
+                               'includes/new_item.html': reverse_name,
+                               'includes/create_collection.html': reverse_name,
+                               'includes/favorite.html': reverse_name
+                               }
         comment = Comment.objects.create(
             collection=self.collection,
             author=self.user2,
             text='Cool!',
         )
         comment.save()
-        reverse_name = reverse('web_collectors:collection',
-                                           kwargs={'slug': self.group.slug,
-                                               'collection_id': 1
-                                                   })
-        response = self.authorized_client.get(reverse_name)
-        self.assertTemplateUsed(response, 'includes/reply_comment.html')
+
+        for template, reverse_name in template_page_names.items():
+            with self.subTest(reverse_name=reverse_name):
+                response = self.authorized_client.get(reverse_name)
+                self.assertTemplateUsed(response, template)
 
 
 
@@ -103,18 +115,6 @@ class CollectionViewsTest(TestCase):
 
     # 'includes/delete_collection.html': reverse('web_collectors:delete_collection',
     #                                            kwargs={'collection_id': 1}),
-    # 'includes/reply_comment.html': reverse('web_collectors:reply_comment',
-    #                                        kwargs={'collection_id': 1,
-    #                                                'comment_id': 1}),
-    # 'includes/delete_comment.html': reverse('web_collectors:delete_comment',
-    #                                         kwargs={'collection_id': 1,
-    #                                                 'comment_id': 1}),
-    # 'includes/update_comment.html': reverse('web_collectors:update_comment',
-    #                                         kwargs={'collection_id': 1,
-    #                                                 'comment_id': 1}),
-    # 'includes/new_item.html': reverse('web_collectors:new_item',
-    #                                         kwargs={'slug': 'knigi',
-    #                                                 'collection_id': 1}),
     # 'includes/delete_item.html': reverse('web_collectors:delete_item',
     #                                      kwargs={'slug': 'knigi',
     #                                              'collection_id': 1,
