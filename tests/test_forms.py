@@ -8,7 +8,8 @@ from django.test import override_settings, TestCase, Client
 from django.urls import reverse
 
 from web_collectors.forms import CollectionForm, CommentForm, ItemForm
-from web_collectors.models import Collection, CollectionGroup, CustomUser, Comment, CollectionItem
+from web_collectors.models import (Collection, CollectionGroup, CustomUser,
+                                   Comment, CollectionItem)
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
