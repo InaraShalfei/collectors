@@ -85,17 +85,20 @@ class CollectionViewsTest(TestCase):
                 self.assertTemplateUsed(response, template)
 
     def test_collection_page_render_all_templates(self):
-        reverse_name = reverse('web_collectors:collection',
-                               kwargs={'slug': self.group.slug,
-                                       'collection_id': 1
-                                       })
-        template_page_names = {'includes/reply_comment.html': reverse_name,
-                               'includes/delete_comment.html': reverse_name,
-                               'includes/update_comment.html': reverse_name,
-                               'includes/child_comments.html': reverse_name,
-                               'includes/new_item.html': reverse_name,
-                               'includes/create_collection.html': reverse_name,
-                               'includes/favorite.html': reverse_name
+        reverse_names = [reverse('web_collectors:collection',
+                                 kwargs={'slug': self.group.slug,
+                                         'collection_id': 1}),
+                         reverse('web_collectors:author_collection',
+                                 kwargs={'username': self.user.username,
+                                         'collection_id': self.collection.id})
+                         ]
+        template_page_names = {'includes/reply_comment.html': reverse_names,
+                               'includes/delete_comment.html': reverse_names,
+                               'includes/update_comment.html': reverse_names,
+                               'includes/child_comments.html': reverse_names,
+                               'includes/new_item.html': reverse_names,
+                               'includes/create_collection.html': reverse_names,
+                               'includes/favorite.html': reverse_names
                                }
         comment = Comment.objects.create(
             collection=self.collection,
@@ -104,10 +107,11 @@ class CollectionViewsTest(TestCase):
         )
         comment.save()
 
-        for template, reverse_name in template_page_names.items():
-            with self.subTest(reverse_name=reverse_name):
-                response = self.authorized_client.get(reverse_name)
-                self.assertTemplateUsed(response, template)
+        for template, reverse_names in template_page_names.items():
+            for reverse_name in reverse_names:
+                with self.subTest(reverse_name=reverse_name):
+                    response = self.authorized_client.get(reverse_name)
+                    self.assertTemplateUsed(response, template)
 
 
 
