@@ -90,19 +90,27 @@ class CommentFormTest(TestCase):
     def setUpClass(cls):
         cls.serialized_rollback = True
         super().setUpClass()
-        cls.user = CustomUser.objects.create_user(username='User1')
+        cls.user = CustomUser.objects.create_user(username='User1',
+                                                  email='user1@mail.kz')
+        cls.user2 = CustomUser.objects.create_user(username='User2',
+                                                   email='user2@mail.kz')
         group = CollectionGroup.objects.create(
             name='Фильмы-2',
             slug='films-2',
             description='All films in the world - 2'
         )
-        Collection.objects.create(
+        cls.collection = Collection.objects.create(
             name='Russian poems',
             description='All Russian poems',
             owner=cls.user,
             group=group)
 
         cls.form = CommentForm()
+        cls.comment = Comment.objects.create(
+            collection=cls.collection,
+            author=cls.user2,
+            text='Cool!',
+        )
 
     @classmethod
     def tearDownClass(cls):
@@ -121,6 +129,21 @@ class CommentFormTest(TestCase):
         response = self.authorized_client.post(
             reverse('web_collectors:add_comment',
                     kwargs={'collection_id': 1}),
+            data=form_data,
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Comment.objects.count(), comment_count+1)
+
+    def test_reply_comment(self):
+        comment_count = Comment.objects.count()
+        form_data = {
+            'text': 'Thanks!!'
+        }
+        response = self.authorized_client.post(
+            reverse('web_collectors:reply_comment',
+                    kwargs={'collection_id': 1,
+                            'comment_id': self.comment.id}),
             data=form_data,
             follow=True
         )
