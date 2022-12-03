@@ -149,10 +149,25 @@ class CollectionViewsTest(TestCase):
                 response = self.authorized_client.get(reverse_name)
                 self.assertTemplateUsed(response, template)
 
+    def test_item_page_render_all_templates(self):
+        reverse_names = [reverse('web_collectors:item',
+                                 kwargs={'slug': self.group.slug,
+                                         'collection_id': 1,
+                                         'item_id': self.collection_item.id}),
+                         reverse('web_collectors:author_collection_item',
+                                 kwargs={'username': self.user.username,
+                                         'collection_id': self.collection.id,
+                                         'item_id': self.collection_item.id})]
 
-    # 'includes/delete_item.html': reverse('web_collectors:delete_item',
-    #                                      kwargs={'slug': 'knigi',
-    #                                              'collection_id': 1,
-    #                                              'item_id': 1}),
-    # 'includes/follow.html': reverse('web_collectors:profile',kwargs={'username': 'Vera'}),
-    # 'includes/unfollow.html': reverse('web_collectors:profile',kwargs={'username': 'Vera'})
+        following = Follow.objects.create(user=self.user2, author=self.user)
+        following.save()
+
+        template_page_names = {
+                               'includes/item.html': reverse_names,
+                               }
+
+        for template, reverse_names in template_page_names.items():
+            for reverse_name in reverse_names:
+                with self.subTest(reverse_name=reverse_name):
+                    response = self.authorized_client.get(reverse_name)
+                    self.assertTemplateUsed(response, template)
