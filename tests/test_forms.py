@@ -64,7 +64,6 @@ class CollectionFormTest(TestCase):
             data=form_data,
             follow=True
         )
-        # self.assertRedirects(response, reverse('web_collectors:collection', kwargs={'slug': 'films', 'collection_id': 1}))
         self.assertEqual(Collection.objects.count(), collection_count+1)
         self.assertEqual(response.status_code, 200)
 
