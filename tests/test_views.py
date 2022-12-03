@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 
 from web_collectors.models import (Comment, Collection, CustomUser,
-                                   CollectionGroup, CollectionItem)
+                                   CollectionGroup, CollectionItem, Follow)
 
 
 class CollectionViewsTest(TestCase):
@@ -122,6 +122,26 @@ class CollectionViewsTest(TestCase):
         template_page_names = {
                                'includes/create_collection.html': reverse_name,
                                'includes/delete_collection.html': reverse_name
+                               }
+
+        for template, reverse_names in template_page_names.items():
+            with self.subTest(reverse_name=reverse_name):
+                response = self.authorized_client.get(reverse_name)
+                self.assertTemplateUsed(response, template)
+
+    def test_profile_page_render_all_templates(self):
+        reverse_name = reverse('web_collectors:profile',
+                               kwargs={'username': self.user.username})
+
+        following = Follow.objects.create(user=self.user2, author=self.user)
+        following.save()
+
+        template_page_names = {
+                               'includes/create_collection.html': reverse_name,
+                               'includes/delete_collection.html': reverse_name,
+                               'includes/author_card.html': reverse_name,
+                               # 'includes/unfollow.html': reverse_name,
+                               # 'includes/follow.html': reverse_name
                                }
 
         for template, reverse_names in template_page_names.items():
