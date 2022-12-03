@@ -2,7 +2,8 @@ from django.db.utils import IntegrityError
 
 from django.test import TestCase
 
-from web_collectors.models import CollectionGroup, Collection, CustomUser, CollectionItem, Comment, Follow
+from web_collectors.models import (CollectionGroup, Collection, CustomUser,
+                                   CollectionItem, Comment, Follow)
 
 
 class CollectionGroupTest(TestCase):
