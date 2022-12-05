@@ -57,15 +57,9 @@ class CollectionUrlsTest(TestCase):
 
     def test_pages_for_guest_client_have_correct_templates(self):
         templates_url_names = {
-        'web_collectors/index.html': '',
-        'web_collectors/groups.html': '/groups/',
-        'web_collectors/all_authors.html': '/all/',
-        'web_collectors/group.html': '/group/knigi/',
-        'web_collectors/collection.html': '/group/knigi/1',
-        'web_collectors/item.html': '/group/knigi/1/1',
-        'web_collectors/profile.html': '/profile/Boba/',
-        'web_collectors/author_collection.html': '/profile/Boba/1',
-        'web_collectors/author_collection_item.html': '/profile/Boba/1/1',
+            'web_collectors/index.html': reverse('web_collectors:index'),
+            'static_pages/about.html': reverse('static_pages:about'),
+            'users/signup.html': reverse('users:signup')
         }
         for template, address in templates_url_names.items():
             with self.subTest(address=address):
@@ -86,14 +80,3 @@ class CollectionUrlsTest(TestCase):
             with self.subTest(address=address):
                 response = self.authorized_client.get(address)
                 self.assertTemplateUsed(response, template, template)
-
-    # def test_redirects_for_anonymous(self):
-    #     url_names = ['/group/knigi/1/comment', '/new_collection/', '/group/knigi/1/edit',
-    #                  '/group/knigi/1/delete', '/group/knigi/1/1/reply', '/group/knigi/1/1/delete_comment',
-    #                  '/group/knigi/1/1/update_comment', '/group/knigi/1/new', '/group/knigi/1/1/update',
-    #                  '/group/knigi/1/1/delete', '/follow/', '/profile/Boba/follow', '/profile/Boba/unfollow']
-    #     for address in url_names:
-    #         with self.subTest(address=address):
-    #             response = self.guest_client.get(address, follow=True)
-    #             self.assertRedirects(response, f'/auth/login/?next={address}')
-
