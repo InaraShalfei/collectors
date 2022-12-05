@@ -145,6 +145,22 @@ class CollectionViewsTest(TestCase):
                 response = self.authorized_client.get(reverse_name)
                 self.assertTemplateUsed(response, template)
 
+    def test_profile_follow(self):
+        reverse_name = reverse('web_collectors:profile',
+                               kwargs={'username': self.user2.username})
+        template = 'includes/follow.html'
+        response = self.authorized_client.get(reverse_name)
+        self.assertTemplateUsed(response, template)
+
+    def test_profile_unfollow(self):
+        reverse_name = reverse('web_collectors:profile',
+                               kwargs={'username': self.user2.username})
+        template = 'includes/unfollow.html'
+        following = Follow.objects.create(user=self.user, author=self.user2)
+        following.save()
+        response = self.authorized_client.get(reverse_name)
+        self.assertTemplateUsed(response, template)
+
     def test_item_page_render_all_templates(self):
         reverse_names = [reverse('web_collectors:item',
                                  kwargs={'slug': self.group.slug,
