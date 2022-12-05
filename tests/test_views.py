@@ -15,19 +15,26 @@ class CollectionViewsTest(TestCase):
             description='All books in the world'
         )
         cls.group2 = CollectionGroup.objects.create(
-            name='Игрушки',
-            slug='toys',
-            description='Все игрушки мира'
+            name='toys',
+            slug='slug',
+            description='All over the world'
         )
         cls.user = CustomUser.objects.create_user(username='Boba',
                                                   email='boba@boba.com')
         cls.user2 = CustomUser.objects.create_user(username='Vera',
                                                    email='vera@vera.com')
         cls.collection = Collection.objects.create(
-            name='Russian authors',
-            description='All books of russian authors',
+            name='Русские авторы',
+            description='Все книги русских авторов',
             owner=cls.user,
             group=cls.group
+        )
+
+        cls.collection2 = Collection.objects.create(
+            name='American toys',
+            description='All American authors',
+            owner=cls.user2,
+            group=cls.group2
         )
         cls.comment = Comment.objects.create(
             collection=cls.collection,
@@ -41,9 +48,14 @@ class CollectionViewsTest(TestCase):
             parent_comment=cls.comment
         )
         cls.collection_item = CollectionItem.objects.create(
-            name='Pushkin poems',
-            description='Poems of A.S.Pushkin',
+            name='Стихи Пушкина',
+            description='Собрание сочинений А.С. Пушкина',
             collection=cls.collection,
+        )
+        cls.collection_item2 = CollectionItem.objects.create(
+            name='Wooden toys',
+            description='Made of wood',
+            collection=cls.collection2,
         )
 
     def setUp(self):
@@ -54,8 +66,6 @@ class CollectionViewsTest(TestCase):
     def test_simple_pages_use_correct_template(self):
         template_page_names = {
             'web_collectors/index.html': reverse('web_collectors:index'),
-            # 'web_collectors/search.html': reverse('web_collectors:search',
-            #                                       kwargs={'collection_name':self.collection.name}),
             'web_collectors/groups.html': reverse('web_collectors:groups'),
             'web_collectors/all_authors.html':
                 reverse('web_collectors:all_authors'),
@@ -179,3 +189,13 @@ class CollectionViewsTest(TestCase):
                 with self.subTest(reverse_name=reverse_name):
                     response = self.authorized_client.get(reverse_name)
                     self.assertTemplateUsed(response, template)
+
+    def test_search_functionality(self):
+        reverse_name = reverse('web_collectors:search')
+        template = 'includes/search.html'
+        collection_count = Collection.objects.filter(name__contains='toys').count()
+        item_count = CollectionItem.objects.filter(name__contains='toys').count()
+        group_count = CollectionGroup.objects.filter(name__contains='toys').count()
+        response = self.authorized_client.get(reverse_name, {'q': 'toys'})
+        self.assertTemplateUsed(response, template)
+        self.assertContains(response, text='toys', count=collection_count + item_count + group_count)
