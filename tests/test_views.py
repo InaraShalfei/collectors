@@ -129,19 +129,15 @@ class CollectionViewsTest(TestCase):
                 response = self.authorized_client.get(reverse_name)
                 self.assertTemplateUsed(response, template)
 
-    def test_profile_page_render_all_templates(self):
+    def test_profile_page_user_is_author(self):
         reverse_name = reverse('web_collectors:profile',
                                kwargs={'username': self.user.username})
-
-        following = Follow.objects.create(user=self.user2, author=self.user)
-        following.save()
 
         template_page_names = {
                                'includes/create_collection.html': reverse_name,
                                'includes/delete_collection.html': reverse_name,
                                'includes/author_card.html': reverse_name,
-                               # 'includes/unfollow.html': reverse_name,
-                               # 'includes/follow.html': reverse_name
+                               'web_collectors/profile.html': reverse_name
                                }
 
         for template, reverse_names in template_page_names.items():
@@ -158,10 +154,6 @@ class CollectionViewsTest(TestCase):
                                  kwargs={'username': self.user.username,
                                          'collection_id': self.collection.id,
                                          'item_id': self.collection_item.id})]
-
-        following = Follow.objects.create(user=self.user2, author=self.user)
-        following.save()
-
         template_page_names = {
                                'includes/item.html': reverse_names,
                                }
