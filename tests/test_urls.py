@@ -29,6 +29,12 @@ class CollectionUrlsTest(TestCase):
             owner=cls.user,
             group=cls.group
         )
+        cls.collection2 = Collection.objects.create(
+            name='Russian toys',
+            description='All toys of russian authors',
+            owner=cls.user2,
+            group=cls.group2
+        )
         cls.comment = Comment.objects.create(
             collection=cls.collection,
             author=cls.user2,
@@ -38,6 +44,11 @@ class CollectionUrlsTest(TestCase):
             name='Pushkin poems',
             description='Poems of A.S.Pushkin',
             collection=cls.collection,
+        )
+        cls.collection_item2 = CollectionItem.objects.create(
+            name='Demchenko toys',
+            description='Toys of Demchenko artist',
+            collection=cls.collection2,
         )
 
     def setUp(self):
@@ -66,17 +77,56 @@ class CollectionUrlsTest(TestCase):
                 response = self.guest_client.get(address)
                 self.assertTemplateUsed(response, template)
 
-    def test_pages_for_authorized_client_have_correct_templates(self):
-        templates_url_names = {
-        'includes/delete_collection.html': '/group/knigi/1/delete',
-        'includes/reply_comment.html': '/group/knigi/1/1/reply',
-        'includes/delete_comment.html': '/group/knigi/1/1/delete_comment',
-        'includes/update_comment.html': '/group/knigi/1/1/update_comment',
-        'web_collectors/new_item.html': '/group/knigi/1/new',
-        'web_collectors/follow.html': '/follow/',
-        'includes/unfollow.html': '/profile/Boba/unfollow',
-        }
-        for template, address in templates_url_names.items():
-            with self.subTest(address=address):
+    def test_urls_exist_at_desired_location_for_authorized_client(self):
+        url_names = [reverse('web_collectors:index'),
+                     reverse('static_pages:about'),
+                     reverse('web_collectors:groups'),
+                     reverse('web_collectors:all_authors'),
+                     reverse('web_collectors:new_collection'),
+                     reverse('web_collectors:follow_index'),
+                     reverse('web_collectors:profile',
+                             kwargs={'username': self.user2.username}),
+                     reverse('web_collectors:favorite_collection',
+                             kwargs={'collection_id': self.collection2.id}),
+                     reverse('web_collectors:profile_follow',
+                             kwargs={'username': self.user2.username}),
+                     reverse('web_collectors:author_collection',
+                             kwargs={'username': self.user2.username,
+                                     'collection_id': self.collection2.id}),
+                     reverse('web_collectors:author_collection_item',
+                             kwargs={'username': self.user2.username,
+                                     'collection_id': self.collection2.id,
+                                     'item_id': self.collection_item2.id}),
+                     reverse('web_collectors:group',
+                             kwargs={'slug': self.group2.slug}),
+                     reverse('web_collectors:collection',
+                             kwargs={'slug': self.group2.slug,
+                                     'collection_id': self.collection2.id}),
+                     reverse('web_collectors:update_collection',
+                             kwargs={'slug': self.group.slug,
+                                     'collection_id': self.collection.id}),
+                     # reverse('web_collectors:delete_collection',
+                     #         kwargs={'slug': self.group.slug,
+                     #                 'collection_id': self.collection.id}),
+                     # reverse('web_collectors:new_item',
+                     #         kwargs={'slug': self.group.slug,
+                     #                 'collection_id': self.collection.id}),
+                     reverse('web_collectors:item',
+                             kwargs={'slug': self.group.slug,
+                                     'collection_id': self.collection.id,
+                                     'item_id': self.collection_item.id}),
+                     reverse('web_collectors:update_item',
+                             kwargs={'slug': self.group.slug,
+                                     'collection_id': self.collection.id,
+                                     'item_id': self.collection_item.id}),
+                     # reverse('web_collectors:delete_item',
+                     #         kwargs={'slug': self.group.slug,
+                     #                 'collection_id': self.collection.id,
+                     #                 'item_id': self.collection_item.id})
+
+                     ]
+
+        for address in url_names:
+            with self.subTest(adress=address):
                 response = self.authorized_client.get(address)
-                self.assertTemplateUsed(response, template, template)
+                self.assertEqual(response.status_code, 200)
