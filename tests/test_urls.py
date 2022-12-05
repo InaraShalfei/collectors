@@ -1,6 +1,8 @@
 from django.test import TestCase, Client
+from django.urls import reverse
 
-from web_collectors.models import Comment, Collection, CustomUser, CollectionGroup, CollectionItem
+from web_collectors.models import (Comment, Collection, CustomUser,
+                                   CollectionGroup, CollectionItem)
 
 
 class CollectionUrlsTest(TestCase):
@@ -44,24 +46,14 @@ class CollectionUrlsTest(TestCase):
         self.authorized_client.force_login(self.user)
 
     def test_urls_exist_at_desired_location_for_guest_client(self):
-        url_names = ['', '/groups/',  '/all/', '/group/knigi/',
-                     '/group/knigi/1', '/group/knigi/1/1',
-                     '/profile/Boba/', '/profile/Boba/1', '/profile/Boba/1/1']
+        url_names = [reverse('web_collectors:index'),
+                     reverse('static_pages:about'),
+                     reverse('users:signup')]
 
         for address in url_names:
             with self.subTest(adress=address):
                 response = self.guest_client.get(address)
                 self.assertEqual(response.status_code, 200)
-
-    # def test_urls_exist_at_desired_location_for_authorized_client(self):
-    #     url_names = ['/new_collection/', '/group/knigi/1/delete', '/group/knigi/1/1/reply',
-    #                  '/group/knigi/1/1/delete_comment', '/group/knigi/1/1/update_comment',
-    #                  '/group/knigi/1/new', '/group/knigi/1/1/delete',  '/follow/']
-    #
-    #     for address in url_names:
-    #         with self.subTest(adress=address):
-    #             response = self.authorized_client.get(address)
-    #             self.assertEqual(response.status_code, 200)
 
     def test_pages_for_guest_client_have_correct_templates(self):
         templates_url_names = {
@@ -87,14 +79,13 @@ class CollectionUrlsTest(TestCase):
         'includes/delete_comment.html': '/group/knigi/1/1/delete_comment',
         'includes/update_comment.html': '/group/knigi/1/1/update_comment',
         'web_collectors/new_item.html': '/group/knigi/1/new',
-        'includes/delete_item.html': '/group/knigi/1/1/delete',
         'web_collectors/follow.html': '/follow/',
         'includes/unfollow.html': '/profile/Boba/unfollow',
         }
         for template, address in templates_url_names.items():
             with self.subTest(address=address):
                 response = self.authorized_client.get(address)
-                self.assertTemplateUsed(response, template)
+                self.assertTemplateUsed(response, template, template)
 
     # def test_redirects_for_anonymous(self):
     #     url_names = ['/group/knigi/1/comment', '/new_collection/', '/group/knigi/1/edit',
