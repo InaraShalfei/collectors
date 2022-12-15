@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 
 from web_collectors.models import (Comment, Collection, CustomUser,
-                                   CollectionGroup, CollectionItem)
+                                   CollectionGroup, CollectionItem, Follow)
 
 
 class CollectionUrlsTest(TestCase):
@@ -51,6 +51,11 @@ class CollectionUrlsTest(TestCase):
             collection=cls.collection2,
         )
 
+        cls.follow = Follow.objects.create(
+            user=cls.user2,
+            author=cls.user
+        )
+
     def setUp(self):
         self.guest_client = Client()
         self.authorized_client = Client()
@@ -90,6 +95,8 @@ class CollectionUrlsTest(TestCase):
                              kwargs={'collection_id': self.collection2.id}),
                      reverse('web_collectors:profile_follow',
                              kwargs={'username': self.user2.username}),
+                     reverse('web_collectors:profile_unfollow',
+                             kwargs={'username': self.user.username}),
                      reverse('web_collectors:author_collection',
                              kwargs={'username': self.user2.username,
                                      'collection_id': self.collection2.id}),
@@ -105,9 +112,8 @@ class CollectionUrlsTest(TestCase):
                      reverse('web_collectors:update_collection',
                              kwargs={'slug': self.group.slug,
                                      'collection_id': self.collection.id}),
-                     # reverse('web_collectors:delete_collection',
-                     #         kwargs={'slug': self.group.slug,
-                     #                 'collection_id': self.collection.id}),
+                     reverse('web_collectors:delete_collection',
+                             kwargs={'collection_id': self.collection.id}),
                      # reverse('web_collectors:new_item',
                      #         kwargs={'slug': self.group.slug,
                      #                 'collection_id': self.collection.id}),
@@ -119,6 +125,17 @@ class CollectionUrlsTest(TestCase):
                              kwargs={'slug': self.group.slug,
                                      'collection_id': self.collection.id,
                                      'item_id': self.collection_item.id}),
+                     reverse('web_collectors:add_comment',
+                             kwargs={'collection_id': self.collection2.id}),
+                     reverse('web_collectors:update_comment',
+                             kwargs={'collection_id': self.collection.id,
+                                     'comment_id': self.comment.id}),
+                     reverse('web_collectors:reply_comment',
+                             kwargs={'collection_id': self.collection.id,
+                                     'comment_id': self.comment.id}),
+                     reverse('web_collectors:delete_comment',
+                             kwargs={'collection_id': self.collection.id,
+                                     'comment_id': self.comment.id}),
                      # reverse('web_collectors:delete_item',
                      #         kwargs={'slug': self.group.slug,
                      #                 'collection_id': self.collection.id,
