@@ -114,9 +114,6 @@ class CollectionUrlsTest(TestCase):
                                      'collection_id': self.collection.id}),
                      reverse('web_collectors:delete_collection',
                              kwargs={'collection_id': self.collection.id}),
-                     # reverse('web_collectors:new_item',
-                     #         kwargs={'slug': self.group.slug,
-                     #                 'collection_id': self.collection.id}),
                      reverse('web_collectors:item',
                              kwargs={'slug': self.group.slug,
                                      'collection_id': self.collection.id,
@@ -136,11 +133,6 @@ class CollectionUrlsTest(TestCase):
                      reverse('web_collectors:delete_comment',
                              kwargs={'collection_id': self.collection.id,
                                      'comment_id': self.comment.id}),
-                     # reverse('web_collectors:delete_item',
-                     #         kwargs={'slug': self.group.slug,
-                     #                 'collection_id': self.collection.id,
-                     #                 'item_id': self.collection_item.id})
-
                      ]
 
         for address in url_names:
