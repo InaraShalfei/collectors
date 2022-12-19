@@ -147,3 +147,24 @@ class CollectionUrlsTest(TestCase):
             with self.subTest(adress=address):
                 response = self.authorized_client.get(address)
                 self.assertEqual(response.status_code, 200)
+
+    def test_urls_exist_at_desired_location_for_delete_item(self):
+        address = reverse('web_collectors:delete_item',
+                          kwargs={'slug': self.group.slug,
+                                  'collection_id': self.collection.id,
+                                  'item_id': self.collection_item.id})
+
+        response = self.authorized_client.post(address)
+        self.assertEqual(response.status_code, 302)
+
+    def test_urls_exist_at_desired_location_for_new_item(self):
+        address = reverse('web_collectors:new_item',
+                          kwargs={'slug': self.group.slug,
+                                  'collection_id': self.collection.id})
+
+        data = {'name': 'Esenin',
+                'collection': self.collection.id,
+                'description': 'A very interesing book ever'}
+
+        response = self.authorized_client.post(address, json=data)
+        self.assertEqual(response.status_code, 200)
