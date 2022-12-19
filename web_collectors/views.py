@@ -191,7 +191,8 @@ def create_item(request, slug, collection_id):
     if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
     if not form.is_valid():
-        return JsonResponse({'status': 'Invalid form', 'errors': form.errors}, status=422)
+        return JsonResponse({'status': 'Invalid form', 'errors': form.errors},
+                            status=422)
     item = form.save(commit=False)
     item.collection = collection
     item.save()
@@ -226,10 +227,11 @@ def delete_item(request, slug, collection_id, item_id):
     group = get_object_or_404(CollectionGroup, slug=slug)
     collection = get_object_or_404(Collection, group=group, id=collection_id)
     item = get_object_or_404(CollectionItem, collection=collection, id=item_id)
-    if request.method == 'POST':
-        item.delete()
-        return redirect('web_collectors:collection', slug=slug,
-                        collection_id=collection_id)
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    item.delete()
+    return redirect('web_collectors:collection', slug=slug,
+                    collection_id=collection_id)
 
 
 @login_required
