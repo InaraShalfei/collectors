@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 
+from tests.fake_image import get_fake_image
 from web_collectors.models import (Comment, Collection, CustomUser,
                                    CollectionGroup, CollectionItem, Follow)
 
@@ -156,7 +157,8 @@ class CollectionUrlsTest(TestCase):
 
         data = {'name': 'Esenin',
                 'collection': self.collection.id,
-                'description': 'A very interesing book ever'}
+                'description': 'A very interesting book ever',
+                'photos': [get_fake_image()]}
 
-        response = self.authorized_client.post(address, json=data)
+        response = self.authorized_client.post(address, data=data, follow=True)
         self.assertEqual(response.status_code, 200)
